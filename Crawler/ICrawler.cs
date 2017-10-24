@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using log4net;
-using RecipesCore;
+using RecipesCore.Models;
 
 namespace Crawler
 {

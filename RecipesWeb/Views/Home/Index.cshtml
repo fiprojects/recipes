@@ -1,0 +1,12 @@
+﻿@model RecipesWeb.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>List of recipes</h1>
+<ul>
+@foreach (var recipe in Model.Recipes)
+{
+    <li><a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id">@recipe.Name</a></li>
+}
+</ul>

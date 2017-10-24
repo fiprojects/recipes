@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Crawler\Crawler.csproj" />
+    <ProjectReference Include="..\Recipes\RecipesCore.csproj" />
   </ItemGroup>
 
 </Project>

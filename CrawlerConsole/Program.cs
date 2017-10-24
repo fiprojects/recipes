@@ -3,6 +3,8 @@ using System.Reflection;
 using System.Xml;
 using Crawler;
 using log4net;
+using RecipesCore;
+using RecipesCore.Services;
 
 namespace CrawlerConsole
 {
@@ -13,9 +15,7 @@ namespace CrawlerConsole
         public static void Main(string[] args)
         {
             SetupLogging();
-
-            ICrawler crawler = new AllRecipesCrawler { Logger = Log };
-            crawler.GetRecipes(6800, 6900);
+            CrawlToDatabase();
         }
 
         private static void SetupLogging()
@@ -25,6 +25,19 @@ namespace CrawlerConsole
 
             var repository = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
             log4net.Config.XmlConfigurator.Configure(repository, config["log4net"]);
+        }
+
+        private static void CrawlToDatabase()
+        {
+            var db = new RecipesContext();
+            var recipesService = new RecipesService(db);
+
+            ICrawler crawler = new AllRecipesCrawler { Logger = Log };
+            var recipes = crawler.GetRecipes(6800, 6810);
+            foreach (var recipe in recipes)
+            {
+                recipesService.Add(recipe);
+            }
         }
     }
 }

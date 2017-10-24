@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using log4net;
-using RecipesCore;
+using RecipesCore.Models;
 
 namespace Crawler
 {

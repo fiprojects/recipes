@@ -1,0 +1,9 @@
+﻿@model RecipesCore.Models.Recipe
+@{
+    ViewData["Title"] = @Model.Name;
+}
+
+<h1>@Model.Name</h1>
+<pre>
+    @Model.ToString()
+</pre>
