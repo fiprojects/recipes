@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Recipes\RecipesCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SimpleAuth\" />
+  </ItemGroup>
+
 </Project>

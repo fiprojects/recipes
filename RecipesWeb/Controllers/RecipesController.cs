@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RecipesCore.Services;
-using RecipesWeb.Models;
 
 namespace RecipesWeb.Controllers
 {
