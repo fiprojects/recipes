@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using log4net;
@@ -11,6 +12,17 @@ namespace Crawler
     public class AllRecipesCrawler : ICrawler
     {
         private const string BaseUrl = "http://allrecipes.com/recipe/";
+
+        private int _delayBetweenRecipes = 1500;
+
+        public AllRecipesCrawler()
+        {
+        }
+
+        public AllRecipesCrawler(int delayBetweenRecipes)
+        {
+            _delayBetweenRecipes = delayBetweenRecipes;
+        }
 
         public ILog Logger { get; set; }
 
@@ -30,20 +42,21 @@ namespace Crawler
             {
                 Name = recipeSource.Name,
                 Description = recipeSource.Description,
-                Categories = recipeSource.Categories,
+                Category = recipeSource.Categories.FirstOrDefault(),
                 Author = recipeSource.Author,
                 Rating = recipeSource.Rating,
                 PreparationTime = recipeSource.PreparationTime,
                 CookTime = recipeSource.CookTime,
                 Ingredients = recipeSource.Ingredients,
-                Directions = recipeSource.Directions
+                Directions = recipeSource.Directions,
+                Image = GetImage(recipeSource.ImageUrl)
             };
             
             Logger.Info($"Recipe processed: {recipe}");
             return recipe;
         }
 
-        public List<Recipe> GetRecipes(long firstId, long lastId)
+        public void ProcessRecipes(long firstId, long lastId, Action<Recipe> processor = null)
         {
             if (firstId == 0 || lastId == 0)
             {
@@ -55,17 +68,22 @@ namespace Crawler
                 throw new ArgumentException("Last ID must be larger than first ID.");
             }
 
-            var recipes = new List<Recipe>();
             for (var id = firstId; id <= lastId; id++)
             {
                 var recipe = GetRecipe(id);
                 if (recipe != null)
                 {
-                    recipes.Add(recipe);
+                    processor?.Invoke(recipe);
                 }
 
-                Thread.Sleep(3000);
+                Thread.Sleep(_delayBetweenRecipes);
             }
+        }
+
+        public List<Recipe> GetRecipes(long firstId, long lastId)
+        {
+            var recipes = new List<Recipe>();
+            ProcessRecipes(firstId, lastId, recipes.Add);
             return recipes;
         }
 
@@ -87,5 +105,16 @@ namespace Crawler
 
         private static string GetRecipeSource(long id)
             => GetPage(BaseUrl + id);
+
+        private static byte[] GetImage(string url)
+        {
+            if (url == null)
+            {
+                return null;
+            }
+
+            var client = new WebClient();
+            return client.DownloadData(url);
+        }
     }
 }

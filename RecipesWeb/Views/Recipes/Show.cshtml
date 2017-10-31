@@ -4,6 +4,11 @@
 }
 
 <h1>@Model.Name</h1>
+@if (Model.Image != null)
+{
+    <img src="/Image/Get?id=@Model.Id" />
+}
+
 <pre>
     @Model.ToString()
 </pre>

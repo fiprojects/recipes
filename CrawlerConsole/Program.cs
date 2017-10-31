@@ -33,11 +33,7 @@ namespace CrawlerConsole
             var recipesService = new RecipesService(db);
 
             ICrawler crawler = new AllRecipesCrawler { Logger = Log };
-            var recipes = crawler.GetRecipes(6800, 6810);
-            foreach (var recipe in recipes)
-            {
-                recipesService.Add(recipe);
-            }
+            crawler.ProcessRecipes(6800, 6810, recipesService.Add);
         }
     }
 }

@@ -13,8 +13,7 @@ namespace RecipesCore.Models
 
         public string Description { get; set; }
 
-        [NotMapped]
-        public List<string> Categories { get; set; }
+        public string Category { get; set; }
 
         public string Author { get; set; }
 
@@ -29,12 +28,14 @@ namespace RecipesCore.Models
 
         public string Directions { get; set; }
 
+        public byte[] Image { get; set; }
+
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"Name: {Name}");
             stringBuilder.AppendLine($"Description: {Description}");
-            stringBuilder.AppendLine($"Categories: [ {(Categories != null ? string.Join(", ", Categories) : string.Empty)} ]");
+            stringBuilder.AppendLine($"Category: [ {Category} ]");
             stringBuilder.AppendLine($"Author: {Author}");
             stringBuilder.AppendLine($"Rating: {Rating}");
             stringBuilder.AppendLine($"Preparation Time: {PreparationTime.Hours} h {PreparationTime.Minutes} min");

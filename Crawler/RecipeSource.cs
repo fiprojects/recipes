@@ -36,6 +36,8 @@ namespace Crawler
 
         public string Directions => GetDirections();
 
+        public string ImageUrl => GetImageUrl();
+
         public RecipeSource(string html)
         {
             _document.LoadHtml(html);
@@ -125,6 +127,12 @@ namespace Crawler
             }
 
             return stringBuilder.ToString();
+        }
+
+        private string GetImageUrl()
+        {
+            var img = _root.SelectSingleNode("//img[@class='rec-photo']");
+            return img?.Attributes["src"].Value;
         }
     }
 }
