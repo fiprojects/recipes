@@ -32,6 +32,10 @@ namespace Crawler
 
         public TimeSpan CookTime => GetTime("cookTime");
 
+        public int Servings => GetServings();
+
+        public int Calories => GetCalories();
+
         public List<string> Ingredients => GetIngredients();
 
         public string Directions => GetDirections();
@@ -48,7 +52,7 @@ namespace Crawler
 
         private List<string> GetCategories()
         {
-            var categories = _root.SelectNodes("//span[@itemprop='title']");
+            var categories = _root.SelectNodes("//span[@itemprop='name']");
             if (categories == null || categories.Count == 0)
             {
                 return new List<string>();
@@ -109,6 +113,18 @@ namespace Crawler
             }
 
             return ingredients.Select(ingredient => ingredient.InnerText).ToList();
+        }
+
+        private int GetServings()
+        {
+            var servingsString = _root.SelectSingleNode("//meta[@id='metaRecipeServings']");
+            return int.TryParse(servingsString?.Attributes["content"]?.Value, out var servings) ? servings : 0;
+        }
+
+        private int GetCalories()
+        {
+            var caloriesString = _root.SelectSingleNode("//span[@class='calorie-count']/span");
+            return int.TryParse(caloriesString?.InnerText, out var calories) ? calories : 0;
         }
 
         private string GetDirections()

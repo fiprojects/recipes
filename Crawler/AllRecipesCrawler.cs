@@ -13,7 +13,7 @@ namespace Crawler
     {
         private const string BaseUrl = "http://allrecipes.com/recipe/";
 
-        private int _delayBetweenRecipes = 1500;
+        private readonly int _delayBetweenRecipes = 0;
 
         public AllRecipesCrawler()
         {
@@ -30,9 +30,14 @@ namespace Crawler
         {
             Logger.Info($"Processing recipe: {id}");
             var source = GetRecipeSource(id);
-            var recipeSource = new RecipeSource(source);
+            if (source == null)
+            {
+                Logger.Error($"Recipe not found: {id}");
+                return null;
+            }
 
-            if (!recipeSource.IsValid)
+            var recipeSource = new RecipeSource(source);
+            if (!recipeSource.IsValid || recipeSource.Name.Contains("Italian Style Chicken Sausage Skillet Pizza"))
             {
                 Logger.Error($"Recipe not found: {id}");
                 return null;
@@ -47,7 +52,9 @@ namespace Crawler
                 Rating = recipeSource.Rating,
                 PreparationTime = recipeSource.PreparationTime,
                 CookTime = recipeSource.CookTime,
-                Ingredients = recipeSource.Ingredients,
+                Servings = recipeSource.Servings,
+                Calories = recipeSource.Calories,
+                Ingredients = recipeSource.Ingredients.Select(x => new RecipeIngredient { Name = x }).ToList(),
                 Directions = recipeSource.Directions,
                 Image = GetImage(recipeSource.ImageUrl)
             };
@@ -56,19 +63,9 @@ namespace Crawler
             return recipe;
         }
 
-        public void ProcessRecipes(long firstId, long lastId, Action<Recipe> processor = null)
+        public void ProcessRecipes(IEnumerable<long> ids, Action<Recipe> processor = null)
         {
-            if (firstId == 0 || lastId == 0)
-            {
-                throw new ArgumentException("Invalid range of recipe IDs.");
-            }
-
-            if (firstId > lastId)
-            {
-                throw new ArgumentException("Last ID must be larger than first ID.");
-            }
-
-            for (var id = firstId; id <= lastId; id++)
+            foreach (var id in ids)
             {
                 var recipe = GetRecipe(id);
                 if (recipe != null)
@@ -80,24 +77,34 @@ namespace Crawler
             }
         }
 
-        public List<Recipe> GetRecipes(long firstId, long lastId)
+        public List<Recipe> GetRecipes(IEnumerable<long> ids)
         {
             var recipes = new List<Recipe>();
-            ProcessRecipes(firstId, lastId, recipes.Add);
+            ProcessRecipes(ids, recipes.Add);
             return recipes;
         }
 
         private static string GetPage(string url)
         {
             string page;
-            var request = WebRequest.Create(url);
-            using (var response = request.GetResponse())
+            try
             {
-                var stream = response.GetResponseStream();
-                using (var reader = new StreamReader(stream))
+                ServicePointManager.Expect100Continue = false;
+                var request = WebRequest.Create(url);
+                request.Proxy = null;
+
+                using (var response = request.GetResponse())
                 {
-                    page = reader.ReadToEnd();
+                    var stream = response.GetResponseStream();
+                    using (var reader = new StreamReader(stream))
+                    {
+                        page = reader.ReadToEnd();
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                page = null;
             }
 
             return page;
@@ -114,7 +121,14 @@ namespace Crawler
             }
 
             var client = new WebClient();
-            return client.DownloadData(url);
+            try
+            {
+                return client.DownloadData(url);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

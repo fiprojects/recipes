@@ -11,8 +11,8 @@ namespace Crawler
 
         Recipe GetRecipe(long id);
 
-        void ProcessRecipes(long firstId, long lastId, Action<Recipe> processor);
+        void ProcessRecipes(IEnumerable<long> ids, Action<Recipe> processor);
 
-        List<Recipe> GetRecipes(long firstId, long lastId);
+        List<Recipe> GetRecipes(IEnumerable<long> ids);
     }
 }
