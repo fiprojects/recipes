@@ -10,11 +10,11 @@
 </div>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9">
         @if (Model.Image != null)
         {
-            <div style="text-align: center; margin-bottom: 15px;">
-                <img src="/Image/Get?id=@Model.Id" class="img-thumbnail"/>
+            <div style="margin-bottom: 15px;">
+                <img src="/Image/Get?id=@Model.Id" class="img-thumbnail center-block"/>
             </div>
             
         }
@@ -27,37 +27,86 @@
 
         <div class="row">
             <div class="col-md-4">
-                <div><strong>Rating</strong></div>
-                <div>@Model.Rating</div>
+                <div>
+                    <i class="fa fa-star"></i>
+                    <strong>Rating</strong>
+                </div>
+                <div style="font-size: 22px;">@Math.Round(Model.Rating, 2)</div>
             </div>
 
-            <div class="col-md-4">
-                <div><strong>Preparation Time</strong></div>
-                <div>@Model.PreparationTime</div>
+            <div class="col-md-2">
+                <div>
+                    <i class="fa fa-cutlery"></i>
+                    <strong>Servings</strong>
+                </div>
+                <div style="font-size: 22px;">@Model.Servings</div>
             </div>
 
-            <div class="col-md-4">
-                <div><strong>Cook Time</strong></div>
-                <div>@Model.CookTime</div>
+            <div class="col-md-2">
+                <div>
+                    <i class="fa fa-hourglass"></i>
+                    <strong>Prep Time</strong>
+                </div>
+                <div style="font-size: 22px;">@Model.PreparationTime</div>
+            </div>
+
+            <div class="col-md-2">
+                <div>
+                    <i class="fa fa-clock-o"></i>
+                    <strong>Cook Time</strong>
+                </div>
+                <div style="font-size: 22px;">@Model.CookTime</div>
+            </div>
+
+            <div class="col-md-2">
+                <div>
+                    <i class="fa fa-fire"></i>
+                    <strong>Calories</strong>
+                </div>
+                <div style="font-size: 22px;">@Model.Calories cal</div>
             </div>
         </div>
         
-        <h3>Ingredients</h3>
-        TODO
+        <hr />
 
-        <h3>Directions</h3>
-        <div>
-            <ol>
-                @foreach (var line in Model.Directions.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)))
-                {
-                    <li>@line</li>
-                }
-            </ol>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>
+                    <i class="fa fa-list"></i>
+                    Ingredients
+                </h3>
+                <div>
+                    <ul>
+                        @foreach (var ingredient in Model.Ingredients)
+                        {
+                            <li>@ingredient.Name</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            
+
+            <div class="col-md-8">
+                <h3>
+                    <i class="fa fa-compass"></i>
+                    Directions
+                </h3>
+                <div>
+                    <ol>
+                        @foreach (var line in Model.Directions.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)))
+                        {
+                            <li>@line</li>
+                        }
+                    </ol>
+                </div>
+            </div>
         </div>
-
     </div>
     
-    <div class="col-md-4">
-        <h3>Recommended Recipes</h3>
+    <div class="col-md-3">
+        <h3>
+            <i class="fa fa-lightbulb-o"></i>
+            Recommended
+        </h3>
     </div>
 </div>
