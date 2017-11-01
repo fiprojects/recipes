@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using RecipesCore.Models;
 
 namespace RecipesCore.Services
@@ -20,7 +21,9 @@ namespace RecipesCore.Services
 
         public Recipe Get(long id)
         {
-            return _db.Recipes.SingleOrDefault(x => x.Id == id);
+            return _db.Recipes
+                .Include(x => x.Ingredients)
+                .SingleOrDefault(x => x.Id == id);
         }
 
         public void Add(Recipe recipe)

@@ -23,8 +23,11 @@ namespace RecipesCore.Models
 
         public TimeSpan CookTime { get; set; }
 
-        [NotMapped]
-        public List<string> Ingredients { get; set; } = new List<string>();
+        public int Servings { get; set; }
+
+        public int Calories { get; set; }
+
+        public List<RecipeIngredient> Ingredients { get; set; } = new List<RecipeIngredient>();
 
         public string Directions { get; set; }
 
@@ -40,7 +43,8 @@ namespace RecipesCore.Models
             stringBuilder.AppendLine($"Rating: {Rating}");
             stringBuilder.AppendLine($"Preparation Time: {PreparationTime.Hours} h {PreparationTime.Minutes} min");
             stringBuilder.AppendLine($"Cook Time: {CookTime.Hours} h {CookTime.Minutes} min");
-            stringBuilder.AppendLine($"Ingredients: [ {(Ingredients != null ? string.Join(", ", Ingredients) : string.Empty)} ]");
+            stringBuilder.AppendLine($"Servings: {Servings}");
+            stringBuilder.AppendLine($"Calories: {Calories} cal");
             stringBuilder.AppendLine($"Directions: {Directions}");
 
             return stringBuilder.ToString();

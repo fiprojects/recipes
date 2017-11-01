@@ -27,6 +27,8 @@ namespace RecipesCore.Migrations
 
                     b.Property<string>("Author");
 
+                    b.Property<int>("Calories");
+
                     b.Property<string>("Category");
 
                     b.Property<TimeSpan>("CookTime");
@@ -43,9 +45,27 @@ namespace RecipesCore.Migrations
 
                     b.Property<double>("Rating");
 
+                    b.Property<int>("Servings");
+
                     b.HasKey("Id");
 
                     b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("RecipesCore.Models.RecipeIngredient", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<long?>("RecipeId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("RecipeIngredient");
                 });
 
             modelBuilder.Entity("RecipesCore.Models.User", b =>
@@ -53,11 +73,19 @@ namespace RecipesCore.Migrations
                     b.Property<long?>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Username");
+                    b.Property<string>("Username")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("RecipesCore.Models.RecipeIngredient", b =>
+                {
+                    b.HasOne("RecipesCore.Models.Recipe", "Recipe")
+                        .WithMany("Ingredients")
+                        .HasForeignKey("RecipeId");
                 });
 #pragma warning restore 612, 618
         }
