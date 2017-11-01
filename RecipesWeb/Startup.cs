@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RecipesCore;
+using RecipesWeb.SimpleAuth;
 
 namespace RecipesWeb
 {
@@ -19,6 +23,20 @@ namespace RecipesWeb
         {
             services.AddMvc();
             services.AddRecipesCore();
+
+            services
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<Auth>();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".Recipes.Session";
+                options.IdleTimeout = TimeSpan.FromHours(3);
+            });
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -34,7 +52,8 @@ namespace RecipesWeb
             }
 
             app.UseStaticFiles();
-
+            app.UseSession();
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

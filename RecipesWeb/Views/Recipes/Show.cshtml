@@ -4,11 +4,60 @@
 }
 
 <h1>@Model.Name</h1>
-@if (Model.Image != null)
-{
-    <img src="/Image/Get?id=@Model.Id" />
-}
 
-<pre>
-    @Model.ToString()
-</pre>
+<div style="margin-bottom: 15px;">
+    In category <a href="#">@Model.Category</a> by <strong>@Model.Author</strong>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        @if (Model.Image != null)
+        {
+            <div style="text-align: center; margin-bottom: 15px;">
+                <img src="/Image/Get?id=@Model.Id" class="img-thumbnail"/>
+            </div>
+            
+        }
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @Model.Description
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div><strong>Rating</strong></div>
+                <div>@Model.Rating</div>
+            </div>
+
+            <div class="col-md-4">
+                <div><strong>Preparation Time</strong></div>
+                <div>@Model.PreparationTime</div>
+            </div>
+
+            <div class="col-md-4">
+                <div><strong>Cook Time</strong></div>
+                <div>@Model.CookTime</div>
+            </div>
+        </div>
+        
+        <h3>Ingredients</h3>
+        TODO
+
+        <h3>Directions</h3>
+        <div>
+            <ol>
+                @foreach (var line in Model.Directions.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)))
+                {
+                    <li>@line</li>
+                }
+            </ol>
+        </div>
+
+    </div>
+    
+    <div class="col-md-4">
+        <h3>Recommended Recipes</h3>
+    </div>
+</div>

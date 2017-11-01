@@ -1,4 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using RecipesCore.Services;
 using RecipesWeb.Models;
@@ -15,7 +19,7 @@ namespace RecipesWeb.Controllers
             _recipesService = recipesService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var viewModel = new HomeViewModel
             {
