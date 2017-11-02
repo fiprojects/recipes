@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RecipesCore;
-using RecipesWeb.SimpleAuth;
 
 namespace RecipesWeb
 {
@@ -28,8 +27,7 @@ namespace RecipesWeb
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<Auth>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddDistributedMemoryCache();
             services.AddSession(options =>

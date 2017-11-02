@@ -32,5 +32,10 @@ namespace RecipesCore.Services
             _db.Add(user);
             _db.SaveChanges();
         }
+
+        public bool Exists(string username)
+        {
+            return Get(username) != null;
+        }
     }
 }

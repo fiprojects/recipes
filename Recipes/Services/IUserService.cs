@@ -7,5 +7,7 @@ namespace RecipesCore.Services
         User Get(string username);
 
         void Add(User user);
+
+        bool Exists(string username);
     }
 }

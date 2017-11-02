@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using RecipesCore.Services;
 using RecipesWeb.Models;
@@ -19,7 +16,7 @@ namespace RecipesWeb.Controllers
             _recipesService = recipesService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var viewModel = new HomeViewModel
             {
@@ -28,7 +25,7 @@ namespace RecipesWeb.Controllers
 
             return View(viewModel);
         }
-        
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
