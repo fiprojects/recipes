@@ -1,0 +1,39 @@
+﻿@model object
+@{
+    ViewData["Title"] = "Sign up";
+}
+
+<div class="container">
+    <form class="form-signin" asp-controller="SignUp" asp-action="SignUp" method="post">
+        <h2 class="form-signin-heading"><i class="fa fa-cutlery"></i> Sign up</h2>
+        
+        <div class="form-group">
+            <label for="user_login" class="sr-only">xdfan</label>
+            <input type="text" name="user_login" id="user_login" class="form-control" placeholder="login" required autofocus>
+        </div>
+        <div class="row"></div>
+       <h3>Info about you</h3>
+        <div class="checkbox">
+            <label> <input type="checkbox" name="vegetarian"> Vegetarian </label>
+        </div>
+        
+        <div class="checkbox">
+            <label> <input type="checkbox" name="vegan"> Vegan </label>
+        </div>
+        
+        <div class="form-group">
+            <label for="allergies">Allergies:</label>
+            <input type="text" class="form-control" id="allergies" name="allergies" placeholder="allergy1; allergy2; allergy3">
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+    </form>
+    
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-10 col-sm-12 col-md-10 col-lg-4 col-centered text-center">
+            <a asp-controller="SignUp" asp-action="Show">Are you already registered? Log in.</a>
+        </div>
+    </div>
+</div>

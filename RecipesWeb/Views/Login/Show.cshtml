@@ -8,11 +8,15 @@
         <label for="user_login" class="sr-only">login</label>
         <input type="text" name="user_login" id="user_login" class="form-control" placeholder="login" required autofocus>
          
-        <!--
-        <label for="user_password" class="sr-only">Password</label>
-        <input type="password" name="user_password" id="user_password" class="form-control" placeholder="password" required>
-        -->
-
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>
+    
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-10 col-sm-12 col-md-10 col-lg-4 col-centered text-center">
+            <a asp-controller="SignUp" asp-action="Show">Don't you have an account? Register here.</a>
+        </div>
+    </div>
 </div>
