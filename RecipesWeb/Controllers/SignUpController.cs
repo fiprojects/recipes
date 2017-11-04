@@ -37,6 +37,17 @@ namespace RecipesWeb.Controllers
             List<UserAllergie> allergiesList = UserAllergie.GetUserAllergiesFromString(allergies);
             User user = new User(username, bVegetarian, bVegan, allergiesList);
             _userService.Add(user);
+            
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, "User")
+            };
+            var identity = new ClaimsIdentity(claims);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            
             return Redirect("/");
         }
 
