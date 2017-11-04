@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RecipesCore.Models
 {
@@ -27,6 +28,8 @@ namespace RecipesCore.Models
             foreach (string s in stringList)
             {
                 string removedWhiteSpaces = s.Trim();
+                if (String.IsNullOrEmpty(removedWhiteSpaces))
+                    continue;
                 list.Add(new UserAllergie(s));
             }
             return list;
