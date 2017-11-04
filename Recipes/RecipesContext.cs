@@ -8,6 +8,8 @@ namespace RecipesCore
         public DbSet<Recipe> Recipes { get; set; }
 
         public DbSet<User> Users { get; set; }
+        
+        public DbSet<UserAllergie> UserAllergies { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
