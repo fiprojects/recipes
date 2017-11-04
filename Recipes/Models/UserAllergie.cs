@@ -26,6 +26,7 @@ namespace RecipesCore.Models
             List<string> stringList = new List<string>(alergies.Split(';'));
             foreach (string s in stringList)
             {
+                string removedWhiteSpaces = s.Trim();
                 list.Add(new UserAllergie(s));
             }
             return list;
