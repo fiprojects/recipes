@@ -15,7 +15,7 @@ namespace RecipesCore.Models
         
         public bool Vegan { get; set; }
 
-        private List<UserAllergie> Allergies { get; set; } = new List<UserAllergie>();
+        public List<UserAllergie> Allergies { get; set; } = new List<UserAllergie>();
 
         public User()
         {
@@ -31,10 +31,10 @@ namespace RecipesCore.Models
             Vegetarian = vegetarian;
             Vegan = vegan;
             Allergies = allergies;
-            foreach (var allergy in Allergies)
-            {
-                allergy.User = this;
-            }
+            //foreach (var allergy in Allergies)
+            //{
+            //    allergy.User = this;
+            //}
         }
     }
 }

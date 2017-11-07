@@ -34,7 +34,7 @@ namespace CrawlerConsole
 
             ICrawler crawler = new AllRecipesCrawler { Logger = Log };
             // crawler.ProcessRecipes(RecipeIdProvider.Range(6800, 6810), recipesService.Add);
-            crawler.ProcessRecipes(RecipeIdProvider.Random(6800, 300000, 20), recipesService.Add);
+            crawler.ProcessRecipes(RecipeIdProvider.Random(6800, 300000, 500), recipesService.Add);
         }
     }
 }
