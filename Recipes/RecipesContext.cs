@@ -13,6 +13,8 @@ namespace RecipesCore
         
         public DbSet<UserAllergie> UserAllergies { get; set; }
 
+        public DbSet<RecipeIngredient> Ingredients { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new AppConfiguration("DatabaseCredentials.secret.json");
