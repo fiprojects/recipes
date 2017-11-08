@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RecipesCore.Models
 {
@@ -16,6 +17,9 @@ namespace RecipesCore.Models
         public bool Vegan { get; set; }
 
         public List<UserAllergie> Allergies { get; set; } = new List<UserAllergie>();
+
+        [InverseProperty("User")]
+        public List<FellowCooks> FellowCooks { get; set; } = new List<FellowCooks>();
 
         public User()
         {
