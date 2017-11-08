@@ -43,11 +43,15 @@ namespace Crawler
                 return null;
             }
 
+            var category = string.IsNullOrWhiteSpace(recipeSource.Categories.FirstOrDefault())
+                ? new Category("Miscellaneous")
+                : new Category(recipeSource.Categories.FirstOrDefault());
+
             var recipe = new Recipe
             {
                 Name = recipeSource.Name,
                 Description = recipeSource.Description,
-                Category = recipeSource.Categories.FirstOrDefault(),
+                Category = category,
                 Author = recipeSource.Author,
                 Rating = recipeSource.Rating,
                 PreparationTime = recipeSource.PreparationTime,

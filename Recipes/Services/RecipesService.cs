@@ -28,6 +28,15 @@ namespace RecipesCore.Services
 
         public void Add(Recipe recipe)
         {
+            var category = _db.Categories.SingleOrDefault(c => c.Name == recipe.Category.Name);
+            if (category == null)
+            {
+                category = recipe.Category;
+                _db.Categories.Add(category);
+                _db.SaveChanges();
+            }
+
+            recipe.Category = category;
             _db.Add(recipe);
             _db.SaveChanges();
         }

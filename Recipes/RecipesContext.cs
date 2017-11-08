@@ -5,6 +5,8 @@ namespace RecipesCore
 {
     public class RecipesContext : DbContext
     {
+        public DbSet<Category> Categories { get; set; }
+
         public DbSet<Recipe> Recipes { get; set; }
 
         public DbSet<User> Users { get; set; }
