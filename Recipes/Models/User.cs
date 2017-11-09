@@ -35,10 +35,6 @@ namespace RecipesCore.Models
             Vegetarian = vegetarian;
             Vegan = vegan;
             Allergies = allergies;
-            //foreach (var allergy in Allergies)
-            //{
-            //    allergy.User = this;
-            //}
         }
     }
 }
