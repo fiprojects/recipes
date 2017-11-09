@@ -13,7 +13,7 @@ namespace Crawler
     {
         private const string BaseUrl = "http://allrecipes.com/recipe/";
 
-        private readonly int _delayBetweenRecipes = 0;
+        private readonly int _delayBetweenRecipes = 3000;
 
         public AllRecipesCrawler()
         {
@@ -36,16 +36,19 @@ namespace Crawler
                 return null;
             }
 
-            var recipeSource = new RecipeSource(source);
-            if (!recipeSource.IsValid || recipeSource.Name.Contains("Italian Style Chicken Sausage Skillet Pizza"))
+            var recipeSource = new RecipeSource(id, source);
+            if (!recipeSource.IsValid)
             {
                 Logger.Error($"Recipe not found: {id}");
                 return null;
             }
 
-            var category = string.IsNullOrWhiteSpace(recipeSource.Categories.FirstOrDefault())
+            var categoryName = RecipeIdProvider.CategoryMap.ContainsKey(id)
+                ? RecipeIdProvider.CategoryMap[id]
+                : recipeSource.Categories.FirstOrDefault();
+            var category = string.IsNullOrWhiteSpace(categoryName)
                 ? new Category("Miscellaneous")
-                : new Category(recipeSource.Categories.FirstOrDefault());
+                : new Category(categoryName);
 
             var recipe = new Recipe
             {
@@ -69,6 +72,7 @@ namespace Crawler
 
         public void ProcessRecipes(IEnumerable<long> ids, Action<Recipe> processor = null)
         {
+            var i = 1;
             foreach (var id in ids)
             {
                 var recipe = GetRecipe(id);
@@ -77,6 +81,8 @@ namespace Crawler
                     processor?.Invoke(recipe);
                 }
 
+                Logger.Debug("Poradi receptu: " + i);
+                i++;
                 Thread.Sleep(_delayBetweenRecipes);
             }
         }
@@ -95,7 +101,6 @@ namespace Crawler
             {
                 ServicePointManager.Expect100Continue = false;
                 var request = WebRequest.Create(url);
-                request.Proxy = null;
 
                 using (var response = request.GetResponse())
                 {

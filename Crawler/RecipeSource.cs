@@ -18,6 +18,8 @@ namespace Crawler
 
         public bool IsValid => _root.SelectSingleNode("//section[@class='error-page']") == null;
 
+        public long Id { get; }
+
         public string Name => GetText("//h1");
 
         public string Description => GetText("//div[@itemprop='description']").Trim('\r', '\n', ' ', '"');
@@ -42,8 +44,9 @@ namespace Crawler
 
         public string ImageUrl => GetImageUrl();
 
-        public RecipeSource(string html)
+        public RecipeSource(long id, string html)
         {
+            Id = id;
             _document.LoadHtml(html);
             _root = _document.DocumentNode;
         }
