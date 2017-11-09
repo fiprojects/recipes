@@ -21,10 +21,12 @@ namespace RecipesCore.Models
             Name = name;
         }
         
-        public static List<UserAllergie> GetUserAllergiesFromString(string alergies)
+        public static List<UserAllergie> GetUserAllergiesFromString(string allergies)
         {
             List<UserAllergie> list = new List<UserAllergie>();
-            List<string> stringList = new List<string>(alergies.Split(';'));
+            if (allergies == null)
+                return list;
+            List<string> stringList = new List<string>(allergies.Split(';'));
             foreach (string s in stringList)
             {
                 string removedWhiteSpaces = s.Trim();
