@@ -15,7 +15,7 @@ namespace RecipesWeb.ViewModels
         public List<Recipe> Recipes { get; set; }
         public List<String> Ingred { get; set; }
         public Dictionary<String, Boolean> Selected { get; set; }
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
     }
 }
