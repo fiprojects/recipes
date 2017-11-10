@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RecipesCore.Models
+﻿namespace RecipesCore.Models
 {
     public class RecipeRatings
     {
-        public long Id { get; set; }
+        public long UserId { get; set; }
 
         public User User { get; set; }
+
+        public long RecipeId { get; set; }
 
         public Recipe Recipe { get; set; }
 
