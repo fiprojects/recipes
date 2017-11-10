@@ -7,6 +7,8 @@ using RecipesWeb.Models;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal;
 using RecipesCore.Models;
 using RecipesCore;
+using RecipesWeb.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace RecipesWeb.Controllers
 {
@@ -21,14 +23,21 @@ namespace RecipesWeb.Controllers
 
         public IActionResult Show()
         {
-
+            var cat = db.Categories.ToList().Select(x =>
+                new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.Name
+                });
+            
             var viewModel = new FilterViewModel
             {
                 //Ingredients = db.Ingredients.ToList(),
                 Selected = new Dictionary<string, bool> { { "egg", false }, { "water", false }, { "floor", false },
                      { "mashrooms", false },  { "oil", false },  { "spenat", false },  { "brokoli", false } },
-                Categories = new List<String> { "Pasta", "Soap", "Chichen", "Dezert" },
-                Ingred = new List<String> { "egg", "water", "floor", "mashrooms", "oil", "spenat", "brokoli" }
+                Categories = new SelectList(cat, "Value", "Text"),
+                Ingred = new List<String> { "egg", "water", "floor", "mashrooms", "oil", "spenat", "brokoli" },
+                Recipes = db.Recipes.ToList()
             };
             return View(viewModel);
         }
