@@ -8,6 +8,8 @@ namespace RecipesCore.Models
 
         public string Name { get; set; }
 
+        public long Priority { get; set; }
+
         public List<Recipe> Recipes { get; set; }
 
         public Category()
