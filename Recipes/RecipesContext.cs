@@ -17,10 +17,27 @@ namespace RecipesCore
         
         public DbSet<UserAllergie> UserAllergies { get; set; }
 
+
+        
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<RecipeDone>()
+                .HasKey(a => new { a.RecipeId, a.UserId });
+
+            modelBuilder.Entity<RecipeSeen>()
+                .HasKey(a => new {a.RecipeId, a.UserId});
+
+            modelBuilder.Entity<RecipeRatings>()
+                .HasKey(a => new { a.RecipeId, a.UserId });
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new AppConfiguration("DatabaseCredentials.secret.json");
             optionsBuilder.UseNpgsql(config["connectionString"]);
         }
+
+        
     }
 }
