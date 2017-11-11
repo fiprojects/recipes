@@ -18,6 +18,12 @@ namespace RecipesCore.Models
 
         public List<UserAllergie> Allergies { get; set; } = new List<UserAllergie>();
 
+        public virtual ICollection<RecipeDone> RecipesDone{ get; set; } = new List<RecipeDone>();
+
+        public virtual ICollection<RecipeSeen> RecipesSeen { get; set; } = new List<RecipeSeen>();
+
+        public virtual ICollection<RecipeRatings> RecipesRatings { get; set; } = new List<RecipeRatings>();
+
         [InverseProperty("User")]
         public List<FellowCooks> FellowCooks { get; set; } = new List<FellowCooks>();
 

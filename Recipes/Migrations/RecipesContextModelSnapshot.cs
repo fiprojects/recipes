@@ -98,6 +98,19 @@ namespace RecipesCore.Migrations
                     b.ToTable("Recipes");
                 });
 
+            modelBuilder.Entity("RecipesCore.Models.RecipeDone", b =>
+                {
+                    b.Property<long>("RecipeId");
+
+                    b.Property<long>("UserId");
+
+                    b.HasKey("RecipeId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RecipeDone");
+                });
+
             modelBuilder.Entity("RecipesCore.Models.RecipeIngredient", b =>
                 {
                     b.Property<long>("Id")
@@ -120,6 +133,34 @@ namespace RecipesCore.Migrations
                     b.HasIndex("RecipeId");
 
                     b.ToTable("RecipeIngredients");
+                });
+
+            modelBuilder.Entity("RecipesCore.Models.RecipeRatings", b =>
+                {
+                    b.Property<long>("RecipeId");
+
+                    b.Property<long>("UserId");
+
+                    b.Property<int>("Rating");
+
+                    b.HasKey("RecipeId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RecipeRatings");
+                });
+
+            modelBuilder.Entity("RecipesCore.Models.RecipeSeen", b =>
+                {
+                    b.Property<long>("RecipeId");
+
+                    b.Property<long>("UserId");
+
+                    b.HasKey("RecipeId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RecipeSeen");
                 });
 
             modelBuilder.Entity("RecipesCore.Models.User", b =>
@@ -173,6 +214,19 @@ namespace RecipesCore.Migrations
                         .HasForeignKey("CategoryId");
                 });
 
+            modelBuilder.Entity("RecipesCore.Models.RecipeDone", b =>
+                {
+                    b.HasOne("RecipesCore.Models.Recipe", "Recipe")
+                        .WithMany("DoneBy")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("RecipesCore.Models.User", "User")
+                        .WithMany("RecipesDone")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("RecipesCore.Models.RecipeIngredient", b =>
                 {
                     b.HasOne("RecipesCore.Models.Ingredient", "Ingredient")
@@ -182,6 +236,32 @@ namespace RecipesCore.Migrations
                     b.HasOne("RecipesCore.Models.Recipe", "Recipe")
                         .WithMany("Ingredients")
                         .HasForeignKey("RecipeId");
+                });
+
+            modelBuilder.Entity("RecipesCore.Models.RecipeRatings", b =>
+                {
+                    b.HasOne("RecipesCore.Models.Recipe", "Recipe")
+                        .WithMany("RecipesRatings")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("RecipesCore.Models.User", "User")
+                        .WithMany("RecipesRatings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("RecipesCore.Models.RecipeSeen", b =>
+                {
+                    b.HasOne("RecipesCore.Models.Recipe", "Recipe")
+                        .WithMany("SeenBy")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("RecipesCore.Models.User", "User")
+                        .WithMany("RecipesSeen")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("RecipesCore.Models.UserAllergie", b =>

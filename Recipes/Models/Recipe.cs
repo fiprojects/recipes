@@ -33,6 +33,12 @@ namespace RecipesCore.Models
 
         public byte[] Image { get; set; }
 
+        public virtual ICollection<RecipeSeen> SeenBy { get; set; } = new List<RecipeSeen>();
+
+        public virtual ICollection<RecipeDone> DoneBy { get; set; } = new List<RecipeDone>();
+
+        public virtual ICollection<RecipeRatings> RecipesRatings { get; set; } = new List<RecipeRatings>();
+
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
