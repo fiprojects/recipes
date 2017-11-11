@@ -27,6 +27,12 @@ namespace RecipesCore.Services
             return _db.RecipeRatings.Where(a => a.UserId == userId).ToList();
         }
 
+        public List<RecipeRatings> GetByUserNameAndRecipeId(string name, long recipeId)
+        {
+            return _db.RecipeRatings.Where(a => a.User.Username == name)
+                .Where(b => b.RecipeId == recipeId).ToList();
+        }
+
         public List<RecipeRatings> GetByRecipeId(long recipeId)
         {
             return _db.RecipeRatings.Where(a => a.RecipeId == recipeId).ToList();
