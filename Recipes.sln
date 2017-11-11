@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crawler", "Crawler\Crawler.csproj", "{5BE7C9F1-A2A6-42BA-B8E8-07F719F757A6}"
 EndProject
@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrawlerConsole", "CrawlerCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesCore", "Recipes\RecipesCore.csproj", "{89151085-2596-4ED9-933E-27090A04C371}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipesWeb", "RecipesWeb\RecipesWeb.csproj", "{6BAED08F-B1B0-4EF2-9F68-43D4755CE512}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesWeb", "RecipesWeb\RecipesWeb.csproj", "{6BAED08F-B1B0-4EF2-9F68-43D4755CE512}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessorRunner", "ProcessorRunner\ProcessorRunner.csproj", "{33F72870-68D5-4570-9B22-0FB0C7969C42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{6BAED08F-B1B0-4EF2-9F68-43D4755CE512}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BAED08F-B1B0-4EF2-9F68-43D4755CE512}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BAED08F-B1B0-4EF2-9F68-43D4755CE512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33F72870-68D5-4570-9B22-0FB0C7969C42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33F72870-68D5-4570-9B22-0FB0C7969C42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33F72870-68D5-4570-9B22-0FB0C7969C42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33F72870-68D5-4570-9B22-0FB0C7969C42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
