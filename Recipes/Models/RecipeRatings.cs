@@ -1,4 +1,6 @@
-﻿namespace RecipesCore.Models
+﻿using System.Text;
+
+namespace RecipesCore.Models
 {
     public class RecipeRatings
     {
@@ -12,5 +14,14 @@
 
         public int Rating { get; set; }
 
+        public override string ToString()
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"User: [ {User} ]");
+            stringBuilder.AppendLine($"Recipe: [ {Recipe} ]");
+            stringBuilder.AppendLine($"Rating: {Rating}");
+
+            return stringBuilder.ToString();
+        }
     }
 }

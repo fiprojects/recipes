@@ -54,7 +54,7 @@ namespace RecipesCore.Services
 
         public void Add(RecipeRatings rating)
         {
-            if (rating?.Recipe == null || rating.User == null || rating.Rating > 5 || rating.Rating < 0)
+            if (rating?.RecipeId == null || rating.UserId == null || rating.Rating > 5 || rating.Rating < 0)
             {
                 return;
             }
