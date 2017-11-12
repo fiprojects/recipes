@@ -20,20 +20,20 @@ namespace RecipesWeb.Controllers
 
         public IActionResult Show(long id)
         {
-            RecipeRatings rating = new RecipeRatings();
+            double userRatingForRecipe = 0;
             var userName = HttpContext.User.Identity.Name;
             if (userName != null)
             {
                 var userRating = _ratingService.GetByUserNameAndRecipeId(userName, id);
                 if (userRating != null)
-                    rating = userRating;
+                    userRatingForRecipe = userRating.Rating;
             }
 
             double averageRating = _ratingService.GetAverageRatingForRecipe(id);
             var viewModel = new RecipesShowModel()
             {
                 Recipe = _recipesService.Get(id),
-                RecipeUserRating = rating,
+                RecipeUserRating = userRatingForRecipe,
                 AverageRating = averageRating
             };
 

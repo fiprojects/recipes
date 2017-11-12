@@ -6,7 +6,7 @@ namespace RecipesWeb.ViewModels
     {
         public Recipe Recipe { get; set; }
 
-        public RecipeRatings RecipeUserRating { get; set; }
+        public double RecipeUserRating { get; set; }
 
         public double AverageRating { get; set; }
     }
