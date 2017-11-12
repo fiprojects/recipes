@@ -47,9 +47,7 @@ namespace RecipesCore.Services
         public double GetAverageRatingForRecipe(long recipeId)
         {
             List<RecipeRatings> recipeRatings = GetByRecipeId(recipeId);
-            double recipeRating = _db.Recipes.SingleOrDefault(a => a.Id == recipeId).Rating;
-            double sum = recipeRatings.Select(a => a.Rating).Sum() + recipeRating;
-            return sum / (recipeRatings.Count + 1);
+            return recipeRatings.Select(a => a.Rating).Sum() / (double)recipeRatings.Count;
         }
 
         public void Add(RecipeRatings rating)

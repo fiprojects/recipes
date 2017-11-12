@@ -28,11 +28,13 @@ namespace RecipesWeb.Controllers
                 if (userRating != null)
                     rating = userRating;
             }
-            
+
+            double averageRating = _ratingService.GetAverageRatingForRecipe(id);
             var viewModel = new RecipesShowModel()
             {
                 Recipe = _recipesService.Get(id),
-                RecipeUserRating = rating
+                RecipeUserRating = rating,
+                AverageRating = averageRating
             };
 
             return View(viewModel);
