@@ -29,14 +29,14 @@ namespace RecipesCore.Services
 
         public RecipeRatings GetByUserNameAndRecipeId(string name, long recipeId)
         {
-            return GetByRecipeId(recipeId).FirstOrDefault(a => a.User.Username == name);
-            /* _db.RecipeRatings.Where(a => a.User.Username == name)
-                .FirstOrDefault(b => b.RecipeId == recipeId);*/
+            return _db.RecipeRatings.Where(a => a.User.Username == name)
+                .FirstOrDefault(b => b.RecipeId == recipeId);
         }
 
         public RecipeRatings GetByUserIdAndRecipeId(long userId, long recipeId)
         {
-            return GetByRecipeId(recipeId).FirstOrDefault(a => a.UserId == userId);
+            return _db.RecipeRatings.Where(a => a.UserId == userId)
+                .FirstOrDefault(b => b.RecipeId == recipeId);
         }
 
         public List<RecipeRatings> GetByRecipeId(long recipeId)
