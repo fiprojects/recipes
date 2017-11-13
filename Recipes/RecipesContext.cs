@@ -19,8 +19,6 @@ namespace RecipesCore
 
         public DbSet<RecipeRatings> RecipeRatings { get; set; }
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RecipeDone>()
