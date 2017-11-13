@@ -58,17 +58,15 @@
                     <i class="fa fa-star"></i>
                     <strong>Rating</strong>
                 </div>
-                <div style="font-size: 22px;">@Math.Round((double) Model.AverageRating, 2)</div>
-
+                <div style="font-size: 22px;">@Math.Round(Model.AverageRating, 2)</div>
             </div>
-            
+
             <div class="col-md-2">
                 <div>
                     <i class="fa fa-star"></i>
                     <strong>Your rating</strong>
                 </div>
                 <div style="font-size: 22px;">@Math.Round((double)Model.RecipeUserRating.Rating, 2)</div>
-
             </div>
 
             <div class="col-md-4">
@@ -76,8 +74,8 @@
                 {
                     @Html.Partial("RatingStars", Model)
                 }
-                
             </div>
+
             <div class="col-md-2">
                 <div>
                     <i class="fa fa-cutlery"></i>
@@ -102,7 +100,6 @@
                     <strong>Calories</strong>
                 </div>
                 <div style="font-size: 22px;">@Model.Recipe.Calories cal</div>
-
             </div>
         </div>
 
@@ -124,7 +121,6 @@
                 </div>
             </div>
             
-
             <div class="col-md-8">
                 <h3>
                     <i class="fa fa-compass"></i>

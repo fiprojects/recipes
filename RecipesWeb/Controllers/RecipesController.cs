@@ -51,7 +51,7 @@ namespace RecipesWeb.Controllers
             {
                 Recipe = _recipesService.Get(id),
                 RecipeUserRating = userRatingForRecipe,
-                AverageRating = _ratingService.GetAverageRatingForRecipe(id)
+                AverageRating = _ratingService.GetAverageRatingForRecipe(id) 
             };
 
             return View(viewModel);

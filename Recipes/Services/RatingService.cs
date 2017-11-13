@@ -47,12 +47,16 @@ namespace RecipesCore.Services
         public double GetAverageRatingForUser(long userId)
         {
             List<RecipeRatings> userRatings = GetByUserId(userId);
+            if (userRatings.Count == 0)
+                return 0;
             return userRatings.Select(a => a.Rating).Sum() / (double)userRatings.Count;
         }
 
         public double GetAverageRatingForRecipe(long recipeId)
         {
             List<RecipeRatings> recipeRatings = GetByRecipeId(recipeId);
+            if (recipeRatings.Count == 0)
+                return 0;
             return recipeRatings.Select(a => a.Rating).Sum() / (double)recipeRatings.Count;
         }
 
@@ -77,7 +81,7 @@ namespace RecipesCore.Services
         public bool Exists(long recipeId, long userId)
         {
             List<RecipeRatings> ratingsForRecipe = GetByRecipeId(recipeId);
-            return ratingsForRecipe.Select(a => a.UserId == userId).Any();
+            return ratingsForRecipe.Any(a => a.UserId == userId);
         }
     }
 }
