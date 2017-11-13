@@ -10,15 +10,15 @@
     }
 
     .rating-star-block .star.filled {
-        background: url("/Images/star-fill-lg.png")no-repeat scroll 0 0 rgb(255, 255, 255);
+        background: url("/Images/star-fill-lg.png")  no-repeat scroll center rgb(255, 255, 255);
     }
 
     .rating-star-block .star {
         display: inline-block;
-        height: 24px;
+        height: 20px;
         overflow: hidden;
         text-indent: -999em;
-        width: 24px;
+        width: 20px;
     }
 
     a {
@@ -54,19 +54,24 @@
             
             <input type="hidden" asp-for=@Model.RecipeUserRating.RecipeId/>
             <div class="col-md-2">
-                <div>
-                    <i class="fa fa-star"></i>
-                    <strong>Rating</strong>
-                </div>
-                <div style="font-size: 22px;">@Math.Round(Model.AverageRating, 2)</div>
-            </div>
-
-            <div class="col-md-2">
-                <div>
-                    <i class="fa fa-star"></i>
-                    <strong>Your rating</strong>
-                </div>
-                <div style="font-size: 22px;">@Math.Round((double)Model.RecipeUserRating.Rating, 2)</div>
+                @if (Model.RecipeUserRating.UserId != 0)
+                {
+                    <div>
+                        <i class="fa fa-star"></i>
+                        <strong>Your rating</strong>
+                    </div>
+                    <div class="rating-star-block row" style="font-size: 20px;" id='div_<%#Container.DataItemIndex %>'>
+                        @for (int i = 0; i < Model.RecipeUserRating.Rating; i++)
+                        {
+                            <span style="height: 20px; width: 20px;" class="star filled"></span>
+                        }
+                        @for (int i = Model.RecipeUserRating.Rating; i < 5; i++)
+                        {
+                            <span style="height: 20px; width: 20px;" class="star outline"></span>
+                        }
+                    </div>
+                }
+                
             </div>
 
             <div class="col-md-4">
@@ -74,6 +79,14 @@
                 {
                     @Html.Partial("RatingStars", Model)
                 }
+            </div>
+
+            <div class="col-md-2">
+                <div>
+                    <i class="fa fa-star"></i>
+                    <strong>Rating</strong>
+                </div>
+                <div style="font-size: 22px;">@Math.Round(Model.AverageRating, 2)</div>
             </div>
 
             <div class="col-md-2">
