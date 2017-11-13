@@ -14,6 +14,8 @@ namespace RecipesCore.Services
 
         RecipeRatings GetByUserNameAndRecipeId(string name, long recipeId);
 
+        RecipeRatings GetByUserIdAndRecipeId(long userId, long recipeId);
+
         List<RecipeRatings> GetByRecipeId(long recipeId);
 
         double GetAverageRatingForUser(long userId);

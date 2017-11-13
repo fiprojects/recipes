@@ -29,8 +29,14 @@ namespace RecipesCore.Services
 
         public RecipeRatings GetByUserNameAndRecipeId(string name, long recipeId)
         {
-            return _db.RecipeRatings.Where(a => a.User.Username == name)
-                .FirstOrDefault(b => b.RecipeId == recipeId);
+            return GetByRecipeId(recipeId).FirstOrDefault(a => a.User.Username == name);
+            /* _db.RecipeRatings.Where(a => a.User.Username == name)
+                .FirstOrDefault(b => b.RecipeId == recipeId);*/
+        }
+
+        public RecipeRatings GetByUserIdAndRecipeId(long userId, long recipeId)
+        {
+            return GetByRecipeId(recipeId).FirstOrDefault(a => a.UserId == userId);
         }
 
         public List<RecipeRatings> GetByRecipeId(long recipeId)
@@ -52,7 +58,7 @@ namespace RecipesCore.Services
 
         public void Add(RecipeRatings rating)
         {
-            if (rating?.RecipeId == null || rating.UserId == null || rating.Rating > 5 || rating.Rating < 0)
+            if (rating?.RecipeId == null || rating?.UserId == null || rating.Rating > 5 || rating.Rating < 0)
             {
                 return;
             }
@@ -60,7 +66,9 @@ namespace RecipesCore.Services
             {
                 _db.RecipeRatings
                     .Where(s => s.RecipeId == rating.RecipeId)
-                    .FirstOrDefault(s => s.UserId == rating.UserId);
+                    .FirstOrDefault(s => s.UserId == rating.UserId).Rating = rating.Rating;
+                _db.SaveChanges();
+                return;
             }
             _db.Add(rating);
             _db.SaveChanges();
