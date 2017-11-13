@@ -1,15 +1,15 @@
 ﻿@model RecipesWeb.ViewModels.RecipesShowModel
 
-        <form asp-action="Show">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for=@Model.RecipeUserRating.UserId />
-            <input type="hidden" asp-for=@Model.RecipeUserRating.RecipeId />
+<form asp-action="Show">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for=@Model.RecipeUserRating.UserId />
+    <input type="hidden" asp-for=@Model.RecipeUserRating.RecipeId />
             
-            <div class="input-group">
-                <input asp-for=@Model.RecipeUserRating.Rating style="width: 50%" min="1" max="5" class="form-control" value=@Model.RecipeUserRating.Rating />
-                <span asp-validation-for=@Model.RecipeUserRating.Rating class="text-danger"></span>
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+    <div class="input-group">
+        <input asp-for=@Model.RecipeUserRating.Rating style="width: 40%" min="1" max="5" class="form-control" value=@Model.RecipeUserRating.Rating />
+        <span asp-validation-for=@Model.RecipeUserRating.Rating class="text-danger"></span>
+        <input type="submit" value="Add rating" class="btn btn-default" />
+    </div>
                 
 </form>
 
