@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace RecipesCore.Models
 {
@@ -41,6 +42,17 @@ namespace RecipesCore.Models
             Vegetarian = vegetarian;
             Vegan = vegan;
             Allergies = allergies;
+        }
+
+        public override string ToString()
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"Username: {Username}");
+            stringBuilder.AppendLine($"Vegan: {Vegan}");
+            stringBuilder.AppendLine($"Vegetarian: {Vegetarian}");
+            stringBuilder.AppendLine($"Allergies:[{Allergies}]");
+
+            return stringBuilder.ToString();
         }
     }
 }

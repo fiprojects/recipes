@@ -17,8 +17,7 @@ namespace RecipesCore
         
         public DbSet<UserAllergie> UserAllergies { get; set; }
 
-
-        
+        public DbSet<RecipeRatings> RecipeRatings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

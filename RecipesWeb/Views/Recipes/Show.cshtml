@@ -1,37 +1,92 @@
-﻿@model RecipesCore.Models.Recipe
+﻿@model RecipesWeb.ViewModels.RecipesShowModel
 @{
-    ViewData["Title"] = @Model.Name;
+    ViewData["Title"] = Model.Recipe.Name;
 }
 
-<h1>@Model.Name</h1>
+
+<style type="text/css">
+    .rating-star-block .star.outline {
+        background: url("/Images/star-empty-lg.png") no-repeat scroll center rgb(255, 255, 255);
+    }
+
+    .rating-star-block .star.filled {
+        background: url("/Images/star-fill-lg.png")  no-repeat scroll center rgb(255, 255, 255);
+    }
+
+    .rating-star-block .star {
+        display: inline-block;
+        height: 20px;
+        overflow: hidden;
+        text-indent: -999em;
+        width: 20px;
+    }
+
+    a {
+        color: #005782;
+        text-decoration: none;
+    }
+</style>
+
+<h1>@Model.Recipe.Name</h1>
 
 <div style="margin-bottom: 15px;">
-    In category <a href="#">@Model.Category</a> by <strong>@Model.Author</strong>
+    In category <a href="#">@Model.Recipe.Category</a> by <strong>@Model.Recipe.Author</strong>
 </div>
 
 <div class="row">
     <div class="col-md-9">
-        @if (Model.Image != null)
+        @if (Model.Recipe.Image != null)
         {
             <div style="margin-bottom: 15px;">
-                <img src="/Image/Get?id=@Model.Id" class="img-thumbnail center-block"/>
+                <img src="/Image/Get?id=@Model.Recipe.Id" class="img-thumbnail center-block"/>
             </div>
             
         }
 
         <div class="panel panel-default">
             <div class="panel-body">
-                @Model.Description
+                @Model.Recipe.Description
             </div>
         </div>
 
+
         <div class="row">
+            
+            <input type="hidden" asp-for=@Model.RecipeUserRating.RecipeId/>
+            <div class="col-md-2" style="padding-left: 30px;">
+                @if (Model.RecipeUserRating.UserId != 0)
+                {
+                    <div>
+                        <i class="fa fa-star" style="margin-left: -10px;"></i>
+                        <strong>Your rating</strong>
+                    </div>
+                    <div class="rating-star-block row" style="font-size: 20px;" id='div_<%#Container.DataItemIndex %>'>
+                        @for (int i = 0; i < Model.RecipeUserRating.Rating; i++)
+                        {
+                            <span style="height: 20px; width: 20px;" class="star filled"></span>
+                        }
+                        @for (int i = Model.RecipeUserRating.Rating; i < 5; i++)
+                        {
+                            <span style="height: 20px; width: 20px;" class="star outline"></span>
+                        }
+                    </div>
+                }
+                
+            </div>
+
             <div class="col-md-4">
+                @if (Model.RecipeUserRating.UserId != 0)
+                {
+                    @Html.Partial("RatingStars", Model)
+                }
+            </div>
+
+            <div class="col-md-2">
                 <div>
                     <i class="fa fa-star"></i>
                     <strong>Rating</strong>
                 </div>
-                <div style="font-size: 22px;">@Math.Round(Model.Rating, 2)</div>
+                <div style="font-size: 22px;">@Math.Round(Model.AverageRating, 2)</div>
             </div>
 
             <div class="col-md-2">
@@ -39,7 +94,12 @@
                     <i class="fa fa-cutlery"></i>
                     <strong>Servings</strong>
                 </div>
-                <div style="font-size: 22px;">@Model.Servings</div>
+                <div style="font-size: 22px;">@Model.Recipe.Servings</div>
+                <div>
+                    <i class="fa fa-clock-o"></i>
+                    <strong>Cook Time</strong>
+                </div>
+                <div style="font-size: 22px;">@Model.Recipe.CookTime</div>
             </div>
 
             <div class="col-md-2">
@@ -47,23 +107,12 @@
                     <i class="fa fa-hourglass"></i>
                     <strong>Prep Time</strong>
                 </div>
-                <div style="font-size: 22px;">@Model.PreparationTime</div>
-            </div>
-
-            <div class="col-md-2">
-                <div>
-                    <i class="fa fa-clock-o"></i>
-                    <strong>Cook Time</strong>
-                </div>
-                <div style="font-size: 22px;">@Model.CookTime</div>
-            </div>
-
-            <div class="col-md-2">
+                <div style="font-size: 22px;">@Model.Recipe.PreparationTime</div>
                 <div>
                     <i class="fa fa-fire"></i>
                     <strong>Calories</strong>
                 </div>
-                <div style="font-size: 22px;">@Model.Calories cal</div>
+                <div style="font-size: 22px;">@Model.Recipe.Calories cal</div>
             </div>
         </div>
 
@@ -77,7 +126,7 @@
                 </h3>
                 <div>
                     <ul>
-                        @foreach (var ingredient in Model.Ingredients)
+                        @foreach (var ingredient in Model.Recipe.Ingredients)
                         {
                             <li>@ingredient.Name</li>
                         }
@@ -85,7 +134,6 @@
                 </div>
             </div>
             
-
             <div class="col-md-8">
                 <h3>
                     <i class="fa fa-compass"></i>
@@ -93,7 +141,7 @@
                 </h3>
                 <div>
                     <ol>
-                        @foreach (var line in Model.Directions.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)))
+                        @foreach (var line in Model.Recipe.Directions.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)))
                         {
                             <li>@line</li>
                         }
