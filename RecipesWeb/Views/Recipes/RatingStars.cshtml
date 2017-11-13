@@ -6,7 +6,7 @@
     <input type="hidden" asp-for=@Model.RecipeUserRating.RecipeId />
             
     <div class="input-group">
-        <input asp-for=@Model.RecipeUserRating.Rating style="width: 40%" min="1" max="5" class="form-control" value=@Model.RecipeUserRating.Rating />
+        <input asp-for=@Model.RecipeUserRating.Rating style="width: 30%" min="1" max="5" class="form-control" value=@Model.RecipeUserRating.Rating />
         <span asp-validation-for=@Model.RecipeUserRating.Rating class="text-danger"></span>
         <input type="submit" value="Change rating" class="btn btn-default" />
     </div>

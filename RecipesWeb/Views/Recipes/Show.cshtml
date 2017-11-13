@@ -53,11 +53,11 @@
         <div class="row">
             
             <input type="hidden" asp-for=@Model.RecipeUserRating.RecipeId/>
-            <div class="col-md-2">
+            <div class="col-md-2" style="padding-left: 30px;">
                 @if (Model.RecipeUserRating.UserId != 0)
                 {
                     <div>
-                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star" style="margin-left: -10px;"></i>
                         <strong>Your rating</strong>
                     </div>
                     <div class="rating-star-block row" style="font-size: 20px;" id='div_<%#Container.DataItemIndex %>'>
