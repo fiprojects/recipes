@@ -9,8 +9,10 @@ namespace RecipesCore
         {
             sc.AddDbContext<RecipesContext>();
 
+            sc.AddTransient<ICategoryService, CategoryService>();
             sc.AddTransient<IRecipesService, RecipesService>();
             sc.AddTransient<IUserService, UserService>();
+            sc.AddTransient<IRatingService, RatingService>();
 
             return sc;
         }

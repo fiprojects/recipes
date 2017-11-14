@@ -7,6 +7,8 @@ namespace RecipesCore.Services
     {
         List<Recipe> GetAll();
 
+        List<Recipe> GetAllByCategoryId(long id);
+
         Recipe Get(long id);
 
         void Add(Recipe recipe);

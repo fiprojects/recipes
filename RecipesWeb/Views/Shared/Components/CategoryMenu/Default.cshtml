@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<RecipesCore.Models.Category>
 @foreach (var category in Model)
 {
-    <li><a href="#">@category.Name</a></li>
+    <li><a asp-controller="Recipes" asp-action="Category" asp-route-id="@category.Id">@category.Name</a></li>
 }
