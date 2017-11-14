@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecipesCore.Services;
@@ -21,6 +22,9 @@ namespace RecipesWeb.Controllers
             var viewModel = new HomeViewModel
             {
                 Recipes = _recipesService.GetAll()
+                    .OrderByDescending(r => r.Rating)
+                    .Take(12)
+                    .ToList()
             };
 
             return View(viewModel);
