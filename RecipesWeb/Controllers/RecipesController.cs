@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
+﻿using Microsoft.AspNetCore.Mvc;
 using RecipesCore.Models;
 using RecipesCore.Services;
 using RecipesWeb.ViewModels;
@@ -13,13 +10,15 @@ namespace RecipesWeb.Controllers
         private readonly IRecipesService _recipesService;
         private readonly IRatingService _ratingService;
         private readonly IUserService _userService;
+        private readonly ICategoryService _categoryService;
 
         public RecipesController(IRecipesService recipesService, IRatingService ratingService,
-                                IUserService userService)
+                                IUserService userService, ICategoryService categoryService)
         {
             _ratingService = ratingService;
             _recipesService = recipesService;
             _userService = userService;
+            _categoryService = categoryService;
         }
 
         public IActionResult Show(long id)
@@ -66,6 +65,17 @@ namespace RecipesWeb.Controllers
             }
 
             return Show(model.RecipeUserRating.RecipeId);
+        }
+
+        public IActionResult Category(long id)
+        {
+
+            var viewModel = new CategoryViewModel
+            {
+                Category = _categoryService.Get(id),
+                Recipes = _recipesService.GetAllByCategoryId(id)
+            };
+            return View(viewModel);
         }
     }
 }

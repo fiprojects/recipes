@@ -1,9 +1,9 @@
-﻿@model RecipesWeb.ViewModels.HomeViewModel
+﻿@model RecipesWeb.ViewModels.CategoryViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Category Overview";
 }
 
-<h1><i class="glyphicon glyphicon-heart"></i> Recipes recommended for you</h1>
+<h1><i class="fa fa-folder-open"></i> @Model.Category.Name</h1>
 <div class="row">
 @foreach (var recipe in Model.Recipes)
 {
@@ -15,10 +15,6 @@
                 </div>
                 
                 <div style="height: 170px">
-                    <div style="font-variant: small-caps; color: gray;">
-                        @recipe.Category.Name
-                    </div>
-
                     <h4>
                         <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id">@recipe.Name</a>
                     </h4>

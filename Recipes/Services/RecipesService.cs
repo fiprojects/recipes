@@ -16,12 +16,24 @@ namespace RecipesCore.Services
 
         public List<Recipe> GetAll()
         {
-            return _db.Recipes.ToList();
+            return _db.Recipes
+                .Include(x => x.Category)
+                .ToList();
+        }
+
+        public List<Recipe> GetAllByCategoryId(long id)
+        {
+            return _db.Recipes
+                .Where(x => x.Category.Id == id)
+                .Include(x => x.Category)
+                .Include(x => x.Ingredients)
+                .ToList();
         }
 
         public Recipe Get(long id)
         {
             return _db.Recipes
+                .Include(x => x.Category)
                 .Include(x => x.Ingredients)
                 .SingleOrDefault(x => x.Id == id);
         }
