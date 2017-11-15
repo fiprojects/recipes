@@ -1,31 +1,7 @@
 ﻿@model RecipesWeb.ViewModels.RecipesShowModel
 @{
-    ViewData["Title"] = Model.Recipe.Name;
+    ViewData["Title"] = @Model.Recipe.Name;
 }
-
-
-<style type="text/css">
-    .rating-star-block .star.outline {
-        background: url("/Images/star-empty-lg.png") no-repeat scroll center rgb(255, 255, 255);
-    }
-
-    .rating-star-block .star.filled {
-        background: url("/Images/star-fill-lg.png")  no-repeat scroll center rgb(255, 255, 255);
-    }
-
-    .rating-star-block .star {
-        display: inline-block;
-        height: 20px;
-        overflow: hidden;
-        text-indent: -999em;
-        width: 20px;
-    }
-
-    a {
-        color: #005782;
-        text-decoration: none;
-    }
-</style>
 
 <h1>@Model.Recipe.Name</h1>
 
@@ -49,44 +25,13 @@
             </div>
         </div>
 
-
         <div class="row">
-            
-            <input type="hidden" asp-for=@Model.RecipeUserRating.RecipeId/>
-            <div class="col-md-2" style="padding-left: 30px;">
-                @if (Model.RecipeUserRating.UserId != 0)
-                {
-                    <div>
-                        <i class="fa fa-star" style="margin-left: -10px;"></i>
-                        <strong>Your rating</strong>
-                    </div>
-                    <div class="rating-star-block row" style="font-size: 20px;" id='div_<%#Container.DataItemIndex %>'>
-                        @for (int i = 0; i < Model.RecipeUserRating.Rating; i++)
-                        {
-                            <span style="height: 20px; width: 20px;" class="star filled"></span>
-                        }
-                        @for (int i = Model.RecipeUserRating.Rating; i < 5; i++)
-                        {
-                            <span style="height: 20px; width: 20px;" class="star outline"></span>
-                        }
-                    </div>
-                }
-                
-            </div>
-
             <div class="col-md-4">
-                @if (Model.RecipeUserRating.UserId != 0)
-                {
-                    @Html.Partial("RatingStars", Model)
-                }
-            </div>
-
-            <div class="col-md-2">
                 <div>
                     <i class="fa fa-star"></i>
                     <strong>Rating</strong>
                 </div>
-                <div style="font-size: 22px;">@Math.Round(Model.AverageRating, 2)</div>
+                <div style="font-size: 22px;">@Math.Round(Model.Recipe.Rating, 2)</div>
             </div>
 
             <div class="col-md-2">
@@ -95,11 +40,6 @@
                     <strong>Servings</strong>
                 </div>
                 <div style="font-size: 22px;">@Model.Recipe.Servings</div>
-                <div>
-                    <i class="fa fa-clock-o"></i>
-                    <strong>Cook Time</strong>
-                </div>
-                <div style="font-size: 22px;">@Model.Recipe.CookTime</div>
             </div>
 
             <div class="col-md-2">
@@ -108,6 +48,17 @@
                     <strong>Prep Time</strong>
                 </div>
                 <div style="font-size: 22px;">@Model.Recipe.PreparationTime</div>
+            </div>
+
+            <div class="col-md-2">
+                <div>
+                    <i class="fa fa-clock-o"></i>
+                    <strong>Cook Time</strong>
+                </div>
+                <div style="font-size: 22px;">@Model.Recipe.CookTime</div>
+            </div>
+
+            <div class="col-md-2">
                 <div>
                     <i class="fa fa-fire"></i>
                     <strong>Calories</strong>
@@ -134,6 +85,7 @@
                 </div>
             </div>
             
+
             <div class="col-md-8">
                 <h3>
                     <i class="fa fa-compass"></i>
@@ -156,5 +108,31 @@
             <i class="fa fa-lightbulb-o"></i>
             Recommended
         </h3>
+        @foreach (var recipe in Model.Recommended)
+{
+    <div class="col-md-12 text-center">
+        <div class="panel panel-default col-md-12">
+            <div class="panel-body">
+                <div style="height: 80px;">
+                    <img src="/Image/Get?id=@recipe.Id" class="img-responsive img-rounded center-block" style="max-height: 150px;" />
+                </div>
+                
+                <div style="height: 90px">
+                    <div style="font-variant: small-caps; color: gray;">
+                        @recipe.Category.Name
+                    </div>
+
+                    <h4>
+                        <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id">@recipe.Name</a>
+                    </h4>
+                    
+                </div>              
+                <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id" class="btn btn-primary btn-block">
+                    <strong>Show recipe</strong> <i class="glyphicon glyphicon-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+}
     </div>
 </div>

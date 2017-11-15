@@ -21,8 +21,7 @@ namespace RecipesWeb.Controllers
         {
             var viewModel = new HomeViewModel
             {
-                Recipes = _recipesService.GetAll()
-                    .OrderByDescending(r => r.Rating)
+                Recipes = _recipesService.GetTopRecommended()
                     .Take(12)
                     .ToList()
             };

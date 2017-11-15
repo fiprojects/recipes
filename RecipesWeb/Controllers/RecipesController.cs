@@ -2,6 +2,9 @@
 using RecipesCore.Models;
 using RecipesCore.Services;
 using RecipesWeb.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RecipesWeb.Controllers
 {
@@ -51,7 +54,19 @@ namespace RecipesWeb.Controllers
                 Recipe = _recipesService.Get(id),
                 RecipeUserRating = userRatingForRecipe,
                 AverageRating = _ratingService.GetAverageRatingForRecipe(id) 
-            };
+             };
+            List<Recipe> all = _recipesService.GetRecommendedByCategoryId(viewModel.Recipe.Category.Id).ToList();
+            Random rnd = new Random();
+            List<Recipe> selected = new List<Recipe>();
+            while(selected.Count != 4)
+            {
+                int index = rnd.Next(all.Count);
+                if (!selected.Contains(all[index]))
+                {
+                    selected.Add(all[index]);
+                }
+            }
+            viewModel.Recommended = selected;
 
             return View(viewModel);
         }

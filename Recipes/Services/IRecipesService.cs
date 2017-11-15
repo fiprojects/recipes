@@ -12,5 +12,9 @@ namespace RecipesCore.Services
         Recipe Get(long id);
 
         void Add(Recipe recipe);
+
+        List<Recipe> GetTopRecommended();
+
+        List<Recipe> GetRecommendedByCategoryId(long id);
     }
 }

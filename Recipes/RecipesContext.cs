@@ -31,6 +31,7 @@ namespace RecipesCore
                 .HasKey(a => new { a.RecipeId, a.UserId });
         }
 
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new AppConfiguration("DatabaseCredentials.secret.json");

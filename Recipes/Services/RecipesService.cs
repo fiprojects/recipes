@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using RecipesCore.Models;
+using System;
 
 namespace RecipesCore.Services
 {
@@ -52,5 +53,26 @@ namespace RecipesCore.Services
             _db.Add(recipe);
             _db.SaveChanges();
         }
+
+        public List<Recipe> GetTopRecommended()
+        {
+            return _db.Recipes
+                .Include(x => x.Category)
+                .Include(x => x.Ingredients)
+                .OrderByDescending(r => r.Rating)
+                .ToList();
+        }
+
+        public List<Recipe> GetRecommendedByCategoryId(long id)
+        {
+            return _db.Recipes
+                .Where(x => x.Category.Id == id)
+                .Include(x => x.Category)
+                .Include(x => x.Ingredients)
+                .OrderBy(r => r.Rating)
+                .ToList();
+        }
+
+
     }
 }
