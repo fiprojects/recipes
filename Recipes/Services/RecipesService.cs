@@ -59,27 +59,18 @@ namespace RecipesCore.Services
             return _db.Recipes
                 .Include(x => x.Category)
                 .Include(x => x.Ingredients)
-                .OrderBy(r => r.Rating)
+                .OrderByDescending(r => r.Rating)
                 .ToList();
         }
 
         public List<Recipe> GetRecommendedByCategoryId(long id)
         {
-            List<Recipe> all = _db.Recipes
+            return _db.Recipes
                 .Where(x => x.Category.Id == id)
                 .Include(x => x.Category)
                 .Include(x => x.Ingredients)
                 .OrderBy(r => r.Rating)
                 .ToList();
-            Random rnd = new Random();
-            List<Recipe> result = new List<Recipe>();
-            for (int i = 0; i < 4; i++)
-            {
-                int index = rnd.Next(0, all.Count);
-                result.Add(all[index]);
-            }
-
-            return result;
         }
 
 
