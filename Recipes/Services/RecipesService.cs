@@ -19,6 +19,7 @@ namespace RecipesCore.Services
         {
             return _db.Recipes
                 .Include(x => x.Category)
+                .Include(x => x.Ingredients).ThenInclude(i => i.Ingredient)
                 .ToList();
         }
 
@@ -35,7 +36,7 @@ namespace RecipesCore.Services
         {
             return _db.Recipes
                 .Include(x => x.Category)
-                .Include(x => x.Ingredients)
+                .Include(x => x.Ingredients).ThenInclude(i => i.Ingredient)
                 .SingleOrDefault(x => x.Id == id);
         }
 
@@ -73,6 +74,33 @@ namespace RecipesCore.Services
                 .ToList();
         }
 
+        public List<Recipe> GetRecommendedByIngredience(long recipeId)
+        {
+            Recipe recipe = Get(recipeId);
+            List<Recipe> all = GetAll();
+            Dictionary<Recipe, int> sameIngredientsCount = new Dictionary<Recipe, int>();
+            foreach (Recipe r in all)
+            {
+                int count = 0;
+                foreach (RecipeIngredient i in recipe.Ingredients)
+                {   
+                    foreach(RecipeIngredient ri in r.Ingredients)
+                    {
+                        if (ri.Ingredient != null && i.Ingredient != null)
+                        {
+                            if (ri.Ingredient.Id.Equals(i.Ingredient.Id))
+                            {
+                                count++;
+                            }
+                        }
+                    }
+                }
+                sameIngredientsCount.Add(r, count);
+            }
+            var toRecommend = sameIngredientsCount.ToList();
+            toRecommend.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
 
+            return toRecommend.Select(kvp => kvp.Key).Take(4).ToList();
+        }
     }
 }

@@ -16,5 +16,7 @@ namespace RecipesCore.Services
         List<Recipe> GetTopRecommended();
 
         List<Recipe> GetRecommendedByCategoryId(long id);
+
+        List<Recipe> GetRecommendedByIngredience(long recipeId);
     }
 }
