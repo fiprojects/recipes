@@ -8,6 +8,6 @@ namespace RecipesCore.Models
         
         public Recipe Recipe { get; set; }
 
-        public List<TfIdfElement> Elements { get; set; }
+        public List<TfIdfElement> Elements { get; set; } = new List<TfIdfElement>();
     }
 }

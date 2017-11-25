@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RecipesCore.Models;
 using RecipesCore.Services;
 
@@ -7,19 +9,23 @@ namespace RecipesCore.Processors
     public class TfIdfComputer : IProcessor
     {
         private readonly IRecipesService _recipesService;
+        private readonly ITfIdfService _tfIdfService;
 
         private readonly Dictionary<Recipe, Dictionary<string, int>> _tfForRecipes = new Dictionary<Recipe, Dictionary<string, int>>();
 
         private readonly Dictionary<string, int> _termOccurenceInDocs = new Dictionary<string, int>();
 
-        public TfIdfComputer(IRecipesService recipesService)
+        public TfIdfComputer(IRecipesService recipesService, ITfIdfService tfIdfService)
         {
             _recipesService = recipesService;
+            _tfIdfService = tfIdfService;
         }
 
         public void Run(string[] args)
         {
-            
+            var recipes = _recipesService.GetAll();
+            var models = ComputeTfIdfForRecipes(recipes);
+            _tfIdfService.Add(models);
         }
         
         private Dictionary<string, int> GetTermsWithCountForRecipe(Recipe recipe)
@@ -31,13 +37,15 @@ namespace RecipesCore.Processors
                 if (dict.ContainsKey(term))
                 {
                     dict[term]++;
+                }
+                else
+                {
+                    dict.Add(term, 1);
                     if (_termOccurenceInDocs.ContainsKey(term))
                         _termOccurenceInDocs[term]++;
                     else
                         _termOccurenceInDocs.Add(term, 1);
                 }
-                else
-                    dict.Add(term, 1);
             }
             return dict;
         }
@@ -54,24 +62,33 @@ namespace RecipesCore.Processors
             List<TfIdfModel> models = new List<TfIdfModel>();
             foreach (Recipe recipe in recipes)
             {
+                var tfIdfModel = new TfIdfModel
+                {
+                    Recipe = recipe
+                };
                 var termsAndCounts = _tfForRecipes[recipe];
+                int maximalFrequency = termsAndCounts.Values.Max();
                 foreach (KeyValuePair<string,int> i in termsAndCounts)
                 {
-                    var model = new TfIdfModel
+                    var element = new TfIdfElement
                     {
-                        Recipe = recipe,
                         Term = i.Key,
-                        TfIdf = GetTfIdfValue(termsAndCounts, n)
+                        TfIdf = GetTfIdfValue(i.Key, i.Value, maximalFrequency, n)
                     };
+                    tfIdfModel.Elements.Add(element);
                 }
+                models.Add(tfIdfModel);
             }
 
             return models;
         }
 
-        private double GetTfIdfValue(Dictionary<string, int> termsAndCounts, int n)
+        private double GetTfIdfValue(string term, int termFreq, int maximalFrequency, int n)
         {
-            return 0.0;
+            double tf = (double)termFreq / (double)maximalFrequency;
+            int nt = _termOccurenceInDocs[term]; // number of documents containing term
+            double idf = Math.Log((double) n / (double) nt, 10); // decimal logarithm
+            return tf*idf;
         }
     }
 }
