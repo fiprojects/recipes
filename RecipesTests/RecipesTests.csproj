@@ -10,11 +10,12 @@
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
     <PackageReference Include="NFluent" Version="2.0.0" />
     <PackageReference Include="NUnit" Version="3.9.0" />
-    <PackageReference Include="NUnit.ConsoleRunner" Version="3.7.0" />
-    <PackageReference Include="NUnit.Runners" Version="3.7.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Recipes\RecipesCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SampleDirections" />
   </ItemGroup>
 </Project>
