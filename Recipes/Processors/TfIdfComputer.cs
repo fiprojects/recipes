@@ -67,11 +67,13 @@ namespace RecipesCore.Processors
             List<TfIdfModel> models = new List<TfIdfModel>();
             foreach (Recipe recipe in recipes)
             {
+                var termsAndCounts = _tfForRecipes[recipe];
+                if (termsAndCounts.Count == 0)
+                    continue;
                 var tfIdfModel = new TfIdfModel
                 {
                     Recipe = recipe
                 };
-                var termsAndCounts = _tfForRecipes[recipe];
                 int maximalFrequency = termsAndCounts.Values.Max();
                 foreach (KeyValuePair<string,int> i in termsAndCounts)
                 {
