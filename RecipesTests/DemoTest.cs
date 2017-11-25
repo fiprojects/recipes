@@ -1,21 +1,13 @@
-﻿using NFluent;
-using NUnit.Framework;
+﻿using Xunit;
 
 namespace RecipesTests
 {
-    [TestFixture]
     public class DemoTest
     {
-        [Test]
+        [Fact]
         public void BasicTest()
         {
-            Assert.AreEqual(15, 15);
-        }
-
-        [Test]
-        public void NFluentTest()
-        {
-            Check.That(15).Equals(15);
+            Assert.Equal(15, 15);
         }
     }
 }
