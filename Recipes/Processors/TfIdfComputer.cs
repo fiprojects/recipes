@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using RecipesCore.Models;
 using RecipesCore.Services;
 
@@ -28,29 +29,33 @@ namespace RecipesCore.Processors
             _tfIdfService.Add(models);
         }
         
-        private Dictionary<string, int> GetTermsWithCountForRecipe(Recipe recipe)
+        public Dictionary<string, int> GetTermsWithCountForRecipe(Recipe recipe)
         {
             var dict = new Dictionary<string, int>();
-            var splitted = recipe.Description.Split(' ');
+            var replaced = Regex.Replace(recipe.Directions, @"\r\n?|\n", " ");
+            var splitted = replaced.Split(' ');
             foreach (string term in splitted)
             {
-                if (dict.ContainsKey(term))
+                string normalized = NormalizeTerm(term);
+                if (normalized.Length == 0)
+                    continue;
+                if (dict.ContainsKey(normalized))
                 {
-                    dict[term]++;
+                    dict[normalized]++;
                 }
                 else
                 {
-                    dict.Add(term, 1);
-                    if (_termOccurenceInDocs.ContainsKey(term))
-                        _termOccurenceInDocs[term]++;
+                    dict.Add(normalized, 1);
+                    if (_termOccurenceInDocs.ContainsKey(normalized))
+                        _termOccurenceInDocs[normalized]++;
                     else
-                        _termOccurenceInDocs.Add(term, 1);
+                        _termOccurenceInDocs.Add(normalized, 1);
                 }
             }
             return dict;
         }
 
-        private List<TfIdfModel> ComputeTfIdfForRecipes(List<Recipe> recipes)
+        public List<TfIdfModel> ComputeTfIdfForRecipes(List<Recipe> recipes)
         {
             int n = recipes.Count;
             foreach (Recipe recipe in recipes)
@@ -83,12 +88,18 @@ namespace RecipesCore.Processors
             return models;
         }
 
-        private double GetTfIdfValue(string term, int termFreq, int maximalFrequency, int n)
+        public double GetTfIdfValue(string term, int termFreq, int maximalFrequency, int n)
         {
             double tf = (double)termFreq / (double)maximalFrequency;
             int nt = _termOccurenceInDocs[term]; // number of documents containing term
             double idf = Math.Log((double) n / (double) nt, 10); // decimal logarithm
             return tf*idf;
+        }
+
+        public string NormalizeTerm(string term)
+        {
+            string ret = term.TrimEnd('.').TrimEnd(';').TrimEnd(',');
+            return ret.ToLower();
         }
     }
 }
