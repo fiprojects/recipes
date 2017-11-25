@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace RecipesTests
 {
     [TestFixture]
-    public class DemoTest
+    public class TfIdfTest
     {
         [Test]
         public void BasicTest()
