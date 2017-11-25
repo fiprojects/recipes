@@ -20,17 +20,23 @@ namespace RecipesTests
         private Recipe _recipe2;
 
         private Recipe _recipe3;
+        private Mock<IRecipesService> _recipesMock;
+        private Mock<ITfIdfService> _tfIdfMock;
 
         [SetUp]
         public void Init()
         {
             InitRecipes();
-            var recipesMock = new Mock<IRecipesService>();
-            recipesMock.Setup(service => service.GetAll()).Returns(new List<Recipe>{_recipe1, _recipe2});
-            var tfIdfMock = new Mock<ITfIdfService>();
-            _tfIdfComputer = new TfIdfComputer(recipesMock.Object, tfIdfMock.Object);
-            _tfIdfComputer = new TfIdfComputer(recipesMock.Object, tfIdfMock.Object);
+            
+            var recipeList = new List<Recipe> {_recipe1, _recipe2, _recipe3};
+            _recipesMock = new Mock<IRecipesService>();
+            _recipesMock.Setup(service => service.GetAll()).Returns(recipeList);
 
+            var tfIdfList = GetModelsForThreeRecipes();
+            _tfIdfMock = new Mock<ITfIdfService>();
+            _tfIdfMock.Setup(service => service.Add(It.IsAny<List<TfIdfModel>>())).Verifiable();
+            
+            _tfIdfComputer = new TfIdfComputer(_recipesMock.Object, _tfIdfMock.Object);
         }
 
         private void InitRecipes()
@@ -150,7 +156,7 @@ namespace RecipesTests
         }
 
         [Test]
-        public void TfIdfOnOneRecipeTest()
+        public void TfIdfOnTwoRecipesTest()
         {
 
             var list = new List<Recipe>
@@ -173,14 +179,85 @@ namespace RecipesTests
             ModelsAreTheSame(expectedList, ret);
         }
 
-        private void ModelsAreTheSame(List<TfIdfModel> expectedList, List<TfIdfModel> ret)
+        [Test]
+        public void TfIdfOnThreeRecipesTest()
+        {
+            var list = new List<Recipe>
+            {
+                _recipe1,
+                _recipe2,
+                _recipe3
+            };
+            var expectedList = GetModelsForThreeRecipes();
+            var ret = _tfIdfComputer.ComputeTfIdfForRecipes(list);
+            ModelsAreTheSame(expectedList, ret);
+
+        }
+
+        [Test]
+        public void RunTest()
+        {
+            _tfIdfComputer.Run(null);
+            _recipesMock.Verify(service => service.GetAll());
+            var modelsList = GetModelsForThreeRecipes();
+            _tfIdfMock.VerifyAll();
+        }
+
+        private List<TfIdfModel> GetModelsForThreeRecipes()
+        {
+            var model1 = new TfIdfModel
+            {
+                Recipe = _recipe1
+            };
+            model1.Elements.Add(new TfIdfElement{Term = "recipe", TfIdf = Math.Log((double)3/1, 10)});
+            model1.Elements.Add(new TfIdfElement{Term = "test", TfIdf = 0.5 * Math.Log((double)3/1, 10)});
+            model1.Elements.Add(new TfIdfElement{Term = "a", TfIdf = 0.5 * Math.Log((double)3/2, 10)});
+
+            var model2 = new TfIdfModel
+            {
+                Recipe = _recipe2
+            };
+            model2.Elements.Add(new TfIdfElement{Term = "rinse", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "buckwheat", TfIdf = ((double)3/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "groats", TfIdf = ((double)2/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "bring", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "a", TfIdf = ((double)2/3) * Math.Log((double)3/2, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "saucepan", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "of", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "water", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "to", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "boil", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "sprinkle", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "in", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "the", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "and", TfIdf = ((double)2/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "simmer", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "until", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "is", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "tender", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "about", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "10", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "minutes", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "drain", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "cool", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+
+            var ret = new List<TfIdfModel>
+            {
+                model1,
+                model2
+            };
+            return ret;
+        }
+
+        private void ModelsAreTheSame(List<TfIdfModel> expectedList, List<TfIdfModel> returnedList)
         {
             double threshold = 1e-06;
-            Assert.AreEqual(expectedList.Count, ret.Count);
+            Assert.AreEqual(expectedList.Count, returnedList.Count);
             foreach (var model in expectedList)
             {
-                var retModel = ret.Find(m => m.Recipe.Equals(model.Recipe));
+                var retModel = returnedList.Find(m => m.Recipe.Equals(model.Recipe));
                 Assert.NotNull(retModel);
+                Assert.AreEqual(model.Elements.Count, retModel.Elements.Count);
                 foreach (var element in model.Elements)
                 {
                     var retElement = retModel.Elements.Find(e => e.Term.Equals(element.Term));
