@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Moq;
 using NFluent;
@@ -18,6 +19,8 @@ namespace RecipesTests
 
         private Recipe _recipe2;
 
+        private Recipe _recipe3;
+
         [SetUp]
         public void Init()
         {
@@ -34,11 +37,15 @@ namespace RecipesTests
         {
             _recipe1 = new Recipe
             {
-                Directions= "\r\nRecipe test A "
+                Directions= "\r\nRecipe test A recipe"
             };
             _recipe2 = new Recipe();
             string readFromFile = File.ReadAllText("../../../SampleDirections/recipe2.txt");
             _recipe2.Directions = readFromFile;
+            _recipe3 = new Recipe
+            {
+                Directions = ""
+            };
         }
 
         [Test]
@@ -140,6 +147,48 @@ namespace RecipesTests
             dict["and"] = 2;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
+        }
+
+        [Test]
+        public void TfIdfOnOneRecipeTest()
+        {
+
+            var list = new List<Recipe>
+            {
+                _recipe1,
+                _recipe3
+            };
+            var expectedModel = new TfIdfModel
+            {
+                Recipe = _recipe1
+            };
+            expectedModel.Elements.Add(new TfIdfElement{Id = 0, Term = "recipe", TfIdf = Math.Log(2, 10)});
+            expectedModel.Elements.Add(new TfIdfElement{Id = 0, Term = "test", TfIdf = 0.5 * Math.Log(2, 10)});
+            expectedModel.Elements.Add(new TfIdfElement{Id = 0, Term = "a", TfIdf = 0.5 * Math.Log(2, 10)});
+            var expectedList = new List<TfIdfModel>
+            {
+                expectedModel
+            };
+            var ret = _tfIdfComputer.ComputeTfIdfForRecipes(list);
+            ModelsAreTheSame(expectedList, ret);
+        }
+
+        private void ModelsAreTheSame(List<TfIdfModel> expectedList, List<TfIdfModel> ret)
+        {
+            double threshold = 1e-06;
+            Assert.AreEqual(expectedList.Count, ret.Count);
+            foreach (var model in expectedList)
+            {
+                var retModel = ret.Find(m => m.Recipe.Equals(model.Recipe));
+                Assert.NotNull(retModel);
+                foreach (var element in model.Elements)
+                {
+                    var retElement = retModel.Elements.Find(e => e.Term.Equals(element.Term));
+                    Assert.NotNull(retElement);
+                    double diff = Math.Abs(element.TfIdf - retElement.TfIdf);
+                    Assert.LessOrEqual(diff, threshold);
+                }
+            }
         }
     }
 }
