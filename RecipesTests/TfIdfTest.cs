@@ -20,7 +20,11 @@ namespace RecipesTests
         private Recipe _recipe2;
 
         private Recipe _recipe3;
+        
+        private Recipe _recipe4;
+        
         private Mock<IRecipesService> _recipesMock;
+        
         private Mock<ITfIdfService> _tfIdfMock;
 
         [SetUp]
@@ -45,12 +49,19 @@ namespace RecipesTests
             {
                 Directions= "\r\nRecipe test A recipe"
             };
+            
             _recipe2 = new Recipe();
             string readFromFile = File.ReadAllText("../../../SampleDirections/recipe2.txt");
             _recipe2.Directions = readFromFile;
+            
             _recipe3 = new Recipe
             {
                 Directions = ""
+            };
+
+            _recipe4 = new Recipe
+            {
+                Directions = "\n recipe a UNIQUE split\r\nsplit"
             };
         }
 
@@ -156,6 +167,18 @@ namespace RecipesTests
         }
 
         [Test]
+        public void NewLineSplitWords()
+        {
+            var dict = new Dictionary<string, int>();
+            dict["recipe"] = 1;
+            dict["a"] = 1;
+            dict["unique"] = 1;
+            dict["split"] = 2;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(_recipe4);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+        
+        [Test]
         public void TfIdfOnTwoRecipesTest()
         {
 
@@ -194,6 +217,41 @@ namespace RecipesTests
 
         }
 
+        [Test]
+        public void TfIdfCommonWordsInAllRecipes()
+        {
+            var recipeList = new List<Recipe>
+            {
+                _recipe1,
+                _recipe4
+            };
+            
+            var model1 = new TfIdfModel
+            {
+                Recipe = _recipe1
+            };
+            model1.Elements.Add(new TfIdfElement{Term = "recipe", TfIdf = 0.0});
+            model1.Elements.Add(new TfIdfElement{Term = "test", TfIdf = 0.5 * Math.Log(2 ,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "a", TfIdf = 0.0});
+            
+            var model2 = new TfIdfModel
+            {
+                Recipe = _recipe4
+            };
+            model2.Elements.Add(new TfIdfElement{Term = "recipe", TfIdf = 0.0});
+            model2.Elements.Add(new TfIdfElement{Term = "a", TfIdf = 0.0});
+            model2.Elements.Add(new TfIdfElement{Term = "unique", TfIdf = 0.5 * Math.Log(2, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "split", TfIdf = 1 * Math.Log(2, 10)});
+            
+            var expectedList = new List<TfIdfModel>
+            {
+                model1,
+                model2
+            };
+            var ret = _tfIdfComputer.ComputeTfIdfForRecipes(recipeList);
+            ModelsAreTheSame(expectedList, ret);
+        }
+        
         [Test]
         public void RunTest()
         {
