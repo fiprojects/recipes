@@ -10,7 +10,11 @@ namespace TfIdfConsole
     {
         public static void Main(string[] args)
         {
+            string time = DateTime.Now.ToString("HH:mm:ss.fff");
+            Console.WriteLine("Computing started at " + time);
             ComputeTfIdf();
+            time = DateTime.Now.ToString("HH:mm:ss.fff");
+            Console.WriteLine("Computing finished at " + time);
         }
 
         private static void ComputeTfIdf()
