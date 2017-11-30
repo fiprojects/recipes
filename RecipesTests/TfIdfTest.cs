@@ -367,7 +367,6 @@ namespace RecipesTests
         }
 
         [Test]
-        [Ignore("Not all features are implemented yet")]
         public void TfIdfOnTwoRealDirectionsTest()
         {
             var recipeList = GetTwoRealRecipes();
@@ -376,12 +375,22 @@ namespace RecipesTests
             ModelsAreTheSame(expectedModels, returnedModels);
         }
 
+        [Test]
+        public void TfIdfOnTwoRealAndOneEmptyDirectionsTest()
+        {
+            var recipeList = GetTwoRealRecipes();
+            recipeList.Add(_recipe3);
+            var expectedModels = GetExpectedModelsForTfIdfOnTwoRealDirectionsTest(recipeList, 3.0);
+            var returnedModels = _tfIdfComputer.ComputeTfIdfForRecipes(recipeList);
+            ModelsAreTheSame(expectedModels, returnedModels);
+        }
+        
         private List<TfIdfModel> GetExpectedModelsForTfIdfOnTwoRealDirectionsTest(List<Recipe> recipesList,
             double n = 2.0)
         {
             double threshold = 0.000001;
-            if ((n - 2.0 < threshold) || (n - 3.0 < threshold))
-                throw new ArgumentException("n");
+            if ((n - 2.0 > threshold) && (n - 3.0 > threshold))
+                throw new ArgumentException("n = " + n);
             var model1 = new TfIdfModel
             {
                 Recipe = recipesList[0]
@@ -392,7 +401,7 @@ namespace RecipesTests
             model1.Elements.Add(new TfIdfElement{Term = "on", TfIdf = (2.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "broiler", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "setting", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "in", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "in", TfIdf = (2.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "a", TfIdf = (3.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "large", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "bowl", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
@@ -404,12 +413,12 @@ namespace RecipesTests
             model1.Elements.Add(new TfIdfElement{Term = "olive", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "oil", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "vinegar", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "basil", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "basil", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "salt", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "and", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "pepper", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "allow", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "mixture", TfIdf = (2.0/9.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "pepper", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "allow", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "mixture", TfIdf = (2.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "to", TfIdf = (2.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "sit", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "for", TfIdf = (3.0/9.0) * Math.Log(n / 2.0,10)});
@@ -419,10 +428,10 @@ namespace RecipesTests
             model1.Elements.Add(new TfIdfElement{Term = "baguette", TfIdf = (3.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "into", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "3/4-inch", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "slices", TfIdf = (4.0/9.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "slices", TfIdf = (3.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "baking", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "sheet", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "arrange", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "arrange", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "single", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "layer", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "broil", TfIdf = (2.0/9.0) * Math.Log(n / 1.0,10)});
@@ -436,7 +445,7 @@ namespace RecipesTests
             model1.Elements.Add(new TfIdfElement{Term = "tomato", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "evenly", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "over", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "top", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "slices.top", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "with", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "mozzarella", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
             model1.Elements.Add(new TfIdfElement{Term = "cheese", TfIdf = (2.0/9.0) * Math.Log(n / 1.0,10)});
@@ -499,7 +508,8 @@ namespace RecipesTests
             model2.Elements.Add(new TfIdfElement{Term = "remaining", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
             model2.Elements.Add(new TfIdfElement{Term = "ingredients", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
             model2.Elements.Add(new TfIdfElement{Term = "ending", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "basiltop", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "basil", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "top", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
             model2.Elements.Add(new TfIdfElement{Term = "35", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
             model2.Elements.Add(new TfIdfElement{Term = "or", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
             model2.Elements.Add(new TfIdfElement{Term = "until", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
