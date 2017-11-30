@@ -84,13 +84,12 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and,"
+                Directions = "something and,    ,and    ,and,    "
             };
             var dict = new Dictionary<string, int>();
             dict["something"] = 1;
-            dict["and"] = 1;
+            dict["and"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
-            Assert.False(dict.ContainsKey("and,"));
             CollectionAssert.AreEquivalent(dict, ret);
         }
         
@@ -99,13 +98,12 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and. "
+                Directions = "something and.  .and  .and."
             };
             var dict = new Dictionary<string, int>();
             dict["something"] = 1;
-            dict["and"] = 1;
+            dict["and"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
-            Assert.False(dict.ContainsKey("and."));
             CollectionAssert.AreEquivalent(dict, ret);
         }
         
@@ -114,13 +112,116 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and; "
+                Directions = "something and; ;and ;and;"
             };
             var dict = new Dictionary<string, int>();
             dict["something"] = 1;
-            dict["and"] = 1;
+            dict["and"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
-            Assert.False(dict.ContainsKey("and;"));
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+
+        [Test]
+        public void TrimColonTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "and :and and: :and:"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["and"] = 4;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+        
+        [Test]
+        public void TrimQuestionMarkTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "and ?and and? ?and?"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["and"] = 4;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+        
+        [Test]
+        public void TrimExclamationMarkTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "and !and and! !and!"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["and"] = 4;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+        
+        [Test]
+        public void TrimParenthesesTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "and (and and( (and( )and and) )and) (and)"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["and"] = 8;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+
+        [Test]
+        public void TrimBracesTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "and {and and{ {and{ }and and} }and} }and}"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["and"] = 8;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+        
+        [Test]
+        public void TrimSquareBracketsTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "and [and and[ [and[ ]and and] ]and] [and]"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["and"] = 8;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+        
+        [Test]
+        public void TrimAngleBracketsTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "and <and and< <and< >and and> >and> >and>"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["and"] = 8;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+        
+        [Test]
+        public void DoNotTrimInsideWord()
+        {
+            var r = new Recipe
+            {
+                Directions = "a(n)d"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["a(n)d"] = 1;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
         
@@ -153,7 +254,7 @@ namespace RecipesTests
         }
         
         [Test]
-        public void TermsInLowerCaseTestTest()
+        public void RemovingNewLinesTest()
         {
             var r = new Recipe
             {
@@ -166,6 +267,19 @@ namespace RecipesTests
             CollectionAssert.AreEquivalent(dict, ret);
         }
 
+        [Test]
+        public void RemovingMoreCharacters()
+        {
+            var r = new Recipe
+            {
+                Directions = "?!and And;,. :!(aNd)?"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["and"] = 3;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+        
         [Test]
         public void NewLineSplitWords()
         {

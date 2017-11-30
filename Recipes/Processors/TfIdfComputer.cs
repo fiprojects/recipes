@@ -12,10 +12,14 @@ namespace RecipesCore.Processors
         private readonly IRecipesService _recipesService;
         private readonly ITfIdfService _tfIdfService;
 
-        private readonly Dictionary<Recipe, Dictionary<string, int>> _tfForRecipes = new Dictionary<Recipe, Dictionary<string, int>>();
+        private readonly Dictionary<Recipe, Dictionary<string, int>> _tfForRecipes = 
+            new Dictionary<Recipe, Dictionary<string, int>>();
 
         private readonly Dictionary<string, int> _termOccurenceInDocs = new Dictionary<string, int>();
 
+        private readonly char[] _charsToRemove =  {',', '.', ';', ':', '?', '!', '(', ')', '{', '}', '[', ']', '<',
+            '>'};
+        
         public TfIdfComputer(IRecipesService recipesService, ITfIdfService tfIdfService)
         {
             _recipesService = recipesService;
@@ -100,7 +104,7 @@ namespace RecipesCore.Processors
 
         public string NormalizeTerm(string term)
         {
-            string ret = term.TrimEnd('.').TrimEnd(';').TrimEnd(',');
+            string ret = term.TrimStart(_charsToRemove).TrimEnd(_charsToRemove);
             return ret.ToLower();
         }
     }
