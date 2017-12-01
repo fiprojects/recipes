@@ -13,6 +13,7 @@ namespace RecipesCore
             sc.AddTransient<IRecipesService, RecipesService>();
             sc.AddTransient<IUserService, UserService>();
             sc.AddTransient<IRatingService, RatingService>();
+            sc.AddTransient<ITfIdfService, TfIdfService>();
 
             return sc;
         }

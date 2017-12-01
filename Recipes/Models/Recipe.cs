@@ -55,5 +55,41 @@ namespace RecipesCore.Models
 
             return stringBuilder.ToString();
         }
+
+        protected bool Equals(Recipe other)
+        {
+            return Id == other.Id && string.Equals(Name, other.Name) && string.Equals(Description, other.Description) &&
+                   Equals(Category, other.Category) && string.Equals(Author, other.Author) &&
+                   Rating.Equals(other.Rating) && PreparationTime.Equals(other.PreparationTime) &&
+                   CookTime.Equals(other.CookTime) && Servings == other.Servings && Calories == other.Calories &&
+                   string.Equals(Directions, other.Directions);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Recipe) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Id.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Name != null ? Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Description != null ? Description.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Category != null ? Category.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Author != null ? Author.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ Rating.GetHashCode();
+                hashCode = (hashCode * 397) ^ PreparationTime.GetHashCode();
+                hashCode = (hashCode * 397) ^ CookTime.GetHashCode();
+                hashCode = (hashCode * 397) ^ Servings;
+                hashCode = (hashCode * 397) ^ Calories;
+                hashCode = (hashCode * 397) ^ (Directions != null ? Directions.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }

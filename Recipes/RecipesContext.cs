@@ -19,6 +19,8 @@ namespace RecipesCore
 
         public DbSet<RecipeRatings> RecipeRatings { get; set; }
 
+        public DbSet<TfIdfModel> TfIdfModels { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RecipeDone>()
