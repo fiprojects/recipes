@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using RecipesCore.Migrations;
 using RecipesCore.Models;
 
 namespace RecipesCore.Services
@@ -26,6 +28,22 @@ namespace RecipesCore.Services
                 return;
             _db.Add(model);
             _db.SaveChanges();
+        }
+
+        public List<TfIdfModel> GetAll()
+        {
+            return _db.TfIdfModels.ToList();
+        }
+
+        public List<TfIdfModel> GetAllExcept(TfIdfModel model)
+        {
+            var list = GetAll();
+            return list.Where(x => !x.Equals(model)).ToList();
+        }
+        
+        public List<TfIdfModel> GetSimilarRecipes(TfIdfModel model)
+        {
+            return null;
         }
     }
 }
