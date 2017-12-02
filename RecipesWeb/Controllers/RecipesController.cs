@@ -14,14 +14,16 @@ namespace RecipesWeb.Controllers
         private readonly IRatingService _ratingService;
         private readonly IUserService _userService;
         private readonly ICategoryService _categoryService;
+        private readonly ITfIdfService _tfIdfService;
 
         public RecipesController(IRecipesService recipesService, IRatingService ratingService,
-                                IUserService userService, ICategoryService categoryService)
+                                IUserService userService, ICategoryService categoryService, ITfIdfService tfIdfService)
         {
             _ratingService = ratingService;
             _recipesService = recipesService;
             _userService = userService;
             _categoryService = categoryService;
+            _tfIdfService = tfIdfService;
         }
 
         public IActionResult Show(long id)
@@ -67,7 +69,7 @@ namespace RecipesWeb.Controllers
                 }
             }
             viewModel.Recommended = selected;
-
+            viewModel.RecommendedByTfIdf = _tfIdfService.GetSimilarRecipesForRecipe(viewModel.Recipe).Take(4).ToList();
             return View(viewModel);
         }
 
