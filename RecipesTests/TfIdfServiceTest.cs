@@ -19,7 +19,8 @@ namespace RecipesTests
         private TfIdfModel _model2;
 
         private TfIdfModel _model3;
-        
+        private double _threshold = 1e-10;
+
         // this method is inspired by https://stackoverflow.com/questions/34332761/mocking-dbsett-inline
         private DbSet<T> ToDbSet<T>(List<T> sourceList) where T : class
         {
@@ -48,7 +49,10 @@ namespace RecipesTests
         {
             _model1 = new TfIdfModel
             {
-                Recipe = new Recipe()
+                Recipe = new Recipe
+                {
+                    Description = "basil soup"
+                }
             };
             _model1.Elements.Add(new TfIdfElement{Term = "a", TfIdf = 0.054});
             _model1.Elements.Add(new TfIdfElement{Term = "soup", TfIdf = 0.103});
@@ -57,7 +61,10 @@ namespace RecipesTests
             
             _model2 = new TfIdfModel
             {
-                Recipe = new Recipe()
+                Recipe = new Recipe
+                {
+                    Description = "tasty egg"
+                }
             };
             _model2.Elements.Add(new TfIdfElement{Term = "egg", TfIdf = 2.4});
             _model2.Elements.Add(new TfIdfElement{Term = "with", TfIdf = 0.004});
@@ -67,7 +74,10 @@ namespace RecipesTests
             
             _model3 = new TfIdfModel
             {
-                Recipe = new Recipe()
+                Recipe = new Recipe
+                {
+                    Description = "everything together"
+                }
             };
             _model3.Elements.Add(new TfIdfElement{Term = "mix", TfIdf = 1.32});
             _model3.Elements.Add(new TfIdfElement{Term = "egg", TfIdf = 2.5});
@@ -90,6 +100,50 @@ namespace RecipesTests
             var expectedList = new List<TfIdfModel>{_model1, _model3};
             var retList = _tfIdfService.GetAllExcept(_model2);
             CollectionAssert.AreEquivalent(expectedList, retList);
+        }
+
+        [Test]
+        public void ComputeZeroSimilarityTest()
+        {
+            var elem = new TfIdfModel
+            {
+                Recipe = new Recipe()
+            };
+            double similarity = _tfIdfService.ComputeCosineSimilarity(elem, _model1);
+            double expectedSim = 0.0f;
+            Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
+        }
+        
+        [Test]
+        public void ComputeSimilarityBetweenOneAndTwoTest()
+        {
+            double expectedSim = 1.0;
+            var similarity = _tfIdfService.ComputeCosineSimilarity(_model1, _model2);
+            Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
+        }
+        
+        [Test]
+        public void ComputeSimilarityBetweenOneAndThreeTest()
+        {
+            double expectedSim = 0.9758958692;
+            var similarity = _tfIdfService.ComputeCosineSimilarity(_model1, _model3);
+            Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
+        }
+        
+        [Test]
+        public void ComputeSimilarityBetweenTwoAndThreeTest()
+        {
+            double expectedSim = 0.9999999867;
+            var similarity = _tfIdfService.ComputeCosineSimilarity(_model2, _model3);
+            Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
+        }
+        
+        [Test]
+        public void ComputeSimilarityWithoutOrderMeaningTest()
+        {
+            double abSimilarity = _tfIdfService.ComputeCosineSimilarity(_model1, _model3);
+            double baSimilarity = _tfIdfService.ComputeCosineSimilarity(_model3, _model1);
+            Assert.AreEqual(abSimilarity, baSimilarity);
         }
     }
 }
