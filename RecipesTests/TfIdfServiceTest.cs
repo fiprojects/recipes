@@ -247,6 +247,15 @@ namespace RecipesTests
             MyCompareRecipes(_recipe3, rankedList[1]);
             MyCompareRecipes(_recipe2, rankedList[2]);
         }
+
+        [Test]
+        public void GetSimilarRecipesForRecipeTwoTest()
+        {
+            var rankedList = _tfIdfService.GetSimilarRecipesForRecipe(_recipe2);
+            MyCompareRecipes(_recipe1, rankedList[0]);
+            MyCompareRecipes(_recipe3, rankedList[1]);
+            MyCompareRecipes(_recipe4, rankedList[2]);
+        }
         
         private void MyCompareRecipes(Recipe expected, Recipe returned)
         {

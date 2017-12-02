@@ -13,6 +13,8 @@ namespace RecipesCore.Services
 
         List<TfIdfModel> GetAllExcept(TfIdfModel model);
 
+        List<Recipe> GetSimilarRecipesForRecipe(Recipe recipe);
+
         List<Recipe> GetSimilarRecipesForModel(TfIdfModel model);
 
         List<Recipe> RankListUsingTfIdf(TfIdfModel model, List<TfIdfModel> models);

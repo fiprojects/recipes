@@ -40,6 +40,12 @@ namespace RecipesCore.Services
             var list = GetAll();
             return list.Where(x => !x.Equals(model)).ToList();
         }
+
+        public List<Recipe> GetSimilarRecipesForRecipe(Recipe recipe)
+        {
+            var model = _db.TfIdfModels.SingleOrDefault(m => m.Recipe.Equals(recipe));
+            return GetSimilarRecipesForModel(model);
+        }
         
         public List<Recipe> GetSimilarRecipesForModel(TfIdfModel model)
         {
