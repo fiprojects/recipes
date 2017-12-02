@@ -78,7 +78,7 @@ namespace RecipesCore.Services
                 sizeB += retElement.TfIdf * retElement.TfIdf;
             }
             if (sizeA < threshold || sizeB < threshold)
-                return 0.0;
+                return -1.0;
             return dotProduct / (Math.Sqrt(sizeA) * Math.Sqrt(sizeB));
         }
     }

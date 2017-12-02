@@ -47,7 +47,7 @@ namespace RecipesTests
         {
             InitRecipes();
             InitTfIdfModels();
-            var modelsList = new List<TfIdfModel> {_model1, _model2, _model3};
+            var modelsList = new List<TfIdfModel> {_model1, _model2, _model3, _model4};
             var mock = new Mock<RecipesContext>();
             mock.Setup(context => context.TfIdfModels).Returns(() => ToDbSet<TfIdfModel>(modelsList));
             _tfIdfService = new TfIdfService(mock.Object);
@@ -57,18 +57,22 @@ namespace RecipesTests
         {
             _recipe1 = new Recipe
             {
+                Id = 1,
                 Description = "basil soup"
             };
             _recipe2 = new Recipe
             {
+                Id = 2,
                 Description = "egg"
             };
             _recipe3 = new Recipe
             {
+                Id = 3,
                 Description = "soup with egg and basil"
             };
             _recipe4 = new Recipe
             {
+                Id = 4,
                 Description = "egg on bread"
             };
         }
@@ -118,7 +122,7 @@ namespace RecipesTests
         [Test]
         public void GetAll()
         {
-            var getAllList = new List<TfIdfModel> {_model1, _model2, _model3};
+            var getAllList = new List<TfIdfModel> {_model1, _model2, _model3, _model4};
             var ret = _tfIdfService.GetAll();
             CollectionAssert.AreEquivalent(getAllList, ret);
         }
@@ -126,7 +130,7 @@ namespace RecipesTests
         [Test]
         public void GetAllExceptTest()
         {
-            var expectedList = new List<TfIdfModel>{_model1, _model3};
+            var expectedList = new List<TfIdfModel>{_model1, _model3, _model4};
             var retList = _tfIdfService.GetAllExcept(_model2);
             CollectionAssert.AreEquivalent(expectedList, retList);
         }
@@ -139,7 +143,7 @@ namespace RecipesTests
                 Recipe = new Recipe()
             };
             double similarity = _tfIdfService.ComputeCosineSimilarity(elem, _model1);
-            double expectedSim = 0.0f;
+            double expectedSim = -1.0f;
             Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
         }
         
@@ -197,6 +201,57 @@ namespace RecipesTests
             double abSimilarity = _tfIdfService.ComputeCosineSimilarity(_model1, _model3);
             double baSimilarity = _tfIdfService.ComputeCosineSimilarity(_model3, _model1);
             Assert.AreEqual(abSimilarity, baSimilarity);
+        }
+
+        [Test]
+        public void GetSimilarRecipesForModelOneTest()
+        {
+            var rankedList = _tfIdfService.GetSimilarRecipesForModel(_model1);
+            bool recipeTwoFirst = rankedList[0].Equals(_recipe2);
+            if (recipeTwoFirst)
+            {
+                MyCompareRecipes(_recipe4, rankedList[1]);
+                MyCompareRecipes(_recipe3, rankedList[2]);
+            }
+            else
+            {
+                MyCompareRecipes(_recipe4, rankedList[0]);
+                MyCompareRecipes(_recipe2, rankedList[1]);
+                MyCompareRecipes(_recipe3, rankedList[2]);
+            }
+        }
+
+        [Test]
+        public void GetSimilarRecipesForModelTwoTest()
+        {
+            var rankedList = _tfIdfService.GetSimilarRecipesForModel(_model2);
+            MyCompareRecipes(_recipe1, rankedList[0]);
+            MyCompareRecipes(_recipe3, rankedList[1]);
+            MyCompareRecipes(_recipe4, rankedList[2]);
+        }
+        
+        [Test]
+        public void GetSimilarRecipesForModelThreeTest()
+        {
+            var rankedList = _tfIdfService.GetSimilarRecipesForModel(_model3);
+            MyCompareRecipes(_recipe2, rankedList[0]);
+            MyCompareRecipes(_recipe4, rankedList[1]);
+            MyCompareRecipes(_recipe1, rankedList[2]);
+        }
+        
+        [Test]
+        public void GetSimilarRecipesForModelFourTest()
+        {
+            var rankedList = _tfIdfService.GetSimilarRecipesForModel(_model4);
+            MyCompareRecipes(_recipe1, rankedList[0]);
+            MyCompareRecipes(_recipe3, rankedList[1]);
+            MyCompareRecipes(_recipe2, rankedList[2]);
+        }
+        
+        private void MyCompareRecipes(Recipe expected, Recipe returned)
+        {
+            Assert.AreEqual(expected.Id, returned.Id);
+            Assert.AreEqual(expected.Description, returned.Description);
         }
     }
 }
