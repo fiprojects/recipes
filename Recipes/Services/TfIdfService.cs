@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using RecipesCore.Migrations;
 using RecipesCore.Models;
 
 namespace RecipesCore.Services
@@ -41,9 +41,45 @@ namespace RecipesCore.Services
             return list.Where(x => !x.Equals(model)).ToList();
         }
         
-        public List<TfIdfModel> GetSimilarRecipes(TfIdfModel model)
+        public List<Recipe> GetSimilarRecipesForModel(TfIdfModel model)
         {
-            return null;
+            var models = GetAllExcept(model);
+            var sortedModels = RankListUsingTfIdf(model, models);
+            return sortedModels;
+        }
+
+        public List<Recipe> RankListUsingTfIdf(TfIdfModel model, List<TfIdfModel> models)
+        {
+            var tuplesList = new List<Tuple<Recipe, double>>();
+            foreach (var tfIdfModel in models)
+            {
+                double similarity = ComputeCosineSimilarity(model, tfIdfModel);
+                tuplesList.Add(Tuple.Create(tfIdfModel.Recipe, similarity));
+            }
+            var ret = tuplesList.OrderByDescending(tuple => tuple.Item2)
+                .Select(tuple => tuple.Item1)
+                .ToList();
+            return ret;
+        }
+
+        public double ComputeCosineSimilarity(TfIdfModel a, TfIdfModel b)
+        {
+            double threshold = 1e-16;
+            double dotProduct = 0.0;
+            double sizeA = 0.0;
+            double sizeB = 0.0;
+            foreach (var element in a.Elements)
+            {
+                var retElement = b.Elements.Find(e => e.Term.Equals(element.Term));
+                if (retElement == null)
+                    continue;
+                dotProduct += element.TfIdf * retElement.TfIdf;
+                sizeA += element.TfIdf * element.TfIdf;
+                sizeB += retElement.TfIdf * retElement.TfIdf;
+            }
+            if (sizeA < threshold || sizeB < threshold)
+                return 0.0;
+            return dotProduct / (Math.Sqrt(sizeA) * Math.Sqrt(sizeB));
         }
     }
 }

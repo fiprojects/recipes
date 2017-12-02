@@ -13,6 +13,10 @@ namespace RecipesCore.Services
 
         List<TfIdfModel> GetAllExcept(TfIdfModel model);
 
-        List<TfIdfModel> GetSimilarRecipes(TfIdfModel model);
+        List<Recipe> GetSimilarRecipesForModel(TfIdfModel model);
+
+        List<Recipe> RankListUsingTfIdf(TfIdfModel model, List<TfIdfModel> models);
+
+        double ComputeCosineSimilarity(TfIdfModel a, TfIdfModel b);
     }
 }
