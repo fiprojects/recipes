@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using RecipesCore.Models;
 
 namespace RecipesCore.Services
@@ -32,7 +33,11 @@ namespace RecipesCore.Services
 
         public List<TfIdfModel> GetAll()
         {
-            return _db.TfIdfModels.ToList();
+            return _db.TfIdfModels
+                .Include(m => m.Recipe)
+                .Include(m => m.Recipe.Category)
+                .Include(m => m.Elements)
+                .ToList();
         }
 
         public List<TfIdfModel> GetAllExcept(TfIdfModel model)
@@ -43,7 +48,9 @@ namespace RecipesCore.Services
 
         public List<Recipe> GetSimilarRecipesForRecipe(Recipe recipe)
         {
-            var model = _db.TfIdfModels.SingleOrDefault(m => m.Recipe.Equals(recipe));
+            var model = _db.TfIdfModels
+                .Include(m => m.Elements)
+                .SingleOrDefault(m => m.Recipe.Equals(recipe));
             return GetSimilarRecipesForModel(model);
         }
         
