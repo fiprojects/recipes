@@ -18,7 +18,7 @@ namespace RecipesCore.Processors
         private readonly Dictionary<string, int> _termOccurenceInDocs = new Dictionary<string, int>();
 
         private readonly char[] _charsToRemove =  {',', '.', ';', ':', '?', '!', '(', ')', '{', '}', '[', ']', '<',
-            '>'};
+            '>', '\'', '"'};
         
         public TfIdfComputer(IRecipesService recipesService, ITfIdfService tfIdfService)
         {

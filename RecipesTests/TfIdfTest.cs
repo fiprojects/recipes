@@ -211,6 +211,32 @@ namespace RecipesTests
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
+
+        [Test]
+        public void TrimApostropheTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "something 'something something' 'something'"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["something"] = 4;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+
+        [Test]
+        public void TrimQuotationMarksTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "something \"something something\" \"something\""
+            };
+            var dict = new Dictionary<string, int>();
+            dict["something"] = 4;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
         
         [Test]
         public void DoNotTrimInsideWord()
