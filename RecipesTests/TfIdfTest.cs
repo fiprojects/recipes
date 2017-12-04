@@ -70,11 +70,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and ."
+                Directions = "something word ."
             };
             var dict = new Dictionary<string, int>();
             dict["something"] = 1;
-            dict["and"] = 1;
+            dict["word"] = 1;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -84,11 +84,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and,    ,and    ,and,    "
+                Directions = "something word,    ,word    ,word,    "
             };
             var dict = new Dictionary<string, int>();
             dict["something"] = 1;
-            dict["and"] = 3;
+            dict["word"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -98,11 +98,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and.  .and  .and."
+                Directions = "something word.  .word  .word."
             };
             var dict = new Dictionary<string, int>();
             dict["something"] = 1;
-            dict["and"] = 3;
+            dict["word"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -112,11 +112,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and; ;and ;and;"
+                Directions = "something word; ;word ;word;"
             };
             var dict = new Dictionary<string, int>();
             dict["something"] = 1;
-            dict["and"] = 3;
+            dict["word"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -126,10 +126,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and :and and: :and:"
+                Directions = "word :word word: :word:"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 4;
+            dict["word"] = 4;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -139,10 +139,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and ?and and? ?and?"
+                Directions = "word ?word word? ?word?"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 4;
+            dict["word"] = 4;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -152,10 +152,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and !and and! !and!"
+                Directions = "word !word word! !word!"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 4;
+            dict["word"] = 4;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -165,10 +165,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and (and and( (and( )and and) )and) (and)"
+                Directions = "word (word word( (word( )word word) )word) (word)"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 8;
+            dict["word"] = 8;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -178,10 +178,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and {and and{ {and{ }and and} }and} }and}"
+                Directions = "word {word word{ {word{ }word word} }word} }word}"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 8;
+            dict["word"] = 8;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -191,10 +191,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and [and and[ [and[ ]and and] ]and] [and]"
+                Directions = "word [word word[ [word[ ]word word] ]word] [word]"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 8;
+            dict["word"] = 8;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -204,10 +204,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and <and and< <and< >and and> >and> >and>"
+                Directions = "word <word word< <word< >word word> >word> >word>"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 8;
+            dict["word"] = 8;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -256,11 +256,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "Something aNd something"
+                Directions = "Something wOrD something"
             };
             var dict = new Dictionary<string, int>();
             dict["something"] = 2;
-            dict["and"] = 1;
+            dict["word"] = 1;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -270,11 +270,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something  and    something"
+                Directions = "something  word    something"
             };
             var dict = new Dictionary<string, int>();
             dict["something"] = 2;
-            dict["and"] = 1;
+            dict["word"] = 1;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -284,11 +284,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something \r\n and something \r\n\r\n and \n something"
+                Directions = "something \r\n word something \r\n\r\n word \n something"
             };
             var dict = new Dictionary<string, int>();
             dict["something"] = 3;
-            dict["and"] = 2;
+            dict["word"] = 2;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -298,10 +298,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "?!and And;,. :!(aNd)?"
+                Directions = "?!word word;,. :!(word)?"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 3;
+            dict["word"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
