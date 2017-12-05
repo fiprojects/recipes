@@ -1,9 +1,10 @@
 ﻿using RecipesCore.Models;
+using System.Collections.Generic;
 
 namespace RecipesCore.Services
 {
-    public interface ICategoryService
+    public interface IInredientService
     {
-        Category Get(long id);
+        List<Ingredient> GetAll();
     }
 }
