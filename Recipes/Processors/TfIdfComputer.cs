@@ -22,11 +22,11 @@ namespace RecipesCore.Processors
 
         private StopWords _stopWords;
 
-        public TfIdfComputer(IRecipesService recipesService, ITfIdfService tfIdfService)
+        public TfIdfComputer(IRecipesService recipesService, ITfIdfService tfIdfService, string stopWordsFile)
         {
             _recipesService = recipesService;
             _tfIdfService = tfIdfService;
-            _stopWords = new StopWords("../../../../Recipes/stop_words.json");
+            _stopWords = new StopWords(stopWordsFile);
         }
 
         public void Run(string[] args)
