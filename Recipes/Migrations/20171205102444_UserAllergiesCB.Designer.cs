@@ -11,9 +11,10 @@ using System;
 namespace RecipesCore.Migrations
 {
     [DbContext(typeof(RecipesContext))]
-    partial class RecipesContextModelSnapshot : ModelSnapshot
+    [Migration("20171205102444_UserAllergiesCB")]
+    partial class UserAllergiesCB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,8 +57,6 @@ namespace RecipesCore.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Importance");
 
                     b.Property<string>("Name");
 
@@ -165,38 +164,6 @@ namespace RecipesCore.Migrations
                     b.ToTable("RecipeSeen");
                 });
 
-            modelBuilder.Entity("RecipesCore.Models.TfIdfElement", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Term");
-
-                    b.Property<double>("TfIdf");
-
-                    b.Property<long?>("TfIdfModelId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TfIdfModelId");
-
-                    b.ToTable("TfIdfElement");
-                });
-
-            modelBuilder.Entity("RecipesCore.Models.TfIdfModel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long?>("RecipeId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("TfIdfModels");
-                });
-
             modelBuilder.Entity("RecipesCore.Models.User", b =>
                 {
                     b.Property<long?>("Id")
@@ -298,20 +265,6 @@ namespace RecipesCore.Migrations
                         .WithMany("RecipesSeen")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("RecipesCore.Models.TfIdfElement", b =>
-                {
-                    b.HasOne("RecipesCore.Models.TfIdfModel")
-                        .WithMany("Elements")
-                        .HasForeignKey("TfIdfModelId");
-                });
-
-            modelBuilder.Entity("RecipesCore.Models.TfIdfModel", b =>
-                {
-                    b.HasOne("RecipesCore.Models.Recipe", "Recipe")
-                        .WithMany()
-                        .HasForeignKey("RecipeId");
                 });
 
             modelBuilder.Entity("RecipesCore.Models.UserAllergie", b =>

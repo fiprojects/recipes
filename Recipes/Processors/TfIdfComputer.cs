@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Pluralize.NET;
 using RecipesCore.Models;
 using RecipesCore.Services;
 
@@ -18,12 +19,17 @@ namespace RecipesCore.Processors
         private readonly Dictionary<string, int> _termOccurenceInDocs = new Dictionary<string, int>();
 
         private readonly char[] _charsToRemove =  {',', '.', ';', ':', '?', '!', '(', ')', '{', '}', '[', ']', '<',
-            '>'};
-        
-        public TfIdfComputer(IRecipesService recipesService, ITfIdfService tfIdfService)
+            '>', '\'', '"', '-'};
+
+        private StopWords _stopWords;
+        private Pluralizer _pluralizer;
+
+        public TfIdfComputer(IRecipesService recipesService, ITfIdfService tfIdfService, string stopWordsFile)
         {
             _recipesService = recipesService;
             _tfIdfService = tfIdfService;
+            _stopWords = new StopWords(stopWordsFile);
+            _pluralizer = new Pluralizer();
         }
 
         public void Run(string[] args)
@@ -105,7 +111,13 @@ namespace RecipesCore.Processors
         public string NormalizeTerm(string term)
         {
             string ret = term.TrimStart(_charsToRemove).TrimEnd(_charsToRemove);
-            return ret.ToLower();
+            ret = ret.ToLower();
+            if (_stopWords.IsStopWord(ret))
+                return "";
+            int n;
+            if (int.TryParse(ret, out n))
+                return "";
+            return _pluralizer.Singularize(ret);
         }
     }
 }

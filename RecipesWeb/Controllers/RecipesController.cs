@@ -33,10 +33,11 @@ namespace RecipesWeb.Controllers
                 Rating = 0
             };
 
+            long? userId = null;
             var userName = HttpContext.User.Identity.Name;
             if (userName != null)
             {
-                var userId = _userService.Get(userName).Id;
+                userId = _userService.Get(userName).Id;
                 if (userId != null)
                 {
                     userRatingForRecipe.UserId = userId.Value;
@@ -54,7 +55,7 @@ namespace RecipesWeb.Controllers
                 Recipe = _recipesService.Get(id),
                 RecipeUserRating = userRatingForRecipe,
                 AverageRating = _ratingService.GetAverageRatingForRecipe(id),
-                Recommended = _recipesService.GetRecommendedByIngredience(id)
+                Recommended = _recipesService.GetRecommendedByIngredience(id, userId)
              };
             //List<Recipe> all = _recipesService.GetRecommendedByCategoryId(viewModel.Recipe.Category.Id).ToList();
             //Random rnd = new Random();
