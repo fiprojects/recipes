@@ -150,7 +150,7 @@ namespace RecipesTests
         [Test]
         public void ComputeSimilarityBetweenOneAndTwoTest()
         {
-            double expectedSim = 1.0;
+            double expectedSim = 0.000016 / (1.060404168 * 2.715121611);  // 0,000005557
             var similarity = _tfIdfService.ComputeCosineSimilarity(_model1, _model2);
             Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
         }
@@ -158,7 +158,7 @@ namespace RecipesTests
         [Test]
         public void ComputeSimilarityBetweenOneAndThreeTest()
         {
-            double expectedSim = 0.9758958692;
+            double expectedSim = 1.390718896 / (1.060404168 * 3.131004785);  // 0,418874766
             var similarity = _tfIdfService.ComputeCosineSimilarity(_model1, _model3);
             Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
         }
@@ -166,7 +166,7 @@ namespace RecipesTests
         [Test]
         public void ComputeSimilarityBetweenOneAndFourTest()
         {
-            double expectedSim = 1.0;
+            double expectedSim = 0.000014 / (1.060404168 * 3.367767321);  // 0,00000392
             var similarity = _tfIdfService.ComputeCosineSimilarity(_model1, _model4);
             Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
         }
@@ -174,7 +174,7 @@ namespace RecipesTests
         [Test]
         public void ComputeSimilarityBetweenTwoAndThreeTest()
         {
-            double expectedSim = 0.9999999867;
+            double expectedSim = 6.000024 / (2.715121611 * 3.131004785);  // 0,705797263
             var similarity = _tfIdfService.ComputeCosineSimilarity(_model2, _model3);
             Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
         }
@@ -182,7 +182,7 @@ namespace RecipesTests
         [Test]
         public void ComputeSimilarityBetweenTwoAndFourTest()
         {
-            double expectedSim = 0.9991415764;
+            double expectedSim = 7.573460062 / (2.715121611 * 3.367767321);  // 0,828252918
             var similarity = _tfIdfService.ComputeCosineSimilarity(_model2, _model4);
             Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
         }
@@ -190,7 +190,7 @@ namespace RecipesTests
         [Test]
         public void ComputeSimilarityBetweenThreeAndFourTest()
         {
-            double expectedSim = 0.9999983907;
+            double expectedSim = 6.750001632 / (3.131004785 * 3.367767321);  // 0,640144573
             var similarity = _tfIdfService.ComputeCosineSimilarity(_model3, _model4);
             Assert.That(similarity, Is.EqualTo(expectedSim).Within(_threshold));
         }
@@ -207,27 +207,18 @@ namespace RecipesTests
         public void GetSimilarRecipesForModelOneTest()
         {
             var rankedList = _tfIdfService.GetSimilarRecipesForModel(_model1);
-            bool recipeTwoFirst = rankedList[0].Equals(_recipe2);
-            if (recipeTwoFirst)
-            {
-                MyCompareRecipes(_recipe4, rankedList[1]);
-                MyCompareRecipes(_recipe3, rankedList[2]);
-            }
-            else
-            {
-                MyCompareRecipes(_recipe4, rankedList[0]);
-                MyCompareRecipes(_recipe2, rankedList[1]);
-                MyCompareRecipes(_recipe3, rankedList[2]);
-            }
+            MyCompareRecipes(_recipe3, rankedList[0]);
+            MyCompareRecipes(_recipe2, rankedList[1]);
+            MyCompareRecipes(_recipe4, rankedList[2]);
         }
 
         [Test]
         public void GetSimilarRecipesForModelTwoTest()
         {
             var rankedList = _tfIdfService.GetSimilarRecipesForModel(_model2);
-            MyCompareRecipes(_recipe1, rankedList[0]);
+            MyCompareRecipes(_recipe4, rankedList[0]);
             MyCompareRecipes(_recipe3, rankedList[1]);
-            MyCompareRecipes(_recipe4, rankedList[2]);
+            MyCompareRecipes(_recipe1, rankedList[2]);
         }
         
         [Test]
@@ -243,18 +234,18 @@ namespace RecipesTests
         public void GetSimilarRecipesForModelFourTest()
         {
             var rankedList = _tfIdfService.GetSimilarRecipesForModel(_model4);
-            MyCompareRecipes(_recipe1, rankedList[0]);
+            MyCompareRecipes(_recipe2, rankedList[0]);
             MyCompareRecipes(_recipe3, rankedList[1]);
-            MyCompareRecipes(_recipe2, rankedList[2]);
+            MyCompareRecipes(_recipe1, rankedList[2]);
         }
 
         [Test]
         public void GetSimilarRecipesForRecipeTwoTest()
         {
             var rankedList = _tfIdfService.GetSimilarRecipesForRecipe(_recipe2);
-            MyCompareRecipes(_recipe1, rankedList[0]);
+            MyCompareRecipes(_recipe4, rankedList[0]);
             MyCompareRecipes(_recipe3, rankedList[1]);
-            MyCompareRecipes(_recipe4, rankedList[2]);
+            MyCompareRecipes(_recipe1, rankedList[2]);
         }
         
         private void MyCompareRecipes(Recipe expected, Recipe returned)

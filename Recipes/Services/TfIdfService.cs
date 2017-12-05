@@ -85,10 +85,18 @@ namespace RecipesCore.Services
             {
                 var retElement = b.Elements.Find(e => e.Term.Equals(element.Term));
                 if (retElement == null)
+                {
+                    sizeA += element.TfIdf * element.TfIdf;
                     continue;
+                }
                 dotProduct += element.TfIdf * retElement.TfIdf;
                 sizeA += element.TfIdf * element.TfIdf;
                 sizeB += retElement.TfIdf * retElement.TfIdf;
+            }
+            var diffList = b.Elements.Where(i => a.Elements.All(ai => ai.Term != i.Term)).ToList();
+            foreach (var element in diffList)
+            {
+                sizeB += element.TfIdf * element.TfIdf;
             }
             if (sizeA < threshold || sizeB < threshold)
                 return -1.0;
