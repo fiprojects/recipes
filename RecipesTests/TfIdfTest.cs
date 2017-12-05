@@ -430,6 +430,33 @@ namespace RecipesTests
         }
 
         [Test]
+        public void TfIdfIgnoringStopWordInComputation()
+        {
+            var recipe = new Recipe
+            {
+                Directions = "and and and and and meaningful meaningful fruit"
+            };
+            var recipeList = new List<Recipe>
+            {
+                recipe,
+                _recipe3
+            };
+            var model = new TfIdfModel
+            {
+                Recipe = recipe
+            };
+            model.Elements.Add(new TfIdfElement{Term = "meaningful", TfIdf = 1.0 * Math.Log(2.0, 10)});
+            model.Elements.Add(new TfIdfElement{Term = "fruit", TfIdf = 0.5 * Math.Log(2.0, 10)});
+            var expectedList = new List<TfIdfModel>
+            {
+                model
+            };
+
+            var ret = _tfIdfComputer.ComputeTfIdfForRecipes(recipeList);
+            ModelsAreTheSame(expectedList, ret);
+        }
+        
+        [Test]
         public void TfIdfOnTwoRealDirectionsTest()
         {
             var recipeList = GetTwoRealRecipes();
