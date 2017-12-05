@@ -22,7 +22,7 @@ namespace TfIdfConsole
             var db = new RecipesContext();
             var recipesService = new RecipesService(db);
             var tfIdfService = new TfIdfService(db);
-            IProcessor processor = new TfIdfComputer(recipesService, tfIdfService);
+            IProcessor processor = new TfIdfComputer(recipesService, tfIdfService, "../Recipes/stop_words.json");
             processor.Run(null);
         }
     }
