@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RecipesCore.Services
 {
-    public interface IInredientService
+    public interface IIngredientService
     {
         List<Ingredient> GetAll();
     }

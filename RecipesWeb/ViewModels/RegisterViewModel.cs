@@ -1,15 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using RecipesCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace RecipesWeb.ViewModels
 {
     public class RegisterViewModel
     {
-        public List<Ingredient> Ingredients{ get; set; }
-
+        public List<SelectedItemViewModel> Ingredients { get; } = new List<SelectedItemViewModel>();
     }
 }

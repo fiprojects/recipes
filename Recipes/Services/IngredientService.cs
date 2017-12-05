@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace RecipesCore.Services
 {
-    class IngredientService : IInredientService
+    public class IngredientService : IIngredientService
     {
         private readonly RecipesContext _db;
 
