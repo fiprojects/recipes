@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RecipesCore.Models;
+using System;
 
 namespace RecipesCore.Services
 {
@@ -17,6 +18,6 @@ namespace RecipesCore.Services
 
         List<Recipe> GetRecommendedByCategoryId(long id);
 
-        List<Recipe> GetRecommendedByIngredience(long recipeId);
+        List<Recipe> GetRecommendedByIngredience(long recipeId, long? userId);
     }
 }

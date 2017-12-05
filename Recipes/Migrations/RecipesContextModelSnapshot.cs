@@ -57,6 +57,8 @@ namespace RecipesCore.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("Importance");
+
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
