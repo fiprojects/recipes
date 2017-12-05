@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Pluralize.NET;
 using RecipesCore.Models;
 using RecipesCore.Services;
 
@@ -21,12 +22,14 @@ namespace RecipesCore.Processors
             '>', '\'', '"', '-'};
 
         private StopWords _stopWords;
+        private Pluralizer _pluralizer;
 
         public TfIdfComputer(IRecipesService recipesService, ITfIdfService tfIdfService, string stopWordsFile)
         {
             _recipesService = recipesService;
             _tfIdfService = tfIdfService;
             _stopWords = new StopWords(stopWordsFile);
+            _pluralizer = new Pluralizer();
         }
 
         public void Run(string[] args)
@@ -114,7 +117,7 @@ namespace RecipesCore.Processors
             int n;
             if (int.TryParse(ret, out n))
                 return "";
-            return ret;
+            return _pluralizer.Singularize(ret);
         }
     }
 }
