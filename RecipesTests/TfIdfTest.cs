@@ -40,14 +40,15 @@ namespace RecipesTests
             _tfIdfMock = new Mock<ITfIdfService>();
             _tfIdfMock.Setup(service => service.Add(It.IsAny<List<TfIdfModel>>())).Verifiable();
             
-            _tfIdfComputer = new TfIdfComputer(_recipesMock.Object, _tfIdfMock.Object);
+            _tfIdfComputer = new TfIdfComputer(_recipesMock.Object, _tfIdfMock.Object,
+                "../../../../Recipes/stop_words.json");
         }
 
         private void InitRecipes()
         {
             _recipe1 = new Recipe
             {
-                Directions= "\r\nRecipe test A recipe"
+                Directions= "\r\nRecipe meaningful A recipe"
             };
             
             _recipe2 = new Recipe();
@@ -70,11 +71,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and ."
+                Directions = "meaningful word ."
             };
             var dict = new Dictionary<string, int>();
-            dict["something"] = 1;
-            dict["and"] = 1;
+            dict["meaningful"] = 1;
+            dict["word"] = 1;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -84,11 +85,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and,    ,and    ,and,    "
+                Directions = "meaningful word,    ,word    ,word,    "
             };
             var dict = new Dictionary<string, int>();
-            dict["something"] = 1;
-            dict["and"] = 3;
+            dict["meaningful"] = 1;
+            dict["word"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -98,11 +99,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and.  .and  .and."
+                Directions = "meaningful word.  .word  .word."
             };
             var dict = new Dictionary<string, int>();
-            dict["something"] = 1;
-            dict["and"] = 3;
+            dict["meaningful"] = 1;
+            dict["word"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -112,11 +113,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something and; ;and ;and;"
+                Directions = "meaningful word; ;word ;word;"
             };
             var dict = new Dictionary<string, int>();
-            dict["something"] = 1;
-            dict["and"] = 3;
+            dict["meaningful"] = 1;
+            dict["word"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -126,10 +127,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and :and and: :and:"
+                Directions = "word :word word: :word:"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 4;
+            dict["word"] = 4;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -139,10 +140,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and ?and and? ?and?"
+                Directions = "word ?word word? ?word?"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 4;
+            dict["word"] = 4;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -152,10 +153,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and !and and! !and!"
+                Directions = "word !word word! !word!"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 4;
+            dict["word"] = 4;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -165,10 +166,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and (and and( (and( )and and) )and) (and)"
+                Directions = "word (word word( (word( )word word) )word) (word)"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 8;
+            dict["word"] = 8;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -178,10 +179,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and {and and{ {and{ }and and} }and} }and}"
+                Directions = "word {word word{ {word{ }word word} }word} }word}"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 8;
+            dict["word"] = 8;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -191,10 +192,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and [and and[ [and[ ]and and] ]and] [and]"
+                Directions = "word [word word[ [word[ ]word word] ]word] [word]"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 8;
+            dict["word"] = 8;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -204,10 +205,62 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "and <and and< <and< >and and> >and> >and>"
+                Directions = "word <word word< <word< >word word> >word> >word>"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 8;
+            dict["word"] = 8;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+
+        [Test]
+        public void TrimApostropheTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "meaningful 'meaningful meaningful' 'meaningful'"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["meaningful"] = 4;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+
+        [Test]
+        public void TrimQuotationMarksTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "meaningful \"meaningful meaningful\" \"meaningful\""
+            };
+            var dict = new Dictionary<string, int>();
+            dict["meaningful"] = 4;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+
+        [Test]
+        public void TrimDashTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "meaningful -meaningful meaningful- -meaningful-"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["meaningful"] = 4;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+
+        [Test]
+        public void RemoveNumbersTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "1 meaningful 22 350"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["meaningful"] = 1;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -230,11 +283,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "Something aNd something"
+                Directions = "meaningful wOrD meaningful"
             };
             var dict = new Dictionary<string, int>();
-            dict["something"] = 2;
-            dict["and"] = 1;
+            dict["meaningful"] = 2;
+            dict["word"] = 1;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -244,11 +297,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something  and    something"
+                Directions = "meaningful  word    meaningful"
             };
             var dict = new Dictionary<string, int>();
-            dict["something"] = 2;
-            dict["and"] = 1;
+            dict["meaningful"] = 2;
+            dict["word"] = 1;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -258,11 +311,11 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "something \r\n and something \r\n\r\n and \n something"
+                Directions = "meaningful \r\n word meaningful \r\n\r\n word \n meaningful"
             };
             var dict = new Dictionary<string, int>();
-            dict["something"] = 3;
-            dict["and"] = 2;
+            dict["meaningful"] = 3;
+            dict["word"] = 2;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -272,10 +325,10 @@ namespace RecipesTests
         {
             var r = new Recipe
             {
-                Directions = "?!and And;,. :!(aNd)?"
+                Directions = "?!word word;,. :!(word)?"
             };
             var dict = new Dictionary<string, int>();
-            dict["and"] = 3;
+            dict["word"] = 3;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
@@ -285,10 +338,23 @@ namespace RecipesTests
         {
             var dict = new Dictionary<string, int>();
             dict["recipe"] = 1;
-            dict["a"] = 1;
             dict["unique"] = 1;
             dict["split"] = 2;
             var ret = _tfIdfComputer.GetTermsWithCountForRecipe(_recipe4);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+
+        [Test]
+        public void RemoveStopWordsTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "always remove a stop word"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["remove"] = 1;
+            dict["word"] = 1;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
             CollectionAssert.AreEquivalent(dict, ret);
         }
         
@@ -306,8 +372,7 @@ namespace RecipesTests
                 Recipe = _recipe1
             };
             expectedModel.Elements.Add(new TfIdfElement{Id = 0, Term = "recipe", TfIdf = Math.Log(2, 10)});
-            expectedModel.Elements.Add(new TfIdfElement{Id = 0, Term = "test", TfIdf = 0.5 * Math.Log(2, 10)});
-            expectedModel.Elements.Add(new TfIdfElement{Id = 0, Term = "a", TfIdf = 0.5 * Math.Log(2, 10)});
+            expectedModel.Elements.Add(new TfIdfElement{Id = 0, Term = "meaningful", TfIdf = 0.5 * Math.Log(2, 10)});
             var expectedList = new List<TfIdfModel>
             {
                 expectedModel
@@ -345,15 +410,13 @@ namespace RecipesTests
                 Recipe = _recipe1
             };
             model1.Elements.Add(new TfIdfElement{Term = "recipe", TfIdf = 0.0});
-            model1.Elements.Add(new TfIdfElement{Term = "test", TfIdf = 0.5 * Math.Log(2 ,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "a", TfIdf = 0.0});
+            model1.Elements.Add(new TfIdfElement{Term = "meaningful", TfIdf = 0.5 * Math.Log(2 ,10)});
             
             var model2 = new TfIdfModel
             {
                 Recipe = _recipe4
             };
             model2.Elements.Add(new TfIdfElement{Term = "recipe", TfIdf = 0.0});
-            model2.Elements.Add(new TfIdfElement{Term = "a", TfIdf = 0.0});
             model2.Elements.Add(new TfIdfElement{Term = "unique", TfIdf = 0.5 * Math.Log(2, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "split", TfIdf = 1 * Math.Log(2, 10)});
             
@@ -366,6 +429,47 @@ namespace RecipesTests
             ModelsAreTheSame(expectedList, ret);
         }
 
+        [Test]
+        public void TfIdfIgnoringStopWordInComputationTest()
+        {
+            var recipe = new Recipe
+            {
+                Directions = "and and and and and meaningful meaningful fruit"
+            };
+            var recipeList = new List<Recipe>
+            {
+                recipe,
+                _recipe3
+            };
+            var model = new TfIdfModel
+            {
+                Recipe = recipe
+            };
+            model.Elements.Add(new TfIdfElement{Term = "meaningful", TfIdf = 1.0 * Math.Log(2.0, 10)});
+            model.Elements.Add(new TfIdfElement{Term = "fruit", TfIdf = 0.5 * Math.Log(2.0, 10)});
+            var expectedList = new List<TfIdfModel>
+            {
+                model
+            };
+
+            var ret = _tfIdfComputer.ComputeTfIdfForRecipes(recipeList);
+            ModelsAreTheSame(expectedList, ret);
+        }
+
+        [Test]
+        public void SingularisationTest()
+        {
+            var r = new Recipe
+            {
+                Directions = "recipes cook"
+            };
+            var dict = new Dictionary<string, int>();
+            dict["recipe"] = 1;
+            dict["cook"] = 1;
+            var ret = _tfIdfComputer.GetTermsWithCountForRecipe(r);
+            CollectionAssert.AreEquivalent(dict, ret);
+        }
+        
         [Test]
         public void TfIdfOnTwoRealDirectionsTest()
         {
@@ -395,126 +499,80 @@ namespace RecipesTests
             {
                 Recipe = recipesList[0]
             };
-            model1.Elements.Add(new TfIdfElement{Term = "preheat", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "the", TfIdf = (9.0/9.0) * Math.Log(n / 2.0 ,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "oven", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "on", TfIdf = (2.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "broiler", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "setting", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "in", TfIdf = (2.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "a", TfIdf = (3.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "large", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "bowl", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "combine", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "roma", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "tomatoes", TfIdf = (2.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "sun-dried", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "garlic", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "olive", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "oil", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "vinegar", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "basil", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "salt", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "and", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "pepper", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "allow", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "mixture", TfIdf = (2.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "to", TfIdf = (2.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "sit", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "for", TfIdf = (3.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "10", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "minutes", TfIdf = (3.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "cut", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "baguette", TfIdf = (3.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "into", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "3/4-inch", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "slices", TfIdf = (3.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "baking", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "sheet", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "arrange", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "single", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "layer", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "broil", TfIdf = (2.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "1", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "2", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "5", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "until", TfIdf = (2.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "slightly", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "brown", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "divide", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "tomato", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "evenly", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "over", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "slices.top", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "with", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "mozzarella", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "cheese", TfIdf = (2.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "or", TfIdf = (1.0/9.0) * Math.Log(n / 2.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "is", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
-            model1.Elements.Add(new TfIdfElement{Term = "melted", TfIdf = (1.0/9.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "preheat", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "oven", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "broiler", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "setting", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "bowl", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "combine", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "roma", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "tomato", TfIdf = (3.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "sun-dried", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "garlic", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "olive", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "oil", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "vinegar", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "basil", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "salt", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "pepper", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "mixture", TfIdf = (2.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "sit", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "minute", TfIdf = (3.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "cut", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "baguette", TfIdf = (3.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "3/4-inch", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "slice", TfIdf = (3.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "baking", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "sheet", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "arrange", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "single", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "layer", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "broil", TfIdf = (2.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "brown", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "divide", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "slices.top", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "mozzarella", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "cheese", TfIdf = (2.0/3.0) * Math.Log(n / 2.0,10)});
+            model1.Elements.Add(new TfIdfElement{Term = "melted", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
 
             var model2 = new TfIdfModel
             {
                 Recipe = recipesList[1]
             };
 
-            model2.Elements.Add(new TfIdfElement{Term = "preheat", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "oven", TfIdf = (3.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "to", TfIdf = (2.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "350", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "degrees", TfIdf = (2.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "f", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "175", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "c", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "dip", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "eggplant", TfIdf = (2.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "slices", TfIdf = (2.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "in", TfIdf = (7.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "egg", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "then", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "bread", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "crumbs", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "place", TfIdf = (2.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "a", TfIdf = (4.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "single", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "layer", TfIdf = (2.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "on", TfIdf = (3.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "baking", TfIdf = (2.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "sheet", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "bake", TfIdf = (2.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "preheated", TfIdf = (2.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "for", TfIdf = (2.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "5", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "minutes", TfIdf = (2.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "each", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "side", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "9x13", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "inch", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "dish", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "spread", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "spaghetti", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "sauce", TfIdf = (2.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "cover", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "the", TfIdf = (3.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "bottom", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "of", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "sprinkle", TfIdf = (2.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "with", TfIdf = (3.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "mozzarella", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "and", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "parmesan", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "cheeses", TfIdf = (2.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "repeat", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "remaining", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "ingredients", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "ending", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "basil", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "top", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "35", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "or", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "until", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "golden", TfIdf = (1.0/7.0) * Math.Log(n / 1.0,10)});
-            model2.Elements.Add(new TfIdfElement{Term = "brown", TfIdf = (1.0/7.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "preheat", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "oven", TfIdf = (3.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "degree", TfIdf = (2.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "dip", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "eggplant", TfIdf = (2.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "slice", TfIdf = (2.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "egg", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "bread", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "crumb", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "single", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "layer", TfIdf = (2.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "baking", TfIdf = (2.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "sheet", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "bake", TfIdf = (2.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "preheated", TfIdf = (2.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "minute", TfIdf = (2.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "9x13", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "inch", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "dish", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "spread", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "spaghetti", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "sauce", TfIdf = (2.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "cover", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "sprinkle", TfIdf = (2.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "mozzarella", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "parmesan", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "cheese", TfIdf = (2.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "repeat", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "remaining", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "ingredient", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "basil", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "golden", TfIdf = (1.0/3.0) * Math.Log(n / 1.0,10)});
+            model2.Elements.Add(new TfIdfElement{Term = "brown", TfIdf = (1.0/3.0) * Math.Log(n / 2.0,10)});
             
             var retList = new List<TfIdfModel> {model1, model2};
             return retList;
@@ -551,8 +609,7 @@ namespace RecipesTests
                 Recipe = _recipe1
             };
             model1.Elements.Add(new TfIdfElement{Term = "recipe", TfIdf = Math.Log((double)3/1, 10)});
-            model1.Elements.Add(new TfIdfElement{Term = "test", TfIdf = 0.5 * Math.Log((double)3/1, 10)});
-            model1.Elements.Add(new TfIdfElement{Term = "a", TfIdf = 0.5 * Math.Log((double)3/2, 10)});
+            model1.Elements.Add(new TfIdfElement{Term = "meaningful", TfIdf = 0.5 * Math.Log((double)3/1, 10)});
 
             var model2 = new TfIdfModel
             {
@@ -560,25 +617,15 @@ namespace RecipesTests
             };
             model2.Elements.Add(new TfIdfElement{Term = "rinse", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "buckwheat", TfIdf = ((double)3/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "groats", TfIdf = ((double)2/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "groat", TfIdf = ((double)2/3) * Math.Log((double)3/1, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "bring", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "a", TfIdf = ((double)2/3) * Math.Log((double)3/2, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "saucepan", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "of", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "water", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "to", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "boil", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "sprinkle", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "in", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "the", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "and", TfIdf = ((double)2/3) * Math.Log((double)3/1, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "simmer", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "until", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "is", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "tender", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "about", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "10", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
-            model2.Elements.Add(new TfIdfElement{Term = "minutes", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
+            model2.Elements.Add(new TfIdfElement{Term = "minute", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "drain", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
             model2.Elements.Add(new TfIdfElement{Term = "cool", TfIdf = ((double)1/3) * Math.Log((double)3/1, 10)});
 

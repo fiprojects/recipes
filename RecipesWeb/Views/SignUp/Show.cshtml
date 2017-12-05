@@ -1,4 +1,4 @@
-﻿@model object
+﻿@model RecipesWeb.ViewModels.RegisterViewModel
 @{
     ViewData["Title"] = "Sign up";
 }
@@ -23,7 +23,22 @@
         
         <div class="form-group">
             <label for="allergies">Allergies:</label>
-            <input type="text" class="form-control" id="allergies" name="allergies" placeholder="allergy1; allergy2; allergy3">
+            
+            <div class="allergiesList">
+                @for (var i = 0; i < Model.Ingredients.Count; i++)
+                {
+                    <div>
+                        <input type="hidden"
+                               asp-for="@Model.Ingredients[i].Id" />
+                        <input type="checkbox"
+                               id="Ingredients_@(i)__Selected"
+                               asp-for="@Model.Ingredients[i].Selected"/>
+                        <label asp-for="@Model.Ingredients[i].Selected">
+                            @Model.Ingredients[i].Name
+                        </label>
+                    </div>
+                }
+            </div>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
     </form>
