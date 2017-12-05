@@ -14,6 +14,7 @@ namespace RecipesCore
             sc.AddTransient<IUserService, UserService>();
             sc.AddTransient<IRatingService, RatingService>();
             sc.AddTransient<IIngredientService, IngredientService>();
+            sc.AddTransient<ITfIdfService, TfIdfService>();
 
             return sc;
         }

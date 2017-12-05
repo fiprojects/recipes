@@ -11,9 +11,10 @@ using System;
 namespace RecipesCore.Migrations
 {
     [DbContext(typeof(RecipesContext))]
-    partial class RecipesContextModelSnapshot : ModelSnapshot
+    [Migration("20171125101047_TFIDF")]
+    partial class TFIDF
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,8 +57,6 @@ namespace RecipesCore.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Importance");
 
                     b.Property<string>("Name");
 
@@ -219,13 +218,11 @@ namespace RecipesCore.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long?>("IngredientId");
+                    b.Property<string>("Name");
 
                     b.Property<long?>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IngredientId");
 
                     b.HasIndex("UserId");
 
@@ -316,10 +313,6 @@ namespace RecipesCore.Migrations
 
             modelBuilder.Entity("RecipesCore.Models.UserAllergie", b =>
                 {
-                    b.HasOne("RecipesCore.Models.Ingredient", "Ingredient")
-                        .WithMany()
-                        .HasForeignKey("IngredientId");
-
                     b.HasOne("RecipesCore.Models.User", "User")
                         .WithMany("Allergies")
                         .HasForeignKey("UserId");
