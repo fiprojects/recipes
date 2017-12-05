@@ -18,7 +18,7 @@ namespace RecipesCore.Processors
         private readonly Dictionary<string, int> _termOccurenceInDocs = new Dictionary<string, int>();
 
         private readonly char[] _charsToRemove =  {',', '.', ';', ':', '?', '!', '(', ')', '{', '}', '[', ']', '<',
-            '>', '\'', '"'};
+            '>', '\'', '"', '-'};
 
         private StopWords _stopWords;
 
@@ -110,6 +110,9 @@ namespace RecipesCore.Processors
             string ret = term.TrimStart(_charsToRemove).TrimEnd(_charsToRemove);
             ret = ret.ToLower();
             if (_stopWords.IsStopWord(ret))
+                return "";
+            int n;
+            if (int.TryParse(ret, out n))
                 return "";
             return ret;
         }
