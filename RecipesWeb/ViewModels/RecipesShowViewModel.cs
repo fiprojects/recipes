@@ -12,5 +12,7 @@ namespace RecipesWeb.ViewModels
         public double AverageRating { get; set; }
 
         public List<Recipe> Recommended { get; set; }
+        
+        public List<Recipe> RecommendedByTfIdf { get; set; }
     }
 }

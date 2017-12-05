@@ -14,14 +14,16 @@ namespace RecipesWeb.Controllers
         private readonly IRatingService _ratingService;
         private readonly IUserService _userService;
         private readonly ICategoryService _categoryService;
+        private readonly ITfIdfService _tfIdfService;
 
         public RecipesController(IRecipesService recipesService, IRatingService ratingService,
-                                IUserService userService, ICategoryService categoryService)
+                                IUserService userService, ICategoryService categoryService, ITfIdfService tfIdfService)
         {
             _ratingService = ratingService;
             _recipesService = recipesService;
             _userService = userService;
             _categoryService = categoryService;
+            _tfIdfService = tfIdfService;
         }
 
         public IActionResult Show(long id)
@@ -57,18 +59,20 @@ namespace RecipesWeb.Controllers
                 AverageRating = _ratingService.GetAverageRatingForRecipe(id),
                 Recommended = _recipesService.GetRecommendedByIngredience(id, userId)
              };
-            //List<Recipe> all = _recipesService.GetRecommendedByCategoryId(viewModel.Recipe.Category.Id).ToList();
-            //Random rnd = new Random();
-            //List<Recipe> selected = new List<Recipe>();
-            //while(selected.Count != 4)
-            //{
-            //    int index = rnd.Next(all.Count);
-            //    if (!selected.Contains(all[index]))
-            //    {
-            //        selected.Add(all[index]);
-            //    }
-            //}
-            //viewModel.Recommended = selected;
+
+            List<Recipe> all = _recipesService.GetRecommendedByCategoryId(viewModel.Recipe.Category.Id).ToList();
+            Random rnd = new Random();
+            List<Recipe> selected = new List<Recipe>();
+            while(selected.Count != 4)
+            {
+                int index = rnd.Next(all.Count);
+                if (!selected.Contains(all[index]))
+                {
+                    selected.Add(all[index]);
+                }
+            }
+            viewModel.Recommended = selected;
+            viewModel.RecommendedByTfIdf = _tfIdfService.GetSimilarRecipesForRecipe(viewModel.Recipe).Take(4).ToList();
 
             return View(viewModel);
         }
