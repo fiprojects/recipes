@@ -19,11 +19,14 @@ namespace RecipesCore.Processors
 
         private readonly char[] _charsToRemove =  {',', '.', ';', ':', '?', '!', '(', ')', '{', '}', '[', ']', '<',
             '>', '\'', '"'};
-        
+
+        private StopWords _stopWords;
+
         public TfIdfComputer(IRecipesService recipesService, ITfIdfService tfIdfService)
         {
             _recipesService = recipesService;
             _tfIdfService = tfIdfService;
+            _stopWords = new StopWords("../../../../Recipes/stop_words.json");
         }
 
         public void Run(string[] args)
@@ -105,7 +108,10 @@ namespace RecipesCore.Processors
         public string NormalizeTerm(string term)
         {
             string ret = term.TrimStart(_charsToRemove).TrimEnd(_charsToRemove);
-            return ret.ToLower();
+            ret = ret.ToLower();
+            if (_stopWords.IsStopWord(ret))
+                return "";
+            return ret;
         }
     }
 }
