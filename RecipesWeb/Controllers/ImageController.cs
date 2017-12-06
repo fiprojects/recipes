@@ -1,26 +1,36 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using RecipesCore.Services;
 
 namespace RecipesWeb.Controllers
 {
     public class ImageController : Controller
     {
-        private readonly IRecipesService _recipesService;
+        private readonly string _cacheDirectory;
 
-        public ImageController(IRecipesService recipesService)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IImageService _imageService;
+
+        public ImageController(IHostingEnvironment hostingEnvironment, IImageService imageService)
         {
-            _recipesService = recipesService;
+            _hostingEnvironment = hostingEnvironment;
+            _imageService = imageService;
+            _cacheDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "Cache");
         }
 
         public IActionResult Get(long id)
         {
-            var recipe = _recipesService.Get(id);
-            if (recipe == null)
-            {
-                return NotFound();
-            }
+            var noImagePath = Path.Combine(_hostingEnvironment.WebRootPath, "Images", "no-image.png");
+            var image = _imageService.GetImage(_cacheDirectory, id) ?? System.IO.File.ReadAllBytes(noImagePath);
+            return File(image, "image/png");
+        }
 
-            return File(recipe.Image, "image/jpeg");
+        public IActionResult Thumbnail(long id)
+        {
+            var noThumbnailPath = Path.Combine(_hostingEnvironment.WebRootPath, "Images", "no-thumbnail.png");
+            var image = _imageService.GetThumbnail(_cacheDirectory, id) ?? System.IO.File.ReadAllBytes(noThumbnailPath);
+            return File(image, "image/png");
         }
     }
 }

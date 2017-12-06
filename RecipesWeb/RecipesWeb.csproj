@@ -21,4 +21,8 @@
         <ProjectReference Include="..\Recipes\RecipesCore.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\Cache\" />
+    </ItemGroup>
+
 </Project>
