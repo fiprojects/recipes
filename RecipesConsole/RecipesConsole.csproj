@@ -10,7 +10,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Crawler\Crawler.csproj" />
     <ProjectReference Include="..\Recipes\RecipesCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="recipes.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

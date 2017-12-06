@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crawler", "Crawler\Crawler.csproj", "{5BE7C9F1-A2A6-42BA-B8E8-07F719F757A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrawlerConsole", "CrawlerConsole\CrawlerConsole.csproj", "{2C2A76EF-D3EF-4F90-A4FE-95461D2BAD33}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesCore", "Recipes\RecipesCore.csproj", "{89151085-2596-4ED9-933E-27090A04C371}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesWeb", "RecipesWeb\RecipesWeb.csproj", "{6BAED08F-B1B0-4EF2-9F68-43D4755CE512}"
@@ -17,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesTests", "RecipesTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TfIdfConsole", "TfIdfConsole\TfIdfConsole.csproj", "{189F742F-E103-487B-901A-3E1E89AED076}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipesConsole", "RecipesConsole\RecipesConsole.csproj", "{55068B48-F093-4760-B9A1-68D75F33451F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesConsole", "RecipesConsole\RecipesConsole.csproj", "{55068B48-F093-4760-B9A1-68D75F33451F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{5BE7C9F1-A2A6-42BA-B8E8-07F719F757A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BE7C9F1-A2A6-42BA-B8E8-07F719F757A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BE7C9F1-A2A6-42BA-B8E8-07F719F757A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2C2A76EF-D3EF-4F90-A4FE-95461D2BAD33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C2A76EF-D3EF-4F90-A4FE-95461D2BAD33}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C2A76EF-D3EF-4F90-A4FE-95461D2BAD33}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C2A76EF-D3EF-4F90-A4FE-95461D2BAD33}.Release|Any CPU.Build.0 = Release|Any CPU
 		{89151085-2596-4ED9-933E-27090A04C371}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{89151085-2596-4ED9-933E-27090A04C371}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89151085-2596-4ED9-933E-27090A04C371}.Release|Any CPU.ActiveCfg = Release|Any CPU
