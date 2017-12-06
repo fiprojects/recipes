@@ -9,11 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesCore", "Recipes\Reci
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesWeb", "RecipesWeb\RecipesWeb.csproj", "{6BAED08F-B1B0-4EF2-9F68-43D4755CE512}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessorRunner", "ProcessorRunner\ProcessorRunner.csproj", "{33F72870-68D5-4570-9B22-0FB0C7969C42}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesTests", "RecipesTests\RecipesTests.csproj", "{51945BA4-01D4-4125-A8DB-0A77365E0F56}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TfIdfConsole", "TfIdfConsole\TfIdfConsole.csproj", "{189F742F-E103-487B-901A-3E1E89AED076}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesConsole", "RecipesConsole\RecipesConsole.csproj", "{55068B48-F093-4760-B9A1-68D75F33451F}"
 EndProject
@@ -35,18 +31,10 @@ Global
 		{6BAED08F-B1B0-4EF2-9F68-43D4755CE512}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BAED08F-B1B0-4EF2-9F68-43D4755CE512}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BAED08F-B1B0-4EF2-9F68-43D4755CE512}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33F72870-68D5-4570-9B22-0FB0C7969C42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33F72870-68D5-4570-9B22-0FB0C7969C42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33F72870-68D5-4570-9B22-0FB0C7969C42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33F72870-68D5-4570-9B22-0FB0C7969C42}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51945BA4-01D4-4125-A8DB-0A77365E0F56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{51945BA4-01D4-4125-A8DB-0A77365E0F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51945BA4-01D4-4125-A8DB-0A77365E0F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51945BA4-01D4-4125-A8DB-0A77365E0F56}.Release|Any CPU.Build.0 = Release|Any CPU
-		{189F742F-E103-487B-901A-3E1E89AED076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{189F742F-E103-487B-901A-3E1E89AED076}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{189F742F-E103-487B-901A-3E1E89AED076}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{189F742F-E103-487B-901A-3E1E89AED076}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55068B48-F093-4760-B9A1-68D75F33451F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{55068B48-F093-4760-B9A1-68D75F33451F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55068B48-F093-4760-B9A1-68D75F33451F}.Release|Any CPU.ActiveCfg = Release|Any CPU

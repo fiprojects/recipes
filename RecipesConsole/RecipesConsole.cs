@@ -44,13 +44,17 @@ namespace RecipesConsole
                     Processor(args);
                     break;
 
+                case "tfidf":
+                    TfIdf();
+                    break;
+
                 default:
                     Console.WriteLine("Invalid action.");
                     break;
             }
         }
 
-        public void Build(string[] args)
+        private void Build(string[] args)
         {
             var first = GetArgument(args, 1);
             var second = GetArgument(args, 2);
@@ -72,15 +76,15 @@ namespace RecipesConsole
             }
         }
 
-        public void Crawl()
+        private void Crawl()
         {
             var recipesService = _serviceProvider.GetService<IRecipesService>();
 
             ICrawler crawler = new AllRecipesCrawler { Logger = Log };
             crawler.ProcessRecipes(RecipeIdProvider.CategorizedCsv("recipes.csv"), recipesService.Add);
         }
-            
-        public void Processor(string[] args)
+
+        private void Processor(string[] args)
         {
             var processorName = GetArgument(args, 1, false);
             var passArgs = args.Skip(2).ToArray();
@@ -94,6 +98,17 @@ namespace RecipesConsole
             {
                 Console.WriteLine($"Processor cannot be run: {e.Message}");
             }
+        }
+
+        private void TfIdf()
+        {
+            Log.Debug($"TF-IDF: Computing started at {DateTime.Now:HH:mm:ss.fff}");
+
+            var recipesService = _serviceProvider.GetService<IRecipesService>();
+            var tfIdfService = _serviceProvider.GetService<ITfIdfService>();
+            new TfIdfComputer(recipesService, tfIdfService, "../Recipes/stop_words.json").Run(null);
+    
+            Log.Debug($"TF-IDF: Computing finished at {DateTime.Now:HH:mm:ss.fff}");
         }
 
         private static void SetupLogging()
