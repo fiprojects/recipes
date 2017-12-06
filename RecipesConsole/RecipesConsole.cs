@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Crawler;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using RecipesCore;
+using RecipesCore.Processors;
 using RecipesCore.Services;
 
 namespace RecipesConsole
@@ -38,6 +40,10 @@ namespace RecipesConsole
                     Crawl();
                     break;
 
+                case "processor":
+                    Processor(args);
+                    break;
+
                 default:
                     Console.WriteLine("Invalid action.");
                     break;
@@ -46,8 +52,8 @@ namespace RecipesConsole
 
         public void Build(string[] args)
         {
-            GetArgument(args, 1, out var first);
-            GetArgument(args, 2, out var second);
+            var first = GetArgument(args, 1);
+            var second = GetArgument(args, 2);
             switch (first)
             {
                 case "image-cache":
@@ -73,6 +79,22 @@ namespace RecipesConsole
             ICrawler crawler = new AllRecipesCrawler { Logger = Log };
             crawler.ProcessRecipes(RecipeIdProvider.CategorizedCsv("recipes.csv"), recipesService.Add);
         }
+            
+        public void Processor(string[] args)
+        {
+            var processorName = GetArgument(args, 1, false);
+            var passArgs = args.Skip(2).ToArray();
+            try
+            {
+                var type = Type.GetType($"RecipesCore.Processors.{processorName}, RecipesCore");
+                var processor = (IProcessor) Activator.CreateInstance(type);
+                processor.Run(passArgs);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Processor cannot be run: {e.Message}");
+            }
+        }
 
         private static void SetupLogging()
         {
@@ -83,14 +105,14 @@ namespace RecipesConsole
             log4net.Config.XmlConfigurator.Configure(repository, config["log4net"]);
         }
 
-        private static string GetArgument(IReadOnlyList<string> args, int index)
+        private static string GetArgument(IReadOnlyList<string> args, int index, bool normalize = true)
         {
-            return index < args.Count ? args[index].ToLower() : null;
-        }
+            if (index >= args.Count)
+            {
+                return null;
+            }
 
-        private static void GetArgument(IReadOnlyList<string> args, int index, out string value)
-        {
-            value = GetArgument(args, index);
+            return normalize ? args[index].ToLower() : args[index];
         }
 
         private static void RequireArgument(string value)

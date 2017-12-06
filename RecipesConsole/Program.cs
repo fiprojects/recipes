@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RecipesConsole
+﻿namespace RecipesConsole
 {
     public static class Program
     {
