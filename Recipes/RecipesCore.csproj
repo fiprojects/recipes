@@ -12,6 +12,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
     <PackageReference Include="Pluralize.NET" Version="0.1.43" />
+    <PackageReference Include="runtime.linux-x64.CoreCompat.System.Drawing" Version="1.0.0-beta009" />
   </ItemGroup>
   <ItemGroup>
     <None Update="DatabaseCredentials.secret.json">
