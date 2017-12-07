@@ -113,6 +113,27 @@ namespace RecipesCore.Services
             return toRecommend.Select(kvp => kvp.Key).Take(4).ToList();
         }
 
+        public List<Recipe> GetMRecipesFromNBestRated(int m = 12, int n = 50)
+        {
+            if (m > n)
+                throw new ArgumentException("m is greater than n (" + m + " > " + n + ")");
+            var list = GetTopRecommended();
+            var topN = list.Where(r => r.Image != null).Take(n).ToList();
+            if (topN.Count < m)
+                throw new ArgumentException("Not enough data. Want " + m + ", only " + list.Count + " available with image");
+            Random rnd = new Random();
+            List<Recipe> selected = new List<Recipe>();
+            while(selected.Count != m)
+            {
+                int index = rnd.Next(n);
+                if (!selected.Contains(topN[index]))
+                {
+                    selected.Add(topN[index]);
+                }
+            }
+            return selected.OrderByDescending(r => r.Rating).ToList();
+        }
+        
         private List<Recipe> GetRecipesForUser(long? userId)
         {
             List<long> ingredientsIds = _db.UserAllergies.Where(x => x.User.Id == userId).Select(x => x.Ingredient.Id).ToList();
