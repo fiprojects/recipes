@@ -77,7 +77,34 @@
 
 
 .allergiesList {
+    padding: 5px;
     height: 200px;
     overflow-y: scroll;
-    border: 1px black solid;
+    border: 1px rgb(164, 164, 164) solid;
+    border-radius: 5px;
 }
+
+.recommended-recipe {
+    border: 1px rgb(198, 198, 198) solid;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    vertical-align: middle;
+}
+
+    .recommended-recipe .row {
+        margin: 5px;
+    }
+
+    .recommended-recipe .image {
+        padding: 0;
+    }
+
+    .recommended-recipe .text {
+        padding: 2px 8px;
+    }
+
+    .recommended-recipe .text h4 {
+        margin: 5px 0;
+        line-height: 22px;
+        font-size: 15px;
+    }

@@ -28,12 +28,12 @@ namespace RecipesWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(string user_login, string vegetarian, string vegan, string allergies,
+        public async Task<IActionResult> SignUp(string userLogin, string vegetarian, string vegan, string allergies,
             [Bind] RegisterViewModel registerViewModel)
         {
             var ingredients = _ingredientService.GetAll();
-            var username = user_login;
-            if (string.IsNullOrWhiteSpace(username) || _userService.Exists(user_login))
+            var username = userLogin;
+            if (string.IsNullOrWhiteSpace(username) || _userService.Exists(userLogin))
             {
                 return Redirect("/Error");
             }
@@ -64,7 +64,7 @@ namespace RecipesWeb.Controllers
         private RegisterViewModel PrepareViewModel()
         {
             var viewModel = new RegisterViewModel();
-            _ingredientService.GetAll().ForEach(i =>
+            _ingredientService.GetAllByPreference().ForEach(i =>
             {
                 viewModel.Ingredients.Add(new SelectedItemViewModel { Id = i.Id, Name = i.Name });
             });

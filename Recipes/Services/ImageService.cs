@@ -4,7 +4,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using log4net;
-using RecipesCore.Models;
 
 namespace RecipesCore.Services
 {

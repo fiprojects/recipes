@@ -1,0 +1,42 @@
+﻿@model RecipesCore.Models.Recipe
+<div class="col-md-4 text-center">
+    <div class="panel panel-default col-md-11">
+        <div class="panel-body">
+            <div style="height: 160px;">
+                <img src="/Image/Thumbnail?id=@(Model.Id)" class="img-responsive img-rounded center-block" style="max-height: 150px;" />
+            </div>
+                
+            <div style="height: 170px">
+                @if (ViewBag.DisplayCategory)
+                {
+                    <div style="font-variant: small-caps; color: gray;">
+                        @Model.Category.Name
+                    </div>
+                }
+
+                <h4>
+                    <a asp-controller="Recipes" asp-action="Show" asp-route-id="@Model.Id">@Model.Name</a>
+                </h4>
+
+                <div>
+                    @if (!string.IsNullOrWhiteSpace(Model.Description))
+                    {
+                        if (Model.Description.Length >= 150)
+                        {
+                            @Model.Description.Substring(0, 150)
+                            <text>...</text>
+                        }
+                        else
+                        {
+                            @Model.Description
+                        }
+                    }
+                </div>
+            </div>
+                
+            <a asp-controller="Recipes" asp-action="Show" asp-route-id="@Model.Id" class="btn btn-primary btn-block">
+                <strong>Show recipe</strong> <i class="glyphicon glyphicon-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+</div>

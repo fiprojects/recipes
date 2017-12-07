@@ -1,48 +1,12 @@
 ﻿@model RecipesWeb.ViewModels.HomeViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
 <h1><i class="glyphicon glyphicon-heart"></i> Recipes recommended for you</h1>
 <div class="row">
 @foreach (var recipe in Model.Recipes)
 {
-    <div class="col-md-4 text-center">
-        <div class="panel panel-default col-md-11">
-            <div class="panel-body">
-                <div style="height: 160px;">
-                    <img src="/Image/Thumbnail?id=@(recipe.Id)" class="img-responsive img-rounded center-block" style="max-height: 150px;" />
-                </div>
-                
-                <div style="height: 170px">
-                    <div style="font-variant: small-caps; color: gray;">
-                        @recipe.Category.Name
-                    </div>
-
-                    <h4>
-                        <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id">@recipe.Name</a>
-                    </h4>
-                    
-                    <div>
-                        @if (!string.IsNullOrWhiteSpace(recipe.Description)) {
-                            if (recipe.Description.Length >= 150)
-                            {
-                                @recipe.Description.Substring(0, 150)
-                                <text>...</text>
-                            }
-                            else
-                            {
-                                @recipe.Description
-                            }
-                        }
-                    </div>
-                </div>
-                
-                <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id" class="btn btn-primary btn-block">
-                    <strong>Show recipe</strong> <i class="glyphicon glyphicon-chevron-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
+    @await Component.InvokeAsync("RecipeCard", new { recipe, displayCategory = true })
 }
 </div>

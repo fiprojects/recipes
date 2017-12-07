@@ -23,10 +23,10 @@ namespace RecipesWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LogIn(string user_login)
+        public async Task<IActionResult> LogIn(string userLogin)
         {
-            var username = user_login;
-            if (string.IsNullOrWhiteSpace(username) || !_userService.Exists(user_login))
+            var username = userLogin;
+            if (string.IsNullOrWhiteSpace(username) || !_userService.Exists(userLogin))
             {
                 return Redirect("/Error");
             }

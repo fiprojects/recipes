@@ -2,15 +2,15 @@
 @{
     ViewData["Title"] = @Model.Recipe.Name;
 }
-
-<h1>@Model.Recipe.Name</h1>
-
-<div style="margin-bottom: 15px;">
-    In category <a href="#">@Model.Recipe.Category.Name</a> by <strong>@Model.Recipe.Author</strong>
-</div>
-
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
+        <h1>@Model.Recipe.Name</h1>
+
+        <div style="margin-bottom: 15px;">
+            In category <a asp-action="Category" asp-route-id="@Model.Recipe.Category.Id">@Model.Recipe.Category.Name</a>
+            by <strong>@Model.Recipe.Author</strong>
+        </div>
+
         <div style="margin-bottom: 15px;">
             <img src="/Image/Get?id=@(Model.Recipe.Id)" class="img-thumbnail center-block"/>
         </div>
@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <hr />
+        <hr/>
 
         <div class="row">
             <div class="col-md-4">
@@ -80,7 +80,7 @@
                     </ul>
                 </div>
             </div>
-            
+
 
             <div class="col-md-8">
                 <h3>
@@ -99,6 +99,7 @@
         </div>
     </div>
     
+    <!--
     <div class="col-md-3">
         <h3>
             <i class="fa fa-lightbulb-o"></i>
@@ -112,7 +113,7 @@
                         <div style="height: 80px;">
                             <img src="/Image/Thumbnail?id=@(recipe.Id)" class="img-responsive img-rounded center-block" style="max-height: 150px;" />
                         </div>
-                
+
                         <div style="height: 90px">
                             <div style="font-variant: small-caps; color: gray;">
                                 @recipe.Category.Name
@@ -121,8 +122,8 @@
                             <h4>
                                 <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id">@recipe.Name</a>
                             </h4>
-                    
-                        </div>              
+
+                        </div>
                         <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id" class="btn btn-primary btn-block">
                             <strong>Show recipe</strong> <i class="glyphicon glyphicon-chevron-right"></i>
                         </a>
@@ -131,34 +132,27 @@
             </div>
         }
     </div>
-    
-    <div class="col-md-3">
+    -->
+
+    <div class="col-md-4">
         <h3>
             <i class="fa fa-lightbulb-o"></i>
-            TF-IDF Recommendation
+            Recommendation
         </h3>
         @foreach (var recipe in Model.RecommendedByTfIdf)
         {
-            <div class="col-md-12 text-center">
-                <div class="panel panel-default col-md-12">
-                    <div class="panel-body">
-                        <div style="height: 80px;">
-                            <img src="/Image/Thumbnail?id=@(recipe.Id)" class="img-responsive img-rounded center-block" style="max-height: 150px;" />
+            <div class="recommended-recipe">
+                <div class="row">
+                    <div class="col-md-5 image">
+                        <img src="/Image/Thumbnail?id=@(recipe.Id)" class="img-responsive img-rounded center-block" style="max-height: 150px;"/>
+                    </div>
+                    <div class="col-md-7 text">
+                        <h4>
+                            <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id">@recipe.Name</a>
+                        </h4>
+                        <div style="font-variant: small-caps; color: gray;">
+                            @recipe.Category.Name
                         </div>
-                
-                        <div style="height: 90px">
-                            <div style="font-variant: small-caps; color: gray;">
-                                @recipe.Category.Name
-                            </div>
-
-                            <h4>
-                                <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id">@recipe.Name</a>
-                            </h4>
-                    
-                        </div>              
-                        <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id" class="btn btn-primary btn-block">
-                            <strong>Show recipe</strong> <i class="glyphicon glyphicon-chevron-right"></i>
-                        </a>
                     </div>
                 </div>
             </div>

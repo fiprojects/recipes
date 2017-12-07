@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 using RecipesCore.Models;
 
@@ -8,7 +7,7 @@ namespace RecipesCore.Processors
     public class IngredientsParser : IProcessor
     {
         private readonly RecipesContext _db = new RecipesContext();
-        private readonly string[] _recognizedIngredients = new string[] {
+        private readonly string[] _recognizedIngredients = {
             "allspice",
             "almond",
             "anchovy",

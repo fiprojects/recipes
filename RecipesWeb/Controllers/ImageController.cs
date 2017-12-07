@@ -19,17 +19,12 @@ namespace RecipesWeb.Controllers
             _cacheDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "Cache");
         }
 
-        public IActionResult Get(long id)
-        {
-            var noImagePath = Path.Combine(_hostingEnvironment.WebRootPath, "Images", "no-image.png");
-            var image = _imageService.GetImage(_cacheDirectory, id) ?? System.IO.File.ReadAllBytes(noImagePath);
-            return File(image, "image/png");
-        }
+        public IActionResult Get(long id) => Get(id, Path.Combine(_hostingEnvironment.WebRootPath, "Images", "no-image.png"));
+        
+        public IActionResult Thumbnail(long id) => Get(id, Path.Combine(_hostingEnvironment.WebRootPath, "Images", "no-thumbnail.png"));
 
-        public IActionResult Thumbnail(long id)
-        {
-            var noThumbnailPath = Path.Combine(_hostingEnvironment.WebRootPath, "Images", "no-thumbnail.png");
-            var image = _imageService.GetThumbnail(_cacheDirectory, id) ?? System.IO.File.ReadAllBytes(noThumbnailPath);
+        private IActionResult Get(long id, string fallbackPath) {
+            var image = _imageService.GetImage(_cacheDirectory, id) ?? System.IO.File.ReadAllBytes(fallbackPath);
             return File(image, "image/png");
         }
     }

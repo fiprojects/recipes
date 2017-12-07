@@ -1,6 +1,4 @@
-﻿using RecipesCore.Models;
-
-namespace RecipesWeb.ViewModels
+﻿namespace RecipesWeb.ViewModels
 {
     public class SelectedItemViewModel
     {

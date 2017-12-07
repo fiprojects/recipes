@@ -19,5 +19,16 @@ namespace RecipesCore.Services
         {
             return _db.Ingredients.ToList();
         }
+
+        public List<Ingredient> GetAllByPreference()
+        {
+            return _db.Ingredients
+                .GroupJoin(_db.UserAllergies, i => i.Id, a => a.Ingredient.Id,
+                    (i, g) => new { i.Id, i.Name, i.Importance, Count = g.Count() })
+                .OrderByDescending(g => g.Count)
+                .ThenBy(g => g.Name)
+                .Select(g => new Ingredient { Id = g.Id, Name = g.Name, Importance = g.Importance })
+                .ToList();
+        }
     }
 }

@@ -90,7 +90,6 @@ namespace RecipesWeb.Controllers
 
         public IActionResult Category(long id)
         {
-
             var viewModel = new CategoryViewModel
             {
                 Category = _categoryService.Get(id),
