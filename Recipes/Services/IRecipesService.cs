@@ -19,5 +19,7 @@ namespace RecipesCore.Services
         List<Recipe> GetRecommendedByCategoryId(long id);
 
         List<Recipe> GetRecommendedByIngredience(long recipeId, long? userId);
+
+        List<Recipe> GetMRecipesFromNBestRated(int m = 12, int n = 50);
     }
 }
