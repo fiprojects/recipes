@@ -5,12 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Crawler;
-using RecipesGraphs;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using RecipesCore;
 using RecipesCore.Processors;
 using RecipesCore.Services;
+using RecipesGraphs;
 
 
 namespace RecipesConsole
@@ -62,8 +62,9 @@ namespace RecipesConsole
 
         private void GenerateGraphs()
         {
-            var recipesService = _serviceProvider.GetService<IRecipesService>();
-            GraphsGenerator gg = new GraphsGenerator(recipesService);
+            var recipesService = _serviceProvider.GetService<RecipesService>();
+            GraphsGenerator graphGen = new GraphsGenerator(recipesService);
+            graphGen.generateGraphs();
         }
 
         private void Build(string[] args)
