@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RecipesWeb.Models;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal;
-using RecipesCore.Models;
 using RecipesCore;
 using RecipesWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace RecipesWeb.Controllers
 {
-    public class SearchController : Controller
+    public class SearchController : BaseController
     {
         private readonly RecipesContext db;
         //private FilterViewModel filter;

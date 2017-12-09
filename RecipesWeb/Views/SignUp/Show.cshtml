@@ -1,4 +1,5 @@
-﻿@model object
+﻿@using RecipesWeb.Tools
+@model RecipesWeb.ViewModels.RegisterViewModel
 @{
     ViewData["Title"] = "Sign up";
 }
@@ -8,11 +9,13 @@
         <h2 class="form-signin-heading"><i class="fa fa-cutlery"></i> Sign up</h2>
         
         <div class="form-group">
-            <label for="user_login" class="sr-only">xdfan</label>
-            <input type="text" name="user_login" id="user_login" class="form-control" placeholder="login" required autofocus>
+            <input type="text" name="userLogin" id="userLogin" class="form-control" placeholder="Username" required autofocus>
         </div>
+
         <div class="row"></div>
-       <h3>Info about you</h3>
+
+        <h3>Info about you</h3>
+        <!--
         <div class="checkbox">
             <label> <input type="checkbox" name="vegetarian"> Vegetarian </label>
         </div>
@@ -20,10 +23,28 @@
         <div class="checkbox">
             <label> <input type="checkbox" name="vegan"> Vegan </label>
         </div>
+        -->
         
         <div class="form-group">
-            <label for="allergies">Allergies:</label>
-            <input type="text" class="form-control" id="allergies" name="allergies" placeholder="allergy1; allergy2; allergy3">
+            <label for="allergies">
+                Please, tell us which ingredients you are allergic to or you strongly dislike:
+            </label>
+            
+            <div class="allergiesList">
+                @for (var i = 0; i < Model.Ingredients.Count; i++)
+                {
+                    <div>
+                        <input type="hidden"
+                               asp-for="@Model.Ingredients[i].Id" />
+                        <input type="checkbox"
+                               id="Ingredients_@(i)__Selected"
+                               asp-for="@Model.Ingredients[i].Selected"/>
+                        <label asp-for="@Model.Ingredients[i].Selected">
+                            @Model.Ingredients[i].Name.CapitalizeFirst()
+                        </label>
+                    </div>
+                }
+            </div>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
     </form>

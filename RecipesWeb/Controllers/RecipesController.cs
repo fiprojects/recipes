@@ -2,23 +2,31 @@
 using RecipesCore.Models;
 using RecipesCore.Services;
 using RecipesWeb.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RecipesWeb.Controllers
 {
-    public class RecipesController : Controller
+    public class RecipesController : BaseController
     {
         private readonly IRecipesService _recipesService;
         private readonly IRatingService _ratingService;
         private readonly IUserService _userService;
         private readonly ICategoryService _categoryService;
+        private readonly ITfIdfService _tfIdfService;
+        private readonly IActionLog _actionLog;
 
         public RecipesController(IRecipesService recipesService, IRatingService ratingService,
-                                IUserService userService, ICategoryService categoryService)
+                                IUserService userService, ICategoryService categoryService, ITfIdfService tfIdfService,
+                                IActionLog actionLog)
         {
             _ratingService = ratingService;
             _recipesService = recipesService;
             _userService = userService;
             _categoryService = categoryService;
+            _tfIdfService = tfIdfService;
+            _actionLog = actionLog;
         }
 
         public IActionResult Show(long id)
@@ -30,10 +38,11 @@ namespace RecipesWeb.Controllers
                 Rating = 0
             };
 
+            long? userId = null;
             var userName = HttpContext.User.Identity.Name;
             if (userName != null)
             {
-                var userId = _userService.Get(userName).Id;
+                userId = _userService.Get(userName).Id;
                 if (userId != null)
                 {
                     userRatingForRecipe.UserId = userId.Value;
@@ -43,15 +52,21 @@ namespace RecipesWeb.Controllers
                 {
                     userRatingForRecipe.Rating = userRating.Rating;
                 }
-                
             }
 
-            var viewModel = new RecipesShowModel()
+            var viewModel = new RecipesShowModel
             {
                 Recipe = _recipesService.Get(id),
                 RecipeUserRating = userRatingForRecipe,
-                AverageRating = _ratingService.GetAverageRatingForRecipe(id) 
-            };
+                AverageRating = _ratingService.GetAverageRatingForRecipe(id)
+             };
+            
+            viewModel.Recommended = GetRecipesByAlgorithm(viewModel.Recipe, userId);
+
+            // Log
+            var referer = Request.Headers["Referer"].ToString();
+            _actionLog.LogDisplayedRecipe(viewModel.Recipe, userName, referer, Algorithm);
+            _actionLog.LogRecommendedRecipes(viewModel.Recipe, viewModel.Recommended, userName, referer, Algorithm);
 
             return View(viewModel);
         }
@@ -69,13 +84,43 @@ namespace RecipesWeb.Controllers
 
         public IActionResult Category(long id)
         {
-
             var viewModel = new CategoryViewModel
             {
                 Category = _categoryService.Get(id),
                 Recipes = _recipesService.GetAllByCategoryId(id)
             };
             return View(viewModel);
+        }
+
+        private List<Recipe> GetRecipesByAlgorithm(Recipe currentRecipe, long? userId)
+        {
+            switch (Algorithm.Identifier)
+            {
+                case "Random":
+                    return GetRandomRecipes(currentRecipe);
+                case "Ingredients":
+                    return _recipesService.GetRecommendedByIngredience(currentRecipe.Id, userId);
+                case "TfIdf":
+                    return _tfIdfService.GetSimilarRecipesForRecipe(currentRecipe).Take(5).ToList();
+                default:
+                    return new List<Recipe>();
+            }
+        }
+
+        private List<Recipe> GetRandomRecipes(Recipe currentRecipe)
+        {
+            var all = _recipesService.GetRecommendedByCategoryId(currentRecipe.Category.Id).ToList();
+            var rnd = new Random();
+            var selected = new List<Recipe>();
+            while (selected.Count != 5)
+            {
+                var index = rnd.Next(all.Count);
+                if (!selected.Contains(all[index]))
+                {
+                    selected.Add(all[index]);
+                }
+            }
+            return selected;
         }
     }
 }

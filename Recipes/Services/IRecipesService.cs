@@ -7,10 +7,20 @@ namespace RecipesCore.Services
     {
         List<Recipe> GetAll();
 
+        int Count();
+
         List<Recipe> GetAllByCategoryId(long id);
 
         Recipe Get(long id);
 
         void Add(Recipe recipe);
+
+        List<Recipe> GetTopRecommended();
+
+        List<Recipe> GetRecommendedByCategoryId(long id);
+
+        List<Recipe> GetRecommendedByIngredience(long recipeId, long? userId);
+
+        List<Recipe> GetMRecipesFromNBestRated(int m = 12, int n = 50);
     }
 }

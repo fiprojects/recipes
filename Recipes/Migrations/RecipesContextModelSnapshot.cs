@@ -20,6 +20,36 @@ namespace RecipesCore.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
+            modelBuilder.Entity("RecipesCore.Models.ActionLogRecord", b =>
+                {
+                    b.Property<long?>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Action");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<long?>("RecipeId");
+
+                    b.Property<string>("RecommendationAlgorithmIdentifier");
+
+                    b.Property<long?>("RecommendedRecipeId");
+
+                    b.Property<string>("Referer");
+
+                    b.Property<long?>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.HasIndex("RecommendedRecipeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ActionLog");
+                });
+
             modelBuilder.Entity("RecipesCore.Models.Category", b =>
                 {
                     b.Property<long>("Id")
@@ -56,6 +86,8 @@ namespace RecipesCore.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Importance");
 
                     b.Property<string>("Name");
 
@@ -163,6 +195,38 @@ namespace RecipesCore.Migrations
                     b.ToTable("RecipeSeen");
                 });
 
+            modelBuilder.Entity("RecipesCore.Models.TfIdfElement", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Term");
+
+                    b.Property<double>("TfIdf");
+
+                    b.Property<long?>("TfIdfModelId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TfIdfModelId");
+
+                    b.ToTable("TfIdfElement");
+                });
+
+            modelBuilder.Entity("RecipesCore.Models.TfIdfModel", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long?>("RecipeId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("TfIdfModels");
+                });
+
             modelBuilder.Entity("RecipesCore.Models.User", b =>
                 {
                     b.Property<long?>("Id")
@@ -185,15 +249,32 @@ namespace RecipesCore.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<long?>("IngredientId");
 
                     b.Property<long?>("UserId");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IngredientId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("UserAllergies");
+                });
+
+            modelBuilder.Entity("RecipesCore.Models.ActionLogRecord", b =>
+                {
+                    b.HasOne("RecipesCore.Models.Recipe", "Recipe")
+                        .WithMany()
+                        .HasForeignKey("RecipeId");
+
+                    b.HasOne("RecipesCore.Models.Recipe", "RecommendedRecipe")
+                        .WithMany()
+                        .HasForeignKey("RecommendedRecipeId");
+
+                    b.HasOne("RecipesCore.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("RecipesCore.Models.FellowCooks", b =>
@@ -264,8 +345,26 @@ namespace RecipesCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("RecipesCore.Models.TfIdfElement", b =>
+                {
+                    b.HasOne("RecipesCore.Models.TfIdfModel")
+                        .WithMany("Elements")
+                        .HasForeignKey("TfIdfModelId");
+                });
+
+            modelBuilder.Entity("RecipesCore.Models.TfIdfModel", b =>
+                {
+                    b.HasOne("RecipesCore.Models.Recipe", "Recipe")
+                        .WithMany()
+                        .HasForeignKey("RecipeId");
+                });
+
             modelBuilder.Entity("RecipesCore.Models.UserAllergie", b =>
                 {
+                    b.HasOne("RecipesCore.Models.Ingredient", "Ingredient")
+                        .WithMany()
+                        .HasForeignKey("IngredientId");
+
                     b.HasOne("RecipesCore.Models.User", "User")
                         .WithMany("Allergies")
                         .HasForeignKey("UserId");

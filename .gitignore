@@ -306,3 +306,6 @@ OpenCover/
 
 # Credentials Configuration File
 *.secret.json
+
+# Cache
+RecipesWeb/wwwroot/Cache/

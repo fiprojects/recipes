@@ -19,6 +19,10 @@ namespace RecipesCore
 
         public DbSet<RecipeRatings> RecipeRatings { get; set; }
 
+        public virtual DbSet<TfIdfModel> TfIdfModels { get; set; }
+
+        public virtual DbSet<ActionLogRecord> ActionLog { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RecipeDone>()
@@ -30,6 +34,7 @@ namespace RecipesCore
             modelBuilder.Entity<RecipeRatings>()
                 .HasKey(a => new { a.RecipeId, a.UserId });
         }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

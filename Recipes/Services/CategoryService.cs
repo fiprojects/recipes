@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
 using RecipesCore.Models;
 
 namespace RecipesCore.Services
@@ -17,6 +15,11 @@ namespace RecipesCore.Services
         public Category Get(long id)
         {
             return _db.Categories.FirstOrDefault(x => x.Id == id);
+        }
+
+        public int Count()
+        {
+            return _db.Categories.Count();
         }
     }
 }

@@ -1,0 +1,56 @@
+﻿@using RecipesCore.Info
+@using RecipesCore.Models
+@using RecipesWeb.Tools
+@model RecipesWeb.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "System Information";
+}
+
+<h1><i class="glyphicon glyphicon-cog"></i> System Information</h1>
+<table class="table table-bordered">
+    <tr>
+        <th class="col-md-4">Number of recipes</th>
+        <td class="col-md-8">@ViewBag.RecipesCount</td>
+    </tr>
+
+    <tr>
+        <th class="col-md-4">Number of categories</th>
+        <td class="col-md-8">@ViewBag.CategoriesCount</td>
+    </tr>
+
+    <tr>
+        <th class="col-md-4">Top 5 disliked ingredients</th>
+        <td class="col-md-8">
+            <ol>
+                @foreach (Ingredient ingredient in ViewBag.TopDislikedIngredients)
+                {
+                <li>@ingredient.Name.CapitalizeFirst()</li>
+                }
+            </ol>
+        </td>
+    </tr>
+
+    <tr>
+        <th>Recommending algorithm</th>
+        <td>@ViewBag.Algorithm.Name</td>
+    </tr>
+</table>
+
+<h3><i class="fa fa-sliders"></i> Switch recommending algorithm</h3>
+<div class="btn-group" role="group">
+    @foreach (RecommendingAlgorithm algorithm in ViewBag.Algorithms)
+    {
+        if (algorithm != ViewBag.Algorithm)
+        {
+            <a class="btn btn-default" asp-action="SwitchAlgorithm" asp-route-identifier="@algorithm.Identifier">
+                @algorithm.Name
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-default active" asp-action="SwitchAlgorithm" asp-route-identifier="@algorithm.Identifier">
+                @algorithm.Name
+            </a>
+        }
+    }
+</div>

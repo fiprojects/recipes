@@ -1,47 +1,19 @@
 ﻿@model RecipesWeb.ViewModels.RecipesShowModel
 @{
-    ViewData["Title"] = Model.Recipe.Name;
+    ViewData["Title"] = @Model.Recipe.Name;
 }
-
-
-<style type="text/css">
-    .rating-star-block .star.outline {
-        background: url("/Images/star-empty-lg.png") no-repeat scroll center rgb(255, 255, 255);
-    }
-
-    .rating-star-block .star.filled {
-        background: url("/Images/star-fill-lg.png")  no-repeat scroll center rgb(255, 255, 255);
-    }
-
-    .rating-star-block .star {
-        display: inline-block;
-        height: 20px;
-        overflow: hidden;
-        text-indent: -999em;
-        width: 20px;
-    }
-
-    a {
-        color: #005782;
-        text-decoration: none;
-    }
-</style>
-
-<h1>@Model.Recipe.Name</h1>
-
-<div style="margin-bottom: 15px;">
-    In category <a href="#">@Model.Recipe.Category.Name</a> by <strong>@Model.Recipe.Author</strong>
-</div>
-
 <div class="row">
-    <div class="col-md-9">
-        @if (Model.Recipe.Image != null)
-        {
-            <div style="margin-bottom: 15px;">
-                <img src="/Image/Get?id=@Model.Recipe.Id" class="img-thumbnail center-block"/>
-            </div>
-            
-        }
+    <div class="col-md-8">
+        <h1>@Model.Recipe.Name</h1>
+
+        <div style="margin-bottom: 15px;">
+            In category <a asp-action="Category" asp-route-id="@Model.Recipe.Category.Id">@Model.Recipe.Category.Name</a>
+            by <strong>@Model.Recipe.Author</strong>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <img src="/Image/Get?id=@(Model.Recipe.Id)" class="img-thumbnail center-block" style="max-height: 350px" />
+        </div>
 
         <div class="panel panel-default">
             <div class="panel-body">
@@ -49,44 +21,13 @@
             </div>
         </div>
 
-
         <div class="row">
-            
-            <input type="hidden" asp-for=@Model.RecipeUserRating.RecipeId/>
-            <div class="col-md-2" style="padding-left: 30px;">
-                @if (Model.RecipeUserRating.UserId != 0)
-                {
-                    <div>
-                        <i class="fa fa-star" style="margin-left: -10px;"></i>
-                        <strong>Your rating</strong>
-                    </div>
-                    <div class="rating-star-block row" style="font-size: 20px;" id='div_<%#Container.DataItemIndex %>'>
-                        @for (int i = 0; i < Model.RecipeUserRating.Rating; i++)
-                        {
-                            <span style="height: 20px; width: 20px;" class="star filled"></span>
-                        }
-                        @for (int i = Model.RecipeUserRating.Rating; i < 5; i++)
-                        {
-                            <span style="height: 20px; width: 20px;" class="star outline"></span>
-                        }
-                    </div>
-                }
-                
-            </div>
-
-            <div class="col-md-4">
-                @if (Model.RecipeUserRating.UserId != 0)
-                {
-                    @Html.Partial("RatingStars", Model)
-                }
-            </div>
-
             <div class="col-md-2">
                 <div>
                     <i class="fa fa-star"></i>
                     <strong>Rating</strong>
                 </div>
-                <div style="font-size: 22px;">@Math.Round(Model.AverageRating, 2)</div>
+                <div style="font-size: 22px;">@Math.Round(Model.Recipe.Rating, 2)</div>
             </div>
 
             <div class="col-md-2">
@@ -95,6 +36,17 @@
                     <strong>Servings</strong>
                 </div>
                 <div style="font-size: 22px;">@Model.Recipe.Servings</div>
+            </div>
+
+            <div class="col-md-2">
+                <div>
+                    <i class="fa fa-hourglass"></i>
+                    <strong>Prep Time</strong>
+                </div>
+                <div style="font-size: 22px;">@Model.Recipe.PreparationTime</div>
+            </div>
+
+            <div class="col-md-2">
                 <div>
                     <i class="fa fa-clock-o"></i>
                     <strong>Cook Time</strong>
@@ -104,11 +56,6 @@
 
             <div class="col-md-2">
                 <div>
-                    <i class="fa fa-hourglass"></i>
-                    <strong>Prep Time</strong>
-                </div>
-                <div style="font-size: 22px;">@Model.Recipe.PreparationTime</div>
-                <div>
                     <i class="fa fa-fire"></i>
                     <strong>Calories</strong>
                 </div>
@@ -116,7 +63,7 @@
             </div>
         </div>
 
-        <hr />
+        <hr/>
 
         <div class="row">
             <div class="col-md-4">
@@ -133,7 +80,8 @@
                     </ul>
                 </div>
             </div>
-            
+
+
             <div class="col-md-8">
                 <h3>
                     <i class="fa fa-compass"></i>
@@ -150,11 +98,29 @@
             </div>
         </div>
     </div>
-    
-    <div class="col-md-3">
+
+    <div class="col-md-4">
         <h3>
             <i class="fa fa-lightbulb-o"></i>
-            Recommended
+            Recommendation
         </h3>
+        @foreach (var recipe in Model.Recommended)
+        {
+            <div class="recommended-recipe">
+                <div class="row">
+                    <div class="col-md-5 image">
+                        <img src="/Image/Thumbnail?id=@(recipe.Id)" class="img-responsive img-rounded center-block" style="max-height: 150px;"/>
+                    </div>
+                    <div class="col-md-7 text">
+                        <h4>
+                            <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id">@recipe.Name</a>
+                        </h4>
+                        <div style="font-variant: small-caps; color: gray;">
+                            @recipe.Category.Name
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecipesCore.Services;
 using RecipesWeb.Models;
@@ -8,7 +7,7 @@ using RecipesWeb.ViewModels;
 
 namespace RecipesWeb.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IRecipesService _recipesService;
 
@@ -21,8 +20,7 @@ namespace RecipesWeb.Controllers
         {
             var viewModel = new HomeViewModel
             {
-                Recipes = _recipesService.GetAll()
-                    .OrderByDescending(r => r.Rating)
+                Recipes = _recipesService.GetMRecipesFromNBestRated(12, 12)
                     .Take(12)
                     .ToList()
             };
