@@ -5,11 +5,13 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Crawler;
+using RecipesGraphs;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using RecipesCore;
 using RecipesCore.Processors;
 using RecipesCore.Services;
+
 
 namespace RecipesConsole
 {
@@ -48,10 +50,20 @@ namespace RecipesConsole
                     TfIdf();
                     break;
 
+                case "graphs":
+                    GenerateGraphs();
+                    break;
+
                 default:
                     Console.WriteLine("Invalid action.");
                     break;
             }
+        }
+
+        private void GenerateGraphs()
+        {
+            var recipesService = _serviceProvider.GetService<IRecipesService>();
+            GraphsGenerator gg = new GraphsGenerator(recipesService);
         }
 
         private void Build(string[] args)
