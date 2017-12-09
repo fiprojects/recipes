@@ -8,7 +8,7 @@ using RecipesCore.Services;
 
 namespace RecipesWeb.Controllers
 {
-    public class LoginController : Controller
+    public class LoginController : BaseController
     {
         private readonly IUserService _userService;
 

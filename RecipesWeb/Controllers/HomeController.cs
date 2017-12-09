@@ -7,7 +7,7 @@ using RecipesWeb.ViewModels;
 
 namespace RecipesWeb.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IRecipesService _recipesService;
 

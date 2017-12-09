@@ -11,7 +11,7 @@ using RecipesWeb.ViewModels;
 
 namespace RecipesWeb.Controllers
 {
-    public class SignUpController : Controller
+    public class SignUpController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IIngredientService _ingredientService;

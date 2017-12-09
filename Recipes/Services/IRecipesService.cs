@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using RecipesCore.Models;
-using System;
 
 namespace RecipesCore.Services
 {
     public interface IRecipesService
     {
         List<Recipe> GetAll();
+
+        int Count();
 
         List<Recipe> GetAllByCategoryId(long id);
 

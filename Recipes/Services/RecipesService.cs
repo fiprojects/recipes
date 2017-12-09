@@ -23,6 +23,11 @@ namespace RecipesCore.Services
                 .ToList();
         }
 
+        public int Count()
+        {
+            return _db.Recipes.Count();
+        }
+
         public List<Recipe> GetAllByCategoryId(long id)
         {
             return _db.Recipes

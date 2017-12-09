@@ -12,7 +12,7 @@
         </div>
 
         <div style="margin-bottom: 15px;">
-            <img src="/Image/Get?id=@(Model.Recipe.Id)" class="img-thumbnail center-block"/>
+            <img src="/Image/Get?id=@(Model.Recipe.Id)" class="img-thumbnail center-block" style="max-height: 350px" />
         </div>
 
         <div class="panel panel-default">
@@ -98,48 +98,13 @@
             </div>
         </div>
     </div>
-    
-    <!--
-    <div class="col-md-3">
-        <h3>
-            <i class="fa fa-lightbulb-o"></i>
-            Recommended
-        </h3>
-        @foreach (var recipe in Model.Recommended)
-        {
-            <div class="col-md-12 text-center">
-                <div class="panel panel-default col-md-12">
-                    <div class="panel-body">
-                        <div style="height: 80px;">
-                            <img src="/Image/Thumbnail?id=@(recipe.Id)" class="img-responsive img-rounded center-block" style="max-height: 150px;" />
-                        </div>
-
-                        <div style="height: 90px">
-                            <div style="font-variant: small-caps; color: gray;">
-                                @recipe.Category.Name
-                            </div>
-
-                            <h4>
-                                <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id">@recipe.Name</a>
-                            </h4>
-
-                        </div>
-                        <a asp-controller="Recipes" asp-action="Show" asp-route-id="@recipe.Id" class="btn btn-primary btn-block">
-                            <strong>Show recipe</strong> <i class="glyphicon glyphicon-chevron-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-    -->
 
     <div class="col-md-4">
         <h3>
             <i class="fa fa-lightbulb-o"></i>
             Recommendation
         </h3>
-        @foreach (var recipe in Model.RecommendedByTfIdf)
+        @foreach (var recipe in Model.Recommended)
         {
             <div class="recommended-recipe">
                 <div class="row">

@@ -5,7 +5,7 @@ using RecipesCore.Services;
 
 namespace RecipesWeb.Controllers
 {
-    public class ImageController : Controller
+    public class ImageController : BaseController
     {
         private readonly string _cacheDirectory;
 

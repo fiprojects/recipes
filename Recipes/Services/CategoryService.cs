@@ -16,5 +16,10 @@ namespace RecipesCore.Services
         {
             return _db.Categories.FirstOrDefault(x => x.Id == id);
         }
+
+        public int Count()
+        {
+            return _db.Categories.Count();
+        }
     }
 }

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace RecipesWeb.Controllers
 {
-    public class RecipesController : Controller
+    public class RecipesController : BaseController
     {
         private readonly IRecipesService _recipesService;
         private readonly IRatingService _ratingService;
@@ -49,31 +49,17 @@ namespace RecipesWeb.Controllers
                 {
                     userRatingForRecipe.Rating = userRating.Rating;
                 }
-                
             }
 
-            var viewModel = new RecipesShowModel()
+            var viewModel = new RecipesShowModel
             {
                 Recipe = _recipesService.Get(id),
                 RecipeUserRating = userRatingForRecipe,
                 AverageRating = _ratingService.GetAverageRatingForRecipe(id),
                 Recommended = _recipesService.GetRecommendedByIngredience(id, userId)
              };
-
-            List<Recipe> all = _recipesService.GetRecommendedByCategoryId(viewModel.Recipe.Category.Id).ToList();
-            Random rnd = new Random();
-            List<Recipe> selected = new List<Recipe>();
-            while(selected.Count != 4)
-            {
-                int index = rnd.Next(all.Count);
-                if (!selected.Contains(all[index]))
-                {
-                    selected.Add(all[index]);
-                }
-            }
-            viewModel.Recommended = selected;
-            viewModel.RecommendedByTfIdf = _tfIdfService.GetSimilarRecipesForRecipe(viewModel.Recipe).Take(4).ToList();
-
+            
+            viewModel.Recommended = GetRecipesByAlgorithm(viewModel.Recipe);
             return View(viewModel);
         }
 
@@ -96,6 +82,35 @@ namespace RecipesWeb.Controllers
                 Recipes = _recipesService.GetAllByCategoryId(id)
             };
             return View(viewModel);
+        }
+
+        private List<Recipe> GetRecipesByAlgorithm(Recipe currentRecipe)
+        {
+            switch (Algorithm.Identifier)
+            {
+                case "Random":
+                    return GetRandomRecipes(currentRecipe);
+                case "TfIdf":
+                    return _tfIdfService.GetSimilarRecipesForRecipe(currentRecipe).Take(5).ToList();
+                default:
+                    return new List<Recipe>();
+            }
+        }
+
+        private List<Recipe> GetRandomRecipes(Recipe currentRecipe)
+        {
+            var all = _recipesService.GetRecommendedByCategoryId(currentRecipe.Category.Id).ToList();
+            var rnd = new Random();
+            var selected = new List<Recipe>();
+            while (selected.Count != 5)
+            {
+                var index = rnd.Next(all.Count);
+                if (!selected.Contains(all[index]))
+                {
+                    selected.Add(all[index]);
+                }
+            }
+            return selected;
         }
     }
 }
