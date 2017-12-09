@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RecipesCore.Models;
 
 namespace RecipesCore.Services
@@ -22,5 +23,9 @@ namespace RecipesCore.Services
         List<Recipe> GetRecommendedByIngredience(long recipeId, long? userId);
 
         List<Recipe> GetMRecipesFromNBestRated(int m = 12, int n = 50);
+
+        List<double> GetOrderedAllDownloadedRatings();
+
+        List<Recipe> GetRecipesForUser(long? userId);
     }
 }

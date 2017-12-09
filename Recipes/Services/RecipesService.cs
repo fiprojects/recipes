@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using RecipesCore.Models;
 using System;
+using Remotion.Linq.Clauses.ResultOperators;
 
 namespace RecipesCore.Services
 {
@@ -132,8 +133,14 @@ namespace RecipesCore.Services
             }
             return selected.OrderByDescending(r => r.Rating).ToList();
         }
-        
-        private List<Recipe> GetRecipesForUser(long? userId)
+
+        public List<double> GetOrderedAllDownloadedRatings()
+        {
+            List<double> ratings = GetAll().Select(a => a.Rating).OrderByDescending(a => a).ToList();
+            return ratings;
+        }
+
+        public List<Recipe> GetRecipesForUser(long? userId)
         {
             List<long> ingredientsIds = _db.UserAllergies.Where(x => x.User.Id == userId).Select(x => x.Ingredient.Id).ToList();
 
@@ -144,5 +151,8 @@ namespace RecipesCore.Services
                 .ToList();
 
         }
+
+        
+        
     }
 }
