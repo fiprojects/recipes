@@ -62,7 +62,7 @@ namespace RecipesConsole
 
         private void GenerateGraphs()
         {
-            var recipesService = _serviceProvider.GetService<RecipesService>();
+            var recipesService = _serviceProvider.GetService<IRecipesService>();
             GraphsGenerator graphGen = new GraphsGenerator(recipesService);
             graphGen.generateGraphs();
         }

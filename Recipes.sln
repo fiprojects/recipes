@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crawler", "Crawler\Crawler.csproj", "{5BE7C9F1-A2A6-42BA-B8E8-07F719F757A6}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesTests", "RecipesTests\RecipesTests.csproj", "{51945BA4-01D4-4125-A8DB-0A77365E0F56}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipesConsole", "RecipesConsole\RecipesConsole.csproj", "{55068B48-F093-4760-B9A1-68D75F33451F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipesGraphs", "RecipesGraphs\RecipesGraphs.csproj", "{490A7565-3178-4D28-AC28-557D54511FD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{55068B48-F093-4760-B9A1-68D75F33451F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55068B48-F093-4760-B9A1-68D75F33451F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55068B48-F093-4760-B9A1-68D75F33451F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{490A7565-3178-4D28-AC28-557D54511FD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{490A7565-3178-4D28-AC28-557D54511FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{490A7565-3178-4D28-AC28-557D54511FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{490A7565-3178-4D28-AC28-557D54511FD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
