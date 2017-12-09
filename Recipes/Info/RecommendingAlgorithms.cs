@@ -11,6 +11,7 @@ namespace RecipesCore.Info
         static RecommendingAlgorithms()
         {
             Add("Random", "Random");
+            Add("Ingredients", "Ingredients");
             Add("TfIdf", "TF-IDF");
         }
 

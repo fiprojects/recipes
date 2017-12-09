@@ -84,13 +84,7 @@ namespace RecipesCore.Services
            
             Recipe recipe = Get(recipeId);
             List<Recipe> all = new List<Recipe>();
-            if (userId != null)
-            {
-              all = GetRecipesForUser(userId);
-            } else
-            {
-                all = GetAll();
-            }
+            all = userId != null ? GetRecipesForUser(userId) : GetAll();
             Dictionary<Recipe, int> sameIngredientsCount = new Dictionary<Recipe, int>();
             foreach (Recipe r in all)
             {
@@ -115,7 +109,7 @@ namespace RecipesCore.Services
             var toRecommend = sameIngredientsCount.ToList();
             toRecommend.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
 
-            return toRecommend.Select(kvp => kvp.Key).Take(4).ToList();
+            return toRecommend.Select(kvp => kvp.Key).Take(5).ToList();
         }
 
         public List<Recipe> GetMRecipesFromNBestRated(int m = 12, int n = 50)

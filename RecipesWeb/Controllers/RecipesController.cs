@@ -55,11 +55,10 @@ namespace RecipesWeb.Controllers
             {
                 Recipe = _recipesService.Get(id),
                 RecipeUserRating = userRatingForRecipe,
-                AverageRating = _ratingService.GetAverageRatingForRecipe(id),
-                Recommended = _recipesService.GetRecommendedByIngredience(id, userId)
+                AverageRating = _ratingService.GetAverageRatingForRecipe(id)
              };
             
-            viewModel.Recommended = GetRecipesByAlgorithm(viewModel.Recipe);
+            viewModel.Recommended = GetRecipesByAlgorithm(viewModel.Recipe, userId);
             return View(viewModel);
         }
 
@@ -84,12 +83,14 @@ namespace RecipesWeb.Controllers
             return View(viewModel);
         }
 
-        private List<Recipe> GetRecipesByAlgorithm(Recipe currentRecipe)
+        private List<Recipe> GetRecipesByAlgorithm(Recipe currentRecipe, long? userId)
         {
             switch (Algorithm.Identifier)
             {
                 case "Random":
                     return GetRandomRecipes(currentRecipe);
+                case "Ingredients":
+                    return _recipesService.GetRecommendedByIngredience(currentRecipe.Id, userId);
                 case "TfIdf":
                     return _tfIdfService.GetSimilarRecipesForRecipe(currentRecipe).Take(5).ToList();
                 default:
