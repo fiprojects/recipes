@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RecipesCore.Info;
 using RecipesCore.Models;
 
@@ -48,6 +49,7 @@ namespace RecipesCore.Services
 
             var record = new ActionLogRecord
             {
+                Date = DateTime.Now,
                 Action = action,
                 Recipe = recipe,
                 RecommendedRecipe = recommendedRecipe,

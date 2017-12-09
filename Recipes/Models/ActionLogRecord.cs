@@ -1,8 +1,12 @@
-﻿namespace RecipesCore.Models
+﻿using System;
+
+namespace RecipesCore.Models
 {
     public class ActionLogRecord
     {
         public long? Id { get; set; }
+
+        public DateTime Date { get; set; }
 
         public string Action { get; set; }
 
