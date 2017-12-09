@@ -19,5 +19,7 @@ namespace RecipesCore.Models
         public string Referer { get; set; }
 
         public string RecommendationAlgorithmIdentifier { get; set; }
+
+        public string Metadata { get; set; }
     }
 }

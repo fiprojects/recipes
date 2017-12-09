@@ -108,3 +108,24 @@
         line-height: 22px;
         font-size: 15px;
     }
+
+.critiquing {
+    margin-bottom: 15px;
+    border: 1px #e3b352 solid;
+    border-radius: 5px;
+}
+
+    .critiquing .critiquing-body {
+        margin: 8px;
+    }
+
+    .critiquing .prompt {
+        text-align: center;
+    }
+
+    .critiquing .question {
+        padding: 8px;
+        color: #b1862e;
+        background-color: #fbeed5;
+        text-align: center;
+    }

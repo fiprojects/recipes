@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using RecipesCore.Info;
 using RecipesCore.Models;
 
@@ -27,6 +28,19 @@ namespace RecipesCore.Services
             recommendedRecipes.ForEach(r => Log("RecommendedRecipe", recipe, r, username, referer, algorithm));
         }
 
+        public void LogCritiquing(Recipe recipe, string username,
+            int questionId, string question, int choiceId, string choice, string data)
+        {
+            var metadata = new StringBuilder()
+                .AppendLine($"questionId: {questionId}")
+                .AppendLine($"question: {question}")
+                .AppendLine($"choiseId: {choiceId}")
+                .AppendLine($"choise: {choice}")
+                .AppendLine($"data: {data}")
+                .ToString();
+            Log("Critiquing", recipe, null, username, null, RecommendingAlgorithms.Get("Critiquing"), metadata);
+        }
+
         private User GetUser(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
@@ -39,7 +53,7 @@ namespace RecipesCore.Services
         }
 
         private void Log(string action, Recipe recipe, Recipe recommendedRecipe,
-            string username, string referer, RecommendingAlgorithm algorithm)
+            string username, string referer, RecommendingAlgorithm algorithm, string metadata = null)
         {
             var user = GetUser(username);
             if (user == null)
@@ -55,7 +69,8 @@ namespace RecipesCore.Services
                 RecommendedRecipe = recommendedRecipe,
                 User = user,
                 Referer = referer,
-                RecommendationAlgorithmIdentifier = algorithm.Identifier
+                RecommendationAlgorithmIdentifier = algorithm.Identifier,
+                Metadata = metadata
             };
             _db.Add(record);
             _db.SaveChanges();

@@ -13,6 +13,7 @@ namespace RecipesCore.Info
             Add("Random", "Random");
             Add("Ingredients", "Ingredients");
             Add("TfIdf", "TF-IDF");
+            Add("Critiquing", "Critiquing");
         }
 
         public static ReadOnlyCollection<RecommendingAlgorithm> GetAll()

@@ -23,6 +23,8 @@ namespace RecipesCore
 
         public virtual DbSet<ActionLogRecord> ActionLog { get; set; }
 
+        public virtual DbSet<Models.Critiquing> Critiquing { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RecipeDone>()

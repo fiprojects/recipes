@@ -11,9 +11,10 @@ using System;
 namespace RecipesCore.Migrations
 {
     [DbContext(typeof(RecipesContext))]
-    partial class RecipesContextModelSnapshot : ModelSnapshot
+    [Migration("20171209114258_Critiquing")]
+    partial class Critiquing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,28 +65,6 @@ namespace RecipesCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("RecipesCore.Models.Critiquing", b =>
-                {
-                    b.Property<long?>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("LastUpdate");
-
-                    b.Property<long?>("RecipeId");
-
-                    b.Property<long?>("UserId");
-
-                    b.Property<double>("Weight");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RecipeId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Critiquing");
                 });
 
             modelBuilder.Entity("RecipesCore.Models.FellowCooks", b =>
@@ -295,17 +274,6 @@ namespace RecipesCore.Migrations
                     b.HasOne("RecipesCore.Models.Recipe", "RecommendedRecipe")
                         .WithMany()
                         .HasForeignKey("RecommendedRecipeId");
-
-                    b.HasOne("RecipesCore.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("RecipesCore.Models.Critiquing", b =>
-                {
-                    b.HasOne("RecipesCore.Models.Recipe", "Recipe")
-                        .WithMany()
-                        .HasForeignKey("RecipeId");
 
                     b.HasOne("RecipesCore.Models.User", "User")
                         .WithMany()

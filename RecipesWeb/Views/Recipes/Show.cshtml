@@ -104,6 +104,36 @@
             <i class="fa fa-lightbulb-o"></i>
             Recommendation
         </h3>
+        
+        @if (Model.CritiquingQuestion != null)
+        {
+        <div class="critiquing">
+            <div class="critiquing-body">
+                <p class="prompt">
+                    Let us know your opinion to help us choose the right
+                    recipe for you.
+                </p>
+
+                <p class="question">
+                    @Model.CritiquingQuestion.Question
+                </p>
+                
+                <div class="btn-group btn-group-justified" role="group">
+                    @foreach (var choice in Model.CritiquingQuestion.GetChoices())
+                    {
+                        <a asp-action="Critique" asp-route-recipeId="@Model.Recipe.Id"
+                           asp-route-question="@Model.CritiquingQuestionIndex"
+                           asp-route-choice="@choice.Item1"
+                           asp-route-data="@Model.CritiquingQuestion.Data"
+                           class="btn btn-default">
+                            @choice.Item2
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+
         @foreach (var recipe in Model.Recommended)
         {
             <div class="recommended-recipe">

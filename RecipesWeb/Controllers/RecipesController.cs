@@ -5,6 +5,7 @@ using RecipesWeb.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RecipesCore.Critiquing.Questions;
 
 namespace RecipesWeb.Controllers
 {
@@ -16,10 +17,11 @@ namespace RecipesWeb.Controllers
         private readonly ICategoryService _categoryService;
         private readonly ITfIdfService _tfIdfService;
         private readonly IActionLog _actionLog;
+        private readonly ICritiquingService _critiquingService;
 
         public RecipesController(IRecipesService recipesService, IRatingService ratingService,
                                 IUserService userService, ICategoryService categoryService, ITfIdfService tfIdfService,
-                                IActionLog actionLog)
+                                IActionLog actionLog, ICritiquingService critiquingService)
         {
             _ratingService = ratingService;
             _recipesService = recipesService;
@@ -27,6 +29,7 @@ namespace RecipesWeb.Controllers
             _categoryService = categoryService;
             _tfIdfService = tfIdfService;
             _actionLog = actionLog;
+            _critiquingService = critiquingService;
         }
 
         public IActionResult Show(long id)
@@ -60,8 +63,16 @@ namespace RecipesWeb.Controllers
                 RecipeUserRating = userRatingForRecipe,
                 AverageRating = _ratingService.GetAverageRatingForRecipe(id)
              };
-            
+
+            // Critiquing
+            if (userId != null && Algorithm.Identifier == "Critiquing")
+            {  
+                _critiquingService.Penalize(userName, viewModel.Recipe);
+                PrepareCritiquing(viewModel);
+            }
+
             viewModel.Recommended = GetRecipesByAlgorithm(viewModel.Recipe, userId);
+            PenalizeRecommended(userName, viewModel.Recommended);
 
             // Log
             var referer = Request.Headers["Referer"].ToString();
@@ -92,6 +103,26 @@ namespace RecipesWeb.Controllers
             return View(viewModel);
         }
 
+        public IActionResult Critique(long recipeId, int question, int choice, string data = null)
+        {
+            _critiquingService.Critique(HttpContext.User.Identity.Name, recipeId, question,
+                choice, data);
+            return RedirectToAction("Show", new { Id = recipeId });
+        }
+
+        private void PrepareCritiquing(RecipesShowModel viewModel)
+        {
+            if (Algorithm.Identifier != "Critiquing")
+            {
+                return;
+            }
+
+            var questions = new Questions(viewModel.Recipe);
+            var question = questions.RandomQuestion();
+            viewModel.CritiquingQuestionIndex = question.Item1;
+            viewModel.CritiquingQuestion = question.Item2;
+        }
+
         private List<Recipe> GetRecipesByAlgorithm(Recipe currentRecipe, long? userId)
         {
             switch (Algorithm.Identifier)
@@ -102,6 +133,8 @@ namespace RecipesWeb.Controllers
                     return _recipesService.GetRecommendedByIngredience(currentRecipe.Id, userId);
                 case "TfIdf":
                     return _tfIdfService.GetSimilarRecipesForRecipe(currentRecipe).Take(5).ToList();
+                case "Critiquing":
+                    return _critiquingService.GetRecommended(5, userId);
                 default:
                     return new List<Recipe>();
             }
@@ -121,6 +154,16 @@ namespace RecipesWeb.Controllers
                 }
             }
             return selected;
+        }
+
+        private void PenalizeRecommended(string username, List<Recipe> recipes)
+        {
+            if (string.IsNullOrWhiteSpace(username) || Algorithm.Identifier != "Critiquing")
+            {
+                return;
+            }
+
+            recipes.ForEach(r => _critiquingService.Penalize(username, r, 0.1));
         }
     }
 }
