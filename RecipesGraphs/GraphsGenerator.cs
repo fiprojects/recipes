@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using RecipesCore.Models;
 using RecipesCore.Services;
 
@@ -11,6 +13,7 @@ namespace RecipesGraphs
     {
         private readonly IRecipesService _recipesService;
 
+
         public GraphsGenerator(IRecipesService recipesServ)
         {
             _recipesService = recipesServ;
@@ -18,47 +21,68 @@ namespace RecipesGraphs
             
         }
 
-        public void generateGraphs()
+        public void GenerateGraphs()
         {
+            //GetRecipeRatingsToCSV();
+            string fileName = "Ingrediences.csv";//+filename.Substring(filename.LastIndexOf('\\')
 
-            string filename = "Graph";//+filename.Substring(filename.LastIndexOf('\\')
-            
-            List<Recipe> recipes = _recipesService.GetAll()
-                .OrderByDescending(a => a.Rating).ToList();
-            
+            var recipes = _recipesService.GetNumberOfUsagesIngredience();
+
+            StringBuilder sb = new StringBuilder();
+
             foreach (var r in recipes)
             {
-                Console.Out.WriteLine(r.Rating);
+                Console.Out.WriteLine(r.Item1 + ", " + r.Item2);
+                sb.AppendLine(r.Item1 + ", " + r.Item2);
             }
-            using (FileStream destinationStream = File.OpenWrite(filename))
-            {
-                
-                //DataPoint dp = new DataPoint();
-                //dp.SetValueXY(100, 200);
-                //List<DataPoint> dataPoints = new List<DataPoint>();
-                //dataPoints.Add(dp);
-                //generatePlot(dataPoints, destinationStream);
-            }
+            PrintToFile(fileName, sb);
 
 
         }
 
+        private void GetRecipeRatingsToCSV()
+        {
+            string fileName = "RecipeRatings.csv";//+filename.Substring(filename.LastIndexOf('\\')
 
-        //public void generatePlot(IList<DataPoint> series, FileStream outputStream)
-        //{
-        //    using (var ch = new Chart())
-        //    {
-        //        ch.ChartAreas.Add(new ChartArea());
-        //        var s = new Series();
-        //        foreach (var pnt in series) s.Points.Add(pnt);
-        //        ch.Series.Add(s);
-        //        ch.SaveImage(outputStream, ChartImageFormat.Jpeg);
-        //    }
-        //}
+            var recipes = _recipesService.GetOrderedAllDownloadedRatings()
+                .GroupBy(a => Math.Round(a, 1))
+                .Select(group => new {
+                    Rating = group.Key,
+                    Count = group.Count()
+                });
 
+            StringBuilder sb = new StringBuilder();
 
+            foreach (var r in recipes)
+            {
+                Console.Out.WriteLine(r.Rating + ", " + r.Count);
+                sb.AppendLine(r.Rating + ", " + r.Count);
+            }
+            PrintToFile(fileName, sb);
+        }
 
+        public void PrintToFile(string fileName, StringBuilder text)
+        {
+            FileStream fs = null;
+            try
+            {
 
-
+                fs = new FileStream(fileName, FileMode.Truncate);
+                using (StreamWriter writer = new StreamWriter(fs))
+                {
+                    writer.Write(text.ToString());
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.Error.WriteLine("Could not write to file " + fileName);
+            }
+            finally
+            {
+                if (fs != null)
+                    fs.Dispose();
+            }
+        }
     }
+    
 }

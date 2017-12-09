@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using RecipesCore.Models;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Extensions.Internal;
 
 namespace RecipesCore.Services
 {
@@ -18,6 +19,16 @@ namespace RecipesCore.Services
         public List<Ingredient> GetAll()
         {
             return _db.Ingredients.ToList();
+        }
+
+        public List<long> GetAllIngredienceIds()
+        {
+            return _db.Ingredients.Select(a => a.Id).ToList();
+        }
+
+        public String GetIngredienceNameById(long id)
+        {
+            return _db.Ingredients.Where(a => a.Id == id).Select(a =>a.Name).SingleOrDefault();
         }
 
         public List<Ingredient> GetAllByPreference()
