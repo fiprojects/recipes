@@ -15,15 +15,18 @@ namespace RecipesWeb.Controllers
         private readonly IUserService _userService;
         private readonly ICategoryService _categoryService;
         private readonly ITfIdfService _tfIdfService;
+        private readonly IActionLog _actionLog;
 
         public RecipesController(IRecipesService recipesService, IRatingService ratingService,
-                                IUserService userService, ICategoryService categoryService, ITfIdfService tfIdfService)
+                                IUserService userService, ICategoryService categoryService, ITfIdfService tfIdfService,
+                                IActionLog actionLog)
         {
             _ratingService = ratingService;
             _recipesService = recipesService;
             _userService = userService;
             _categoryService = categoryService;
             _tfIdfService = tfIdfService;
+            _actionLog = actionLog;
         }
 
         public IActionResult Show(long id)
@@ -59,6 +62,12 @@ namespace RecipesWeb.Controllers
              };
             
             viewModel.Recommended = GetRecipesByAlgorithm(viewModel.Recipe, userId);
+
+            // Log
+            var referer = Request.Headers["Referer"].ToString();
+            _actionLog.LogDisplayedRecipe(viewModel.Recipe, userName, referer, Algorithm);
+            _actionLog.LogRecommendedRecipes(viewModel.Recipe, viewModel.Recommended, userName, referer, Algorithm);
+
             return View(viewModel);
         }
 

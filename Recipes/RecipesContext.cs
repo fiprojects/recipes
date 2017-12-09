@@ -21,6 +21,8 @@ namespace RecipesCore
 
         public virtual DbSet<TfIdfModel> TfIdfModels { get; set; }
 
+        public virtual DbSet<ActionLogRecord> ActionLog { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RecipeDone>()

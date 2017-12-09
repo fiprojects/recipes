@@ -11,9 +11,10 @@ using System;
 namespace RecipesCore.Migrations
 {
     [DbContext(typeof(RecipesContext))]
-    partial class RecipesContextModelSnapshot : ModelSnapshot
+    [Migration("20171209005517_ActionLogRecord")]
+    partial class ActionLogRecord
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,8 +32,6 @@ namespace RecipesCore.Migrations
 
                     b.Property<string>("RecommendationAlgorithmIdentifier");
 
-                    b.Property<long?>("RecommendedRecipeId");
-
                     b.Property<string>("Referer");
 
                     b.Property<long?>("UserId");
@@ -40,8 +39,6 @@ namespace RecipesCore.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
-
-                    b.HasIndex("RecommendedRecipeId");
 
                     b.HasIndex("UserId");
 
@@ -265,10 +262,6 @@ namespace RecipesCore.Migrations
                     b.HasOne("RecipesCore.Models.Recipe", "Recipe")
                         .WithMany()
                         .HasForeignKey("RecipeId");
-
-                    b.HasOne("RecipesCore.Models.Recipe", "RecommendedRecipe")
-                        .WithMany()
-                        .HasForeignKey("RecommendedRecipeId");
 
                     b.HasOne("RecipesCore.Models.User", "User")
                         .WithMany()
