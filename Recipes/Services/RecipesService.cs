@@ -152,7 +152,7 @@ namespace RecipesCore.Services
 
         }
 
-        public List<Recipe> GetRecipesWithIngredienceByHerId(long id)
+        public List<Recipe> GetRecipesWithIngredienceById(long id)
         {
             return _db.Recipes
                 .Include(b => b.Ingredients)
@@ -164,9 +164,9 @@ namespace RecipesCore.Services
                 .ToList();
         }
 
-        public double GetNumberOfRecipesWithIngredienceByHerId(long id)
+        public double GetNumberOfRecipesWithIngredienceById(long id)
         {
-            return GetRecipesWithIngredienceByHerId(id).Count;
+            return GetRecipesWithIngredienceById(id).Count;
         }
     }
 }
