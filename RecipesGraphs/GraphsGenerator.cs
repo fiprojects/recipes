@@ -27,8 +27,15 @@ namespace RecipesGraphs
         public void GenerateGraphs()
         {
             //GetRecipeRatingsToCSV();
+            //GetFrewOfIngrediences();
             string fileName = "Ingrediences2.csv";
 
+            
+
+        }
+
+        private void GetFrewOfIngrediences()
+        {
             var ingredienceIds = _ingredientService.GetAllIngrediencesIds();
             Console.Out.WriteLine(ingredienceIds.Count);
 
@@ -38,7 +45,7 @@ namespace RecipesGraphs
             {
                 sb = new StringBuilder();
 
-                double numberOfRecipes = _recipesService.GetNumberOfRecipesWithIngredienceByHerId(id);
+                double numberOfRecipes = _recipesService.GetNumberOfRecipesWithIngredienceById(id);
                 string name = _ingredientService.GetIngredienceNameById(id);
                 int importance = _ingredientService.GetIngredienceImportanceById(id);
 
@@ -52,9 +59,8 @@ namespace RecipesGraphs
                 {
                     PrintToFile("Ingrediences2.csv", sb, FileMode.Append);
                 }
-                
-            }
 
+            }
         }
 
         private void GetRecipeRatingsToCSV()
