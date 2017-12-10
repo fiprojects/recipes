@@ -27,5 +27,9 @@ namespace RecipesCore.Services
         List<double> GetOrderedAllDownloadedRatings();
 
         List<Recipe> GetRecipesForUser(long? userId);
+
+        List<Recipe> GetRecipesWithIngredienceByHerId(long id);
+
+        double GetNumberOfRecipesWithIngredienceByHerId(long id);
     }
 }

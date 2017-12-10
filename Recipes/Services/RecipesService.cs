@@ -152,7 +152,21 @@ namespace RecipesCore.Services
 
         }
 
-        
-        
+        public List<Recipe> GetRecipesWithIngredienceByHerId(long id)
+        {
+            return _db.Recipes
+                .Include(b => b.Ingredients)
+                .ThenInclude(g => g.Ingredient)
+                .SelectMany(c => c.Ingredients)
+                .Where(d => d.Ingredient != null)
+                .Where(e => e.Ingredient.Id == id)
+                .Select(f => f.Recipe)
+                .ToList();
+        }
+
+        public double GetNumberOfRecipesWithIngredienceByHerId(long id)
+        {
+            return GetRecipesWithIngredienceByHerId(id).Count;
+        }
     }
 }

@@ -8,7 +8,9 @@ namespace RecipesCore.Services
     {
         List<Ingredient> GetAll();
 
-        List<long> GetAllIngredienceIds();
+        List<long> GetAllIngrediencesIds();
+
+        int GetIngredienceImportanceById(long id);
 
         String GetIngredienceNameById(long id);
 

@@ -12,31 +12,40 @@ namespace RecipesGraphs
     public class GraphsGenerator
     {
         private readonly IRecipesService _recipesService;
+        private readonly IIngredientService _ingredientService;
 
 
-        public GraphsGenerator(IRecipesService recipesServ)
+        public GraphsGenerator(IRecipesService recipesServ, IIngredientService ingredientServ)
         {
             _recipesService = recipesServ;
-            if (_recipesService == null) Console.Out.WriteLine("RecipesService == NULL");
-            
+            _ingredientService = ingredientServ;
+            if (_recipesService == null) Console.Out.WriteLine("_recipesService == NULL");
+            if (_ingredientService == null) Console.Out.WriteLine("_ingredientService == NULL");
+
         }
 
         public void GenerateGraphs()
         {
             //GetRecipeRatingsToCSV();
-            string fileName = "Ingrediences.csv";//+filename.Substring(filename.LastIndexOf('\\')
+            string fileName = "Ingrediences.csv";
 
-            var recipes = _recipesService.GetNumberOfUsagesIngredience();
+            var ingredienceIds = _ingredientService.GetAllIngrediencesIds();
+            Console.Out.WriteLine(ingredienceIds.Count);
 
             StringBuilder sb = new StringBuilder();
-
-            foreach (var r in recipes)
+            sb.AppendLine("ingredienceId, ingredienceName, numberOfRecipes, importance");
+            foreach (long id in ingredienceIds)
             {
-                Console.Out.WriteLine(r.Item1 + ", " + r.Item2);
-                sb.AppendLine(r.Item1 + ", " + r.Item2);
-            }
-            PrintToFile(fileName, sb);
+                sb = new StringBuilder();
 
+                double numberOfRecipes = _recipesService.GetNumberOfRecipesWithIngredienceByHerId(id);
+                string name = _ingredientService.GetIngredienceNameById(id);
+                int importance = _ingredientService.GetIngredienceImportanceById(id);
+                
+                sb.AppendLine(id +","+ name + "," + numberOfRecipes + ","  + importance);
+                Console.Out.WriteLine(id + "," + name + "," + numberOfRecipes + "," + importance);
+                PrintToFile(fileName, sb, FileMode.Append);
+            }
 
         }
 
@@ -58,16 +67,16 @@ namespace RecipesGraphs
                 Console.Out.WriteLine(r.Rating + ", " + r.Count);
                 sb.AppendLine(r.Rating + ", " + r.Count);
             }
-            PrintToFile(fileName, sb);
+            PrintToFile(fileName, sb, FileMode.Truncate);
         }
 
-        public void PrintToFile(string fileName, StringBuilder text)
+        public void PrintToFile(string fileName, StringBuilder text, FileMode mode)
         {
             FileStream fs = null;
             try
             {
 
-                fs = new FileStream(fileName, FileMode.Truncate);
+                fs = new FileStream(fileName, mode);
                 using (StreamWriter writer = new StreamWriter(fs))
                 {
                     writer.Write(text.ToString());
@@ -75,7 +84,7 @@ namespace RecipesGraphs
             }
             catch (InvalidOperationException ex)
             {
-                Console.Error.WriteLine("Could not write to file " + fileName);
+                Console.Error.WriteLine("Could not write to file " + fileName + " "+ text);
             }
             finally
             {
@@ -83,6 +92,8 @@ namespace RecipesGraphs
                     fs.Dispose();
             }
         }
+
+        
     }
     
 }
