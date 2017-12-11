@@ -32,7 +32,7 @@ namespace RecipesGraphs
             //GetCookTimesToCSV();
             //GetPreparationTimesToCSV();
             //GetPreparationAndCookTimesToCSV();
-            GetTfidfDataToCSV();
+            //GetTfidfDataToCSV();
             
         }
 
