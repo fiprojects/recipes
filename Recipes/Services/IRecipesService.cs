@@ -37,5 +37,7 @@ namespace RecipesCore.Services
         List<Tuple<int, int>> GetPreparationTimesAndRecipesCount();
 
         List<Tuple<int, int>> GetCookAndPrepTimesAndRecipesCount();
+
+        List<Tuple<string, int>> GetCountOfRecipesInCategory();
     }
 }

@@ -33,7 +33,29 @@ namespace RecipesGraphs
             //GetPreparationTimesToCSV();
             //GetPreparationAndCookTimesToCSV();
             //GetTfidfDataToCSV();
+            GetCountOfRecipesForCategoriesToCSV();
             
+        }
+
+        private void GetCountOfRecipesForCategoriesToCSV()
+        {
+            List<Tuple<string, int>> categoriesAndRecipes = _recipesService.GetCountOfRecipesInCategory();
+            string fileName = "CategoriesAndRecipes.csv";
+            StringBuilder sb = new StringBuilder("Category, numberOfRecipes" + Environment.NewLine);
+            PrintToFile(fileName, sb, FileMode.Append);
+            
+
+            foreach (var categoryAndCount in categoriesAndRecipes)
+            {
+                sb = new StringBuilder();
+
+
+                sb.AppendLine(categoryAndCount.Item1 + "," + categoryAndCount.Item2);
+                Console.Out.WriteLine(categoryAndCount.Item1 + "," + categoryAndCount.Item2);
+                PrintToFile(fileName, sb, FileMode.Append);
+
+            }
+
         }
 
         private void GetTfidfDataToCSV()

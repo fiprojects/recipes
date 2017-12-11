@@ -195,5 +195,15 @@ namespace RecipesCore.Services
                 .OrderBy(c => c.Item1)
                 .ToList();
         }
+
+        public List<Tuple<string, int>> GetCountOfRecipesInCategory()
+        {
+            return _db.Recipes
+                .Include(a => a.Category)
+                .Where(b => b.Category!= null)
+                .Select(c => Tuple.Create(c.Category.Name, c.Category.Recipes.Count))
+                .Distinct()
+                .ToList();
+        }
     }
 }
