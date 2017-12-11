@@ -68,6 +68,39 @@ namespace RecipesGraphs
                 PrintToFile(fileName, sb, FileMode.Append);
 
             }
+            List<Tuple<String, int>> groupedTupleList =  new List<Tuple<String, int>>();
+            Tuple<String, int> tuple = null;
+            string name = "";
+            for (int i = 1; i <= 450; i++)
+            {
+                
+                if (i % 3 == 1)
+                {
+                    tuple = null;
+                    name = i + "..." + (i + 2);
+                }
+                Tuple<int, int> foundTuple = numOfRecipesAndCountOfTerms.Find(a => a.Item1 == i);
+                if (foundTuple != null)
+                {
+                    int value = 0;
+                    
+                    if (tuple != null )
+                    {
+                        value = tuple.Item2;
+                    }
+
+                    tuple = new Tuple<string, int>(name, foundTuple.Item2 + value);
+                    
+                }
+                if (i % 3 == 0 && tuple != null)
+                {
+                    groupedTupleList.Add(tuple);
+                    Console.Out.WriteLine(tuple.Item1 + ", " + tuple.Item2);
+                    sb = new StringBuilder(tuple.Item1 + ", " + tuple.Item2 +  Environment.NewLine);
+                    PrintToFile(fileName, sb, FileMode.Append);
+                }
+
+            }
         }
 
         private void GetCookTimesToCSV()

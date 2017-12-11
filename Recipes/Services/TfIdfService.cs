@@ -119,7 +119,7 @@ namespace RecipesCore.Services
             List<Tuple<string, int>> termnAndCountOfRecipes = GetNumberOfRecipesWhereUsedForTerms();
             return termnAndCountOfRecipes.GroupBy(a => a.Item2)
                 .Select(group => Tuple.Create(group.Key, group.Count()))
-                .OrderByDescending(c => c.Item1)
+                .OrderBy(c => c.Item1)
                 .ToList();
         }
     }
