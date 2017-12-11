@@ -102,5 +102,25 @@ namespace RecipesCore.Services
                 return -1.0;
             return dotProduct / (Math.Sqrt(sizeA) * Math.Sqrt(sizeB));
         }
+
+        public List<Tuple<string, int>> GetNumberOfRecipesWhereUsedForTerms()
+        {
+            return _db.TfIdfModels
+                .Include(m => m.Elements)
+                .SelectMany(a => a.Elements)
+                .GroupBy(b => b.Term)
+                .Select(group => Tuple.Create(group.Key, group.Count()))
+                .OrderByDescending(c => c.Item2)
+                .ToList();
+        }
+
+        public List<Tuple<int, int>> GetSumOfTermsUsedInTheSameNumberOfRecipes()
+        {
+            List<Tuple<string, int>> termnAndCountOfRecipes = GetNumberOfRecipesWhereUsedForTerms();
+            return termnAndCountOfRecipes.GroupBy(a => a.Item2)
+                .Select(group => Tuple.Create(group.Key, group.Count()))
+                .OrderByDescending(c => c.Item1)
+                .ToList();
+        }
     }
 }

@@ -13,15 +13,16 @@ namespace RecipesGraphs
     {
         private readonly IRecipesService _recipesService;
         private readonly IIngredientService _ingredientService;
+        private readonly ITfIdfService _tfIdfService;
 
-
-        public GraphsGenerator(IRecipesService recipesServ, IIngredientService ingredientServ)
+        public GraphsGenerator(IRecipesService recipesServ, IIngredientService ingredientServ, ITfIdfService tfidfServ)
         {
             _recipesService = recipesServ;
             _ingredientService = ingredientServ;
+            _tfIdfService = tfidfServ;
             if (_recipesService == null) Console.Out.WriteLine("_recipesService == NULL");
             if (_ingredientService == null) Console.Out.WriteLine("_ingredientService == NULL");
-
+            if (_tfIdfService == null) Console.Out.WriteLine("_tfIdfService == NULL");
         }
 
         public void GenerateGraphs()
@@ -31,17 +32,39 @@ namespace RecipesGraphs
             //GetCookTimesToCSV();
             //GetPreparationTimesToCSV();
             //GetPreparationAndCookTimesToCSV();
-            string fileName = "PreparationAndCookTime.csv";
+            GetTfidfDataToCSV();
+            
+        }
 
-            List<Tuple<int, int>> cookTimes = _recipesService.GetCookAndPrepTimesAndRecipesCount();
+        private void GetTfidfDataToCSV()
+        {
+            string fileName = "TFIDFcsvForGraph.csv";
+
+            List<Tuple<string, int>> termnAndCountOfRecipes = _tfIdfService.GetNumberOfRecipesWhereUsedForTerms();
             StringBuilder sb = new StringBuilder();
-            foreach (var cookT in cookTimes)
+            foreach (var termAndCount in termnAndCountOfRecipes)
             {
                 sb = new StringBuilder();
-                
 
-                sb.AppendLine(cookT.Item1 + "," + cookT.Item2);
-                Console.Out.WriteLine(cookT.Item1 + "," + cookT.Item2);
+
+                sb.AppendLine(termAndCount.Item1 + "," + termAndCount.Item2);
+                Console.Out.WriteLine(termAndCount.Item1 + "," + termAndCount.Item2);
+                PrintToFile(fileName, sb, FileMode.Append);
+
+            }
+            sb.AppendLine("Number recipes in which used, number of terms");
+            PrintToFile(fileName, sb, FileMode.Append);
+
+            List<Tuple<int, int>> numOfRecipesAndCountOfTerms =
+                _tfIdfService.GetSumOfTermsUsedInTheSameNumberOfRecipes();
+            
+            foreach (var numOfRecipesAndCountT in numOfRecipesAndCountOfTerms)
+            {
+                sb = new StringBuilder();
+
+
+                sb.AppendLine(numOfRecipesAndCountT.Item1 + "," + numOfRecipesAndCountT.Item2);
+                Console.Out.WriteLine(numOfRecipesAndCountT.Item1 + "," + numOfRecipesAndCountT.Item2);
                 PrintToFile(fileName, sb, FileMode.Append);
 
             }

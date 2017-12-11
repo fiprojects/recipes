@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RecipesCore.Models;
 
 namespace RecipesCore.Services
@@ -20,5 +21,9 @@ namespace RecipesCore.Services
         List<Recipe> RankListUsingTfIdf(TfIdfModel model, List<TfIdfModel> models);
 
         double ComputeCosineSimilarity(TfIdfModel a, TfIdfModel b);
+
+        List<Tuple<string, int>> GetNumberOfRecipesWhereUsedForTerms();
+
+        List<Tuple<int, int>> GetSumOfTermsUsedInTheSameNumberOfRecipes();
     }
 }
