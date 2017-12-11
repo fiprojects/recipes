@@ -27,14 +27,81 @@ namespace RecipesGraphs
         public void GenerateGraphs()
         {
             //GetRecipeRatingsToCSV();
-            //GetFrewOfIngrediences();
-            string fileName = "Ingrediences2.csv";
+            //GetFrewOfIngrediencesToCSV();
+            //GetCookTimesToCSV();
+            //GetPreparationTimesToCSV();
+            //GetPreparationAndCookTimesToCSV();
+            string fileName = "PreparationAndCookTime.csv";
 
-            
+            List<Tuple<int, int>> cookTimes = _recipesService.GetCookAndPrepTimesAndRecipesCount();
+            StringBuilder sb = new StringBuilder();
+            foreach (var cookT in cookTimes)
+            {
+                sb = new StringBuilder();
+                
 
+                sb.AppendLine(cookT.Item1 + "," + cookT.Item2);
+                Console.Out.WriteLine(cookT.Item1 + "," + cookT.Item2);
+                PrintToFile(fileName, sb, FileMode.Append);
+
+            }
         }
 
-        private void GetFrewOfIngrediences()
+        private void GetCookTimesToCSV()
+        {
+            string fileName = "CookTime.csv";
+
+            List<Tuple<int, int>> cookTimes = _recipesService.GetCookingTimesAndRecipesCount();
+            StringBuilder sb = new StringBuilder();
+            foreach (var cookT in cookTimes)
+            {
+                sb = new StringBuilder();
+
+
+                sb.AppendLine(cookT.Item1 + "," + cookT.Item2);
+                Console.Out.WriteLine(cookT.Item1 + "," + cookT.Item2);
+                PrintToFile(fileName, sb, FileMode.Append);
+
+            }
+        }
+
+        private void GetPreparationTimesToCSV()
+        {
+            string fileName = "PreparationTime.csv";
+
+            List<Tuple<int, int>> cookTimes = _recipesService.GetPreparationTimesAndRecipesCount();
+            StringBuilder sb = new StringBuilder();
+            foreach (var cookT in cookTimes)
+            {
+                sb = new StringBuilder();
+
+
+                sb.AppendLine(cookT.Item1 + "," + cookT.Item2);
+                Console.Out.WriteLine(cookT.Item1 + "," + cookT.Item2);
+                PrintToFile(fileName, sb, FileMode.Append);
+
+            }
+        }
+
+        private void GetPreparationAndCookTimesToCSV()
+        {
+            string fileName = "PreparationAndCookTime.csv";
+
+            List<Tuple<int, int>> cookTimes = _recipesService.GetCookAndPrepTimesAndRecipesCount();
+            StringBuilder sb = new StringBuilder();
+            foreach (var cookT in cookTimes)
+            {
+                sb = new StringBuilder();
+
+
+                sb.AppendLine(cookT.Item1 + "," + cookT.Item2);
+                Console.Out.WriteLine(cookT.Item1 + "," + cookT.Item2);
+                PrintToFile(fileName, sb, FileMode.Append);
+
+            }
+        }
+
+        private void GetFrewOfIngrediencesToCSV()
         {
             var ingredienceIds = _ingredientService.GetAllIngrediencesIds();
             Console.Out.WriteLine(ingredienceIds.Count);

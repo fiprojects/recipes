@@ -28,8 +28,14 @@ namespace RecipesCore.Services
 
         List<Recipe> GetRecipesForUser(long? userId);
 
-        List<Recipe> GetRecipesWithIngredienceByHerId(long id);
+        List<Recipe> GetRecipesWithIngredienceById(long id);
 
-        double GetNumberOfRecipesWithIngredienceByHerId(long id);
+        double GetNumberOfRecipesWithIngredienceById(long id);
+
+        List<Tuple<int, int>> GetCookingTimesAndRecipesCount();
+
+        List<Tuple<int, int>> GetPreparationTimesAndRecipesCount();
+
+        List<Tuple<int, int>> GetCookAndPrepTimesAndRecipesCount();
     }
 }
