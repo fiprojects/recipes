@@ -1,55 +1,58 @@
-8,pepper,358,1
-16,sugar,207,1
-179,squash,3,1
-103,hummus,1,1
-175,dill,4,1
-83,clove,8,1
-15,brown sugar,0,1
-4,margarine,12,1
-40,white vinegar,13,1
-56,mustard,32,1
-182,turnip,1,1
-23,garlic,230,1
-101,coriander,13,1
-82,baking powder,35,1
-25,lemon,69,1
-1,onion,259,1
-189,molasses,3,1
-137,vinegar,8,1
-86,yeast,12,1
-13,olive oil,0,1
-49,water,140,1
-97,balsamic vinegar,13,1
-181,tamarind,3,1
-156,cream,4,1
-39,rice vinegar,7,1
-169,fennel,2,1
-14,oil,287,1
-17,basil,52,1
-33,thyme,21,1
-157,dressing,5,1
-31,rosemary,13,1
-52,baking soda,31,1
-32,shallot,5,1
-42,condensed milk,4,1
-143,leek,1,1
-100,cayenne,2,1
-158,oats,7,1
-172,barley,4,1
-63,cornstarch,28,1
-9,salt,357,1
-184,chive,5,1
-64,cumin,44,1
-170,relish,2,1
-68,ketchup,13,1
-84,flour,117,1
-145,marjoram,3,1
-118,saffron,2,1
-38,tomato,107,1
-104,maple syrup,7,1
-163,crust,10,1
-102,garam masala,5,1
-29,oregano,41,1
-2,butter,176,1
-186,allspice,5,1
-7,parsley,79,1
+Sloupec1,Sloupec2,Sloupec3,Sloupec4,Sloupec5
+8,pepper,358,1,
+9,salt,357,1,
+14,oil,287,1,
+1,onion,259,1,
+23,garlic,230,1,
+16,sugar,207,1,
+2,butter,176,1,
+49,water,140,1,
+84,flour,117,1,
+38,tomato,107,1,
+0,other,632,1,
+7,parsley,79,1,
+25,lemon,69,1,
+17,basil,52,1,
+64,cumin,44,1,
+29,oregano,41,1,
+82,baking powder,35,1,
+56,mustard,32,1,
+52,baking soda,31,1,
+63,cornstarch,28,1,
+33,thyme,21,1,
+40,white vinegar,13,1,
+101,coriander,13,1,
+97,balsamic vinegar,13,1,
+31,rosemary,13,1,
+68,ketchup,13,1,
+4,margarine,12,1,
+86,yeast,12,1,
+163,crust,10,1,
+83,clove,8,1,
+137,vinegar,8,1,
+39,rice vinegar,7,1,
+158,oats,7,1,
+104,maple syrup,7,1,
+157,dressing,5,1,
+32,shallot,5,1,
+184,chive,5,1,
+102,garam masala,5,1,
+186,allspice,5,1,
+175,dill,4,1,
+156,cream,4,1,
+42,condensed milk,4,1,
+172,barley,4,1,
+179,squash,3,1,
+189,molasses,3,1,
+181,tamarind,3,1,
+145,marjoram,3,1,
+169,fennel,2,1,
+100,cayenne,2,1,
+170,relish,2,1,
+118,saffron,2,1,
+103,hummus,1,1,
+182,turnip,1,1,
+143,leek,1,1,
+15,brown sugar,0,1,
+13,olive oil,0,1,
+0,other,632,1,
