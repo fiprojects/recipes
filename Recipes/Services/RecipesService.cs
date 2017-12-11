@@ -168,5 +168,32 @@ namespace RecipesCore.Services
         {
             return GetRecipesWithIngredienceById(id).Count;
         }
+
+        public List<Tuple<int, int>> GetCookingTimesAndRecipesCount()
+        {
+            return _db.Recipes
+                .GroupBy(a => a.CookTime.Minutes)
+                .Select(group => Tuple.Create(group.Key, group.Count()))
+                .OrderBy(c => c.Item1)
+                .ToList();
+        }
+
+        public List<Tuple<int, int>> GetPreparationTimesAndRecipesCount()
+        {
+            return _db.Recipes
+                .GroupBy(a => a.PreparationTime.Minutes)
+                .Select(group => Tuple.Create(group.Key, group.Count()))
+                .OrderBy(c => c.Item1)
+                .ToList();
+        }
+
+        public List<Tuple<int, int>> GetCookAndPrepTimesAndRecipesCount()
+        {
+            return _db.Recipes
+                .GroupBy(a => a.PreparationTime.Minutes + a.CookTime.Minutes)
+                .Select(group => Tuple.Create(group.Key, group.Count()))
+                .OrderBy(c => c.Item1)
+                .ToList();
+        }
     }
 }
