@@ -26,7 +26,7 @@
 * /Recipes/Services/CritiquingService.cs - výpočet doporučení na základě vah
 
 ## Rozdělení rolí
-Veronika - analýza a vizualizace dat, ruční korekce ingrediencí, evaluace
-Patrik - náhodný výběr a doporučení na základě ingrediencí, kategorizace ingrediencí
-Jozef - TF-IDF, filtrace slov
-Michael - critiquing, crawling
+* Veronika - analýza a vizualizace dat, ruční korekce ingrediencí, evaluace
+* Patrik - náhodný výběr a doporučení na základě ingrediencí, kategorizace ingrediencí
+* Jozef - TF-IDF, filtrace slov, evaluace
+* Michael - critiquing, crawling
